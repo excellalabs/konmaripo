@@ -16,6 +16,7 @@ variables:
   dockerRegistryServiceConnection: '45e3c083-bfeb-4f9f-bd31-4cb3efd92e57'
   imageRepository: 'konmaripoweb'
   containerRegistry: 'konmaripocontainerregistry.azurecr.io'
+  buildContextLocation: '$(Build.SourcesDirectory)/src/Konmaripo.Web'
   dockerfilePath: '$(Build.SourcesDirectory)/src/Konmaripo.Web/Konmaripo.Web/Dockerfile'
   tag: '$(Build.BuildId)'
   
@@ -37,7 +38,7 @@ stages:
         command: build
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
-        buildContext: ".."
+        buildContext: "$(buildContextLocation)"
         tags: |
           $(tag)
     - task: Docker@2
