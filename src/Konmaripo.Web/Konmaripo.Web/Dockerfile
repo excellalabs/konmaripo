@@ -7,7 +7,7 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster AS build
 WORKDIR /src
-COPY ["Konmaripo.Web.csproj", "Konmaripo.Web/"]
+COPY ["Konmaripo.Web/Konmaripo.Web.csproj", "./Konmaripo.Web/"]
 RUN dotnet restore "Konmaripo.Web/Konmaripo.Web.csproj"
 COPY . .
 WORKDIR "/src/Konmaripo.Web"
