@@ -41,6 +41,7 @@ stages:
         buildContext: "$(buildContextLocation)"
         tags: |
           $(tag)
+          konmaripoweb
     - task: Docker@2
       displayName: Push an image to container registry
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
@@ -51,3 +52,4 @@ stages:
         containerRegistry: $(dockerRegistryServiceConnection)
         tags: |
           $(tag)
+          konmaripoweb
