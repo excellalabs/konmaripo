@@ -1,36 +1,25 @@
-## GitHub Governance Tool
+## Konmaripo: Konmari your GitHub Org's Repositories
 
-* .NET Core
-* Single exe
+**NOTE:** This tool is in early and experimental stages; it is not currently recommended for use.
+
+This tool is a simple web app to allow you to look at all of the repositories in your GitHub organization and see if it's time to arhive them, with automated steps to help you sunset the repository.
+
+## Ingredients
+This tool uses: 
+
+* .NET Core MVC web app
+* Azure AD Integration
+* Azure DevOps
+* Docker containers
 * Octokit .NET (with a GitHub Access token)
 
-## Features
+## Planned Feature Roadmap
 
- * Create and pin an issue
- * Archive the repository
- * Clone a github repository
- * Zip up a repository
- * Delete repository?
- * Accept a list of repositories
-
-## Usage
-
-`gh-gov archive --org excellaco --repos repo1,repo2,repo3`
-
- * Confirm
- * Access token via environment variables / secrets
- * Create issue
- * Pin the issue
- * Archive the repo(s)
- * gh-gov delete --org --repos repo1,repo2,repo3 --archive-location
- * Confirm
- * Clone repo
- * Zip the repo 
- * Copy repo to known location
- * Delete the repo
-
-## Adjacent Subjects
-
-* Automated testing
-* DevOps builds  (PRs)
-* Tag releases
+* Delegated access via Azure AD. Admins can choose who can triage these repositories
+* See applications and statistics to enable you to make an informed decision
+* Archival: Create and pin an issue
+* Archival: Archive the repository
+* Removal: Clone a github repository
+* Removal: Zip up a repository
+* Removal: Delete repository?
+* Enforce a waiting period between archival and removal
