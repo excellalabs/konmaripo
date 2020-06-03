@@ -37,6 +37,7 @@ stages:
         command: build
         repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
+        buildContext: ".."
         tags: |
           $(tag)
     - task: Docker@2
