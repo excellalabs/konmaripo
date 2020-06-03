@@ -18,8 +18,8 @@ variables:
   containerRegistry: 'konmaripocontainerregistry.azurecr.io'
   buildContextLocation: '$(Build.SourcesDirectory)/src/Konmaripo.Web'
   dockerfilePath: '$(Build.SourcesDirectory)/src/Konmaripo.Web/Konmaripo.Web/Dockerfile'
-  #tag: '$(Build.BuildId)'
-  tag: 'release'
+  tag: '$(Build.BuildId)'
+  #tag: 'release'
   
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -47,10 +47,8 @@ stages:
       displayName: Push an image to container registry
       condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
       inputs:
-        command: push
-        repository: $(imageRepository)
-        dockerfile: $(dockerfilePath)
         containerRegistry: $(dockerRegistryServiceConnection)
+        repository: $(imageRepository)
+        command: push
         tags: |
           $(tag)
-          $(imageRepository)
