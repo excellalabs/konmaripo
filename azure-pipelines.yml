@@ -37,8 +37,9 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        repository: $(imageRepository)
         dockerfile: $(dockerfilePath)
+        repository: $(imageRepository)
+        containerRegistry: $(dockerRegistryServiceConnection)
         buildContext: "$(buildContextLocation)"
         tags: |
           $(tag)
