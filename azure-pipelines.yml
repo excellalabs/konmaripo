@@ -18,7 +18,8 @@ variables:
   containerRegistry: 'konmaripocontainerregistry.azurecr.io'
   buildContextLocation: '$(Build.SourcesDirectory)/src/Konmaripo.Web'
   dockerfilePath: '$(Build.SourcesDirectory)/src/Konmaripo.Web/Konmaripo.Web/Dockerfile'
-  tag: '$(Build.BuildId)'
+  #tag: '$(Build.BuildId)'
+  tag: 'release'
   
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
