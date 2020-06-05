@@ -10,6 +10,16 @@ using Konmaripo.Web.Models;
 
 namespace Konmaripo.Web.Controllers
 {
+    public class GitHubRepo
+    {
+        public string Name { get; }
+
+        public GitHubRepo(string name)
+        {
+            Name = name;
+        }
+    }
+
     [Authorize]
     public class HomeController : Controller
     {
@@ -22,6 +32,8 @@ namespace Konmaripo.Web.Controllers
 
         public IActionResult Index()
         {
+            // Obtain list of GitHub Repos
+            // Pass through to the view
             return View();
         }
 
