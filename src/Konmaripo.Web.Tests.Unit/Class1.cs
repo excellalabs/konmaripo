@@ -1,4 +1,5 @@
 ﻿using System;
+using FluentAssertions;
 using Xunit;
 
 namespace Konmaripo.Web.Tests.Unit
@@ -10,7 +11,7 @@ namespace Konmaripo.Web.Tests.Unit
         {
             var result = 1 + 1;
 
-            Assert.Equal(2, result);
+            result.Should().Be(2);
         }
     }
 }
