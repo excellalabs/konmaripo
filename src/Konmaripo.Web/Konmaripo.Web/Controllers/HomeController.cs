@@ -51,11 +51,16 @@ namespace Konmaripo.Web.Controllers
         {
             // Obtain list of GitHub Repos
             // Pass through to the view
-            var repos = await _client.Repository.GetAllForOrg(_ghSettings.OrganizationName, new ApiOptions(){PageSize = 100});
+            var repos = await _client.Repository.GetAllForOrg(_ghSettings.OrganizationName, new ApiOptions());
 
             var resultList = repos.Select(x => new GitHubRepo(x.Name)).ToList();
+            
+            _logger.LogInformation("Returning {RepoCount} repositories", resultList.Count);
+
             return View(resultList);
+
         }
+
 
         public IActionResult Privacy()
         {
