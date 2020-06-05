@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Konmaripo.Web.Controllers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authorization;
@@ -67,6 +68,9 @@ namespace Konmaripo.Web
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
             });
+
+            services.AddOptions();
+            services.Configure<GitHubSettings>(Configuration.GetSection("GitHubSettings"));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
