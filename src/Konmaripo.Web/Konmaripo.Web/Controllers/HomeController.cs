@@ -36,16 +36,18 @@ namespace Konmaripo.Web.Controllers
         private GitHubClient _client;
         private GitHubSettings _ghSettings;
 
-        public HomeController(ILogger<HomeController> logger, IOptions<GitHubSettings> gitHubSettings)
+        public HomeController(ILogger<HomeController> logger, IOptions<GitHubSettings> gitHubSettings, GitHubClient client)
         {
-            // TODO: Input checks
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _ghSettings = gitHubSettings.Value ?? throw new ArgumentNullException(nameof(gitHubSettings));
+            _client = client ?? throw new ArgumentNullException(nameof(client));
+
             // TODO: Inject GitHubClient ready to go
 
             _logger = logger;
 
             var credentials = new Credentials(token: gitHubSettings.Value.AccessToken);
             _client = new GitHubClient(new ProductHeaderValue("Konmaripo"), new InMemoryCredentialStore(credentials));
-            _ghSettings = gitHubSettings.Value;
         }
 
         public async Task<IActionResult> Index()
