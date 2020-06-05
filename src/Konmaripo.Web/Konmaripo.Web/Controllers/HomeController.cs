@@ -39,6 +39,7 @@ namespace Konmaripo.Web.Controllers
         public HomeController(ILogger<HomeController> logger, IOptions<GitHubSettings> gitHubSettings)
         {
             // TODO: Input checks
+            // TODO: Inject GitHubClient ready to go
 
             _logger = logger;
 
