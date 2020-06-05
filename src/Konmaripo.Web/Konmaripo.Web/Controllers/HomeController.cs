@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -8,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Konmaripo.Web.Models;
 using Microsoft.Extensions.Options;
 using Octokit;
-using Octokit.Internal;
 using Activity = System.Diagnostics.Activity;
 
 namespace Konmaripo.Web.Controllers
@@ -33,8 +31,8 @@ namespace Konmaripo.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private GitHubClient _client;
-        private GitHubSettings _ghSettings;
+        private readonly GitHubClient _client;
+        private readonly GitHubSettings _ghSettings;
 
         public HomeController(ILogger<HomeController> logger, IOptions<GitHubSettings> gitHubSettings, GitHubClient client)
         {
