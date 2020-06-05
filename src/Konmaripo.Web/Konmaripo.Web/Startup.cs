@@ -32,7 +32,6 @@ namespace Konmaripo.Web
         {
             ConfigureHackyHttpsEnforcement(services);
 
-            IdentityModelEventSource.ShowPII = true;
             services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
                 .AddAzureAD(options =>
                 {
