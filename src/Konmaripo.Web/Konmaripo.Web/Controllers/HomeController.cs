@@ -42,12 +42,8 @@ namespace Konmaripo.Web.Controllers
             _ghSettings = gitHubSettings.Value ?? throw new ArgumentNullException(nameof(gitHubSettings));
             _client = client ?? throw new ArgumentNullException(nameof(client));
 
-            // TODO: Inject GitHubClient ready to go
-
             _logger = logger;
 
-            var credentials = new Credentials(token: gitHubSettings.Value.AccessToken);
-            _client = new GitHubClient(new ProductHeaderValue("Konmaripo"), new InMemoryCredentialStore(credentials));
         }
 
         public async Task<IActionResult> Index()
