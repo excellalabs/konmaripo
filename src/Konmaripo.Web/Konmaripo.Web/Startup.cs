@@ -50,6 +50,18 @@ namespace Konmaripo.Web
                 options.Filters.Add(new AuthorizeFilter(policy));
             });
             services.AddRazorPages();
+
+            services.AddOptions();
+            
+            services.Configure<GitHubSettings>(Configuration.GetSection("GitHubSettings"));
+            services.AddTransient<GitHubClient>(serviceProvider =>
+            {
+                var settings = serviceProvider.GetService<IOptions<GitHubSettings>>();
+                var credentials = new Credentials(token: settings.Value.AccessToken);
+
+                return new GitHubClient(new ProductHeaderValue("Konmaripo"),
+                    new InMemoryCredentialStore(credentials));
+            });
         }
 
         /// <summary>
@@ -70,17 +82,6 @@ namespace Konmaripo.Web
                 // configuration.
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
-            });
-
-            services.AddOptions();
-            services.Configure<GitHubSettings>(Configuration.GetSection("GitHubSettings"));
-            services.AddTransient<GitHubClient>(serviceProvider =>
-            {
-                var settings = serviceProvider.GetService<IOptions<GitHubSettings>>();
-                var credentials = new Credentials(token: settings.Value.AccessToken);
-
-                return new GitHubClient(new ProductHeaderValue("Konmaripo"),
-                    new InMemoryCredentialStore(credentials));
             });
         }
 
