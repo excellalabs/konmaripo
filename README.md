@@ -2,7 +2,7 @@
 
 **NOTE:** This tool is in early and experimental stages; it is not currently recommended for use.
 
-This tool is a simple web app to allow you to look at all of the repositories in your GitHub organization and see if it's time to arhive them, with automated steps to help you sunset the repository.
+This tool is a simple web app to allow you to look at all of the repositories in your GitHub organization and see if it's time to archive them, with automated steps to help you sunset the repository.
 
 ## Ingredients
 This tool uses: 
