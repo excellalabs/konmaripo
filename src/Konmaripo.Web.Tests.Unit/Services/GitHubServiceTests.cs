@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Konmaripo.Web.Models;
@@ -17,15 +17,16 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
     public class GitHubServiceTests
     {
+        [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
         public class Ctor
         {
-            Mock<IGitHubClient> dummyClient = new Mock<IGitHubClient>();
-            Mock<IOptions<GitHubSettings>> dummySettings = new Mock<IOptions<GitHubSettings>>();
+            readonly Mock<IGitHubClient> _dummyClient = new Mock<IGitHubClient>();
+            readonly Mock<IOptions<GitHubSettings>> _dummySettings = new Mock<IOptions<GitHubSettings>>();
 
             [Fact]
             public void NullGitHubClient_ThrowsException()
             {
-                Action sut = () => new GitHubService(githubClient: null, dummySettings.Object);
+                Action sut = () => new GitHubService(githubClient: null, _dummySettings.Object);
 
                 sut.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("githubClient");
@@ -34,7 +35,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             [Fact]
             public void NullOptions_ThrowsException()
             {
-                Action sut = () => new GitHubService(githubClient: dummyClient.Object, null);
+                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, null);
 
                 sut.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("githubSettings");
