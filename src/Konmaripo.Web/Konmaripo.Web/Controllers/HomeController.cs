@@ -6,8 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
-using Microsoft.Extensions.Options;
-using Octokit;
 using Activity = System.Diagnostics.Activity;
 
 namespace Konmaripo.Web.Controllers

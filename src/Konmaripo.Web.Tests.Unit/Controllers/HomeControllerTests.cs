@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Castle.Core.Logging;
+using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Konmaripo.Web.Controllers;
 using Konmaripo.Web.Services;
@@ -13,10 +11,11 @@ namespace Konmaripo.Web.Tests.Unit.Controllers
 {
     public class HomeControllerTests
     {
+        [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
         public class Ctor
         {
-            private Mock<ILogger<HomeController>> _mockLogger;
-            private Mock<IGitHubService> _mockGitHubService;
+            private readonly Mock<ILogger<HomeController>> _mockLogger;
+            private readonly Mock<IGitHubService> _mockGitHubService;
 
             public Ctor()
             {
