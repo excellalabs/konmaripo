@@ -16,14 +16,12 @@ namespace Konmaripo.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly GitHubService _gitHubService;
+        private readonly IGitHubService _gitHubService;
 
-        public HomeController(ILogger<HomeController> logger, GitHubService gitHubService)
+        public HomeController(ILogger<HomeController> logger, IGitHubService gitHubService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _gitHubService = gitHubService;
-
-            _logger = logger;
+            _gitHubService = gitHubService ?? throw new ArgumentNullException(nameof(gitHubService));
         }
 
         public async Task<IActionResult> Index()

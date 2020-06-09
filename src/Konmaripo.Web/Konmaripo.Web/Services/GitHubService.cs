@@ -8,7 +8,12 @@ using Octokit;
 
 namespace Konmaripo.Web.Services
 {
-    public class GitHubService
+    public interface IGitHubService
+    {
+        Task<List<GitHubRepo>> GetRepositoriesForOrganizationAsync();
+    }
+
+    public class GitHubService : IGitHubService
     {
         private IGitHubClient _githubClient;
         private GitHubSettings _gitHubSettings;
