@@ -15,6 +15,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
     public class GitHubServiceTests
     {
+
         public class Ctor
         {
             [Fact]
@@ -29,6 +30,15 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
         public class GetRepositoriesForOrganization
         {
+            private GitHubService _sut;
+            private readonly Mock<IGitHubClient> _mockClient;
+
+            public GetRepositoriesForOrganization()
+            {
+                _mockClient = new Mock<IGitHubClient>();
+                _sut = new GitHubService(_mockClient.Object);
+            }
+
             [Fact]
             public async Task ReturnsTheRepositoryNamesFromTheGithubClient()
             {
@@ -36,18 +46,14 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 
                 var repositoryObjects = GetDummyRepositoryObjectsForNames(repositoryNames);
 
-                var mockClient = new Mock<IGitHubClient>();
-                mockClient.Setup(x => 
+                _mockClient.Setup(x => 
                         x.Repository.GetAllForOrg(It.IsAny<string>()))
                     .Returns(Task.FromResult(repositoryObjects));
 
-                var sut = new GitHubService(mockClient.Object);
-
-                var result = await sut.GetRepositoriesForOrganizationAsync();
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
                 var resultNames = result.Select(repoResult => repoResult.Name).ToList();
 
                 resultNames.Should().Contain(repositoryNames);
-
             }
 
             private static IReadOnlyList<Repository> GetDummyRepositoryObjectsForNames(List<string> repositoryNames)
