@@ -11,16 +11,6 @@ using Activity = System.Diagnostics.Activity;
 
 namespace Konmaripo.Web.Controllers
 {
-    public class GitHubRepo
-    {
-        public string Name { get; }
-
-        public GitHubRepo(string name)
-        {
-            Name = name;
-        }
-    }
-
     public class GitHubSettings
     {
         public string AccessToken { get; set; }
