@@ -20,7 +20,9 @@ namespace Konmaripo.Web.Services
 
         public async Task<List<GitHubRepo>> GetRepositoriesForOrganizationAsync()
         {
-            var repos = await _githubClient.Repository.GetAllForOrg("");
+            var orgName = _gitHubSettings.OrganizationName;
+
+            var repos = await _githubClient.Repository.GetAllForOrg(orgName);
 
             return repos.Select(x => new GitHubRepo(x.Name)).ToList();
         }

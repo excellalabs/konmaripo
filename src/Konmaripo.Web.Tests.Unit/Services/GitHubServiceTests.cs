@@ -46,12 +46,17 @@ namespace Konmaripo.Web.Tests.Unit.Services
         {
             private GitHubService _sut;
             private readonly Mock<IGitHubClient> _mockClient;
+            private readonly Mock<IRepositoriesClient> _mockRepoClient;
             private readonly Mock<IOptions<GitHubSettings>> _mockSettings;
             private readonly GitHubSettings _settingsObject = new GitHubSettings();
 
             public GetRepositoriesForOrganization()
             {
                 _mockClient = new Mock<IGitHubClient>();
+                _mockRepoClient = new Mock<IRepositoriesClient>();
+
+                _mockClient.Setup(x => x.Repository).Returns(_mockRepoClient.Object);
+ 
                 _mockSettings = new Mock<IOptions<GitHubSettings>>();
                 _mockSettings.Setup(x => x.Value).Returns(_settingsObject);
                 _sut = new GitHubService(_mockClient.Object, _mockSettings.Object);
@@ -64,14 +69,26 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 
                 var repositoryObjects = GetDummyRepositoryObjectsForNames(repositoryNames);
 
-                _mockClient.Setup(x => 
-                        x.Repository.GetAllForOrg(It.IsAny<string>()))
+                _mockRepoClient.Setup(x => 
+                        x.GetAllForOrg(It.IsAny<string>()))
                     .Returns(Task.FromResult(repositoryObjects));
 
                 var result = await _sut.GetRepositoriesForOrganizationAsync();
                 var resultNames = result.Select(repoResult => repoResult.Name).ToList();
 
                 resultNames.Should().Contain(repositoryNames);
+            }
+
+            [Fact]
+            public void UsesTheOrganizationNameFromSettings()
+            {
+                var testOrgName = "MyTestOrg";
+
+                _settingsObject.OrganizationName = testOrgName;
+
+                _sut.GetRepositoriesForOrganizationAsync();
+
+                _mockClient.Verify(x=>x.Repository.GetAllForOrg(testOrgName), Times.Once);
             }
 
             private static IReadOnlyList<Repository> GetDummyRepositoryObjectsForNames(List<string> repositoryNames)
