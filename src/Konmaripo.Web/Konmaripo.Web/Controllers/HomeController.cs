@@ -5,50 +5,28 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Konmaripo.Web.Models;
-using Microsoft.Extensions.Options;
-using Octokit;
+using Konmaripo.Web.Services;
 using Activity = System.Diagnostics.Activity;
 
 namespace Konmaripo.Web.Controllers
 {
-    public class GitHubRepo
-    {
-        public string Name { get; }
-
-        public GitHubRepo(string name)
-        {
-            Name = name;
-        }
-    }
-
-    public class GitHubSettings
-    {
-        public string AccessToken { get; set; }
-        public string OrganizationName { get; set; }
-    }
-
     [Authorize]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly GitHubClient _client;
-        private readonly GitHubSettings _ghSettings;
+        private readonly IGitHubService _gitHubService;
 
-        public HomeController(ILogger<HomeController> logger, IOptions<GitHubSettings> gitHubSettings, GitHubClient client)
+        public HomeController(ILogger<HomeController> logger, IGitHubService gitHubService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-            _ghSettings = gitHubSettings.Value ?? throw new ArgumentNullException(nameof(gitHubSettings));
-            _client = client ?? throw new ArgumentNullException(nameof(client));
-
-            _logger = logger;
-
+            _gitHubService = gitHubService ?? throw new ArgumentNullException(nameof(gitHubService));
         }
 
         public async Task<IActionResult> Index()
         {
             // Obtain list of GitHub Repos
             // Pass through to the view
-            var repos = await _client.Repository.GetAllForOrg(_ghSettings.OrganizationName, new ApiOptions());
+            var repos = await _gitHubService.GetRepositoriesForOrganizationAsync();
 
             var resultList = repos.Select(x => new GitHubRepo(x.Name)).ToList();
             

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Konmaripo.Web.Controllers;
+using Konmaripo.Web.Models;
+using Konmaripo.Web.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
 using Microsoft.AspNetCore.Authorization;
@@ -61,6 +63,16 @@ namespace Konmaripo.Web
 
                 return new GitHubClient(new ProductHeaderValue("Konmaripo"),
                     new InMemoryCredentialStore(credentials));
+            });
+
+            services.AddTransient<GitHubService>(provider =>
+            {
+                var gitHubClient = provider.GetRequiredService<GitHubClient>();
+                var githubSettings = provider.GetService<IOptions<GitHubSettings>>();
+
+                var service = new GitHubService(gitHubClient, githubSettings);
+
+                return service;
             });
         }
 
