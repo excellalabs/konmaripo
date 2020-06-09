@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Konmaripo.Web\Konmaripo.Web\Konmaripo.Web.csproj" />
+    <ProjectReference Include="..\Konmaripo.Web\Konmaripo.Web.csproj" />
   </ItemGroup>
 
 </Project>
