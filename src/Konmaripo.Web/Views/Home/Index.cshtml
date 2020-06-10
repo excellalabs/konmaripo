@@ -5,6 +5,49 @@
     var nonArchivedRepos = Model.Where(x => !x.IsArchived).OrderBy(x=>x.UpdatedDate).ToList();
 
     ViewData["Title"] = "Home Page";
+
+    void RepoTable(List<GitHubRepo> repoList)
+    {
+        <table class="table table-striped">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col"><!--Private icon--></th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Stars</th>
+                    <th scope="col">Forks</th>
+                    <th scope="col">Issues</th>
+                    <th scope="col" title="Date the repository was created">Created</th>
+                    <th scope="col" title="Date the repository was updated, e.g. title, language, settings, properties">Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+             @foreach (var item in repoList)
+                {
+                    <tr>
+                     @if (item.IsPrivate)
+                        {
+                        <td title="Private repository">
+                        <i class="fas fa-lock text-success"></i>
+                        </td>
+                        }
+                    else
+                        {
+                        <td title="Public repository">
+                        <i class="fas fa-lock-open text-danger"></i>
+                        </td>
+                        }
+                        <th scope="row" title="@item.Description">@item.Name</th>
+                        <td>@item.StarCount</td>
+                        <td>@item.ForkCount</td>
+                        <td>@item.OpenIssueCount</td>
+                        <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
+                        <td title="@item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
 }
 
 <div class="text-center">
@@ -16,87 +59,16 @@
     <h2 class="display-4">Active</h2>
 </div>
 
-<table class="table table-striped">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col"><!--Private icon--></th>
-            <th scope="col">Name</th>
-            <th scope="col">Stars</th>
-            <th scope="col">Forks</th>
-            <th scope="col">Issues</th>
-            <th scope="col" title="Date the repository was created">Created</th>
-            <th scope="col" title="Date the repository was updated, e.g. title, language, settings, properties">Updated</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in nonArchivedRepos)
-        {
-            <tr>
-                @if (item.IsPrivate)
-                {
-                    <td title="Private repository">
-                        <i class="fas fa-lock text-success"></i>
-                    </td>
-                }
-                else
-                {
-                    <td title="Public repository">
-                        <i class="fas fa-lock-open text-danger"></i>
-                    </td>
-                }
-                <th scope="row" title="@item.Description">@item.Name</th>
-                <td>@item.StarCount</td>
-                <td>@item.ForkCount</td>
-                <td>@item.OpenIssueCount</td>
-                <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
-                <td title="@item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
-            </tr>
-        }
-    </tbody>
+@{ RepoTable(nonArchivedRepos); }
 
-</table>
 
 
 <div class="text-center">
     <h2 class="display-4">Archived</h2>
 </div>
+@{
 
-<table class="table table-striped">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col"><!--Private icon--></th>
-            <th scope="col">Name</th>
-            <th scope="col">Stars</th>
-            <th scope="col">Forks</th>
-            <th scope="col">Issues</th>
-            <th scope="col" title="Date the repository was created">Created</th>
-            <th scope="col" title="Date the repository was updated, e.g. title, language, settings, properties">Updated</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in alreadyArchivedRepos)
-        {
-        <tr>
-            @if (item.IsPrivate)
-            {
-                <td title="Private repository">
-                    <i class="fas fa-lock text-success"></i>
-                </td>
-            }
-            else
-            {
-                <td title="Public repository">
-                    <i class="fas fa-lock-open text-danger"></i>
-                </td>
-            }
-            <th scope="row" title="@item.Description">@item.Name</th>
-            <td>@item.StarCount</td>
-            <td>@item.ForkCount</td>
-            <td>@item.OpenIssueCount</td>
-            <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
-            <td title="@item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
-        </tr>
-        }
-    </tbody>
 
-</table>
+    RepoTable(alreadyArchivedRepos);
+}
+
