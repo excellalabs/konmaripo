@@ -91,6 +91,6 @@
             <li>Actually archive the repository</li>
         </ul>
 
-        <button type="button" class="btn btn-danger">Archive @Model.RepoInfo.Name</button>
+        @Html.ActionLink($"Archive {Model.RepoInfo.Name}", "ArchiveRepo", new {repoId = Model.RepoInfo.Id}, new{@class = "btn btn-danger", role="button"})
     </div>
 </div>
