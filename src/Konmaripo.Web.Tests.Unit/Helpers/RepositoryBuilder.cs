@@ -18,6 +18,8 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         private DateTimeOffset _createdDate = DateTimeOffset.Now;
         private DateTimeOffset _updatedDate = DateTimeOffset.Now;
         private long _repoId = 0;
+        private string _description = "";
+        private bool _isPrivate = false;
 
         public RepositoryBuilder()
         {
@@ -39,8 +41,8 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
             var owner = new User();
 
             var repo = new Repository(DummyString, DummyString, DummyString, DummyString, DummyString, DummyString,
-                DummyString, _repoId, DummyString, owner, _repositoryName, DummyString, false, DummyString,
-                DummyString, DummyString, false, false, _forkCount, _starCount, DummyString, _openIssueCount, _dummyDateTimeOffset,
+                DummyString, _repoId, DummyString, owner, _repositoryName, DummyString, false, _description,
+                DummyString, DummyString, _isPrivate, false, _forkCount, _starCount, DummyString, _openIssueCount, _dummyDateTimeOffset,
                 _createdDate, _updatedDate, repositoryPermissions,
                 dummyInternalRepository, dummyInternalRepository,
                 licenseMetadata,
@@ -88,6 +90,18 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         public RepositoryBuilder WithId(long repoId)
         {
             _repoId = repoId;
+            return this;
+        }
+
+        public RepositoryBuilder WithDescription(string desc)
+        {
+            _description = desc;
+            return this;
+        }
+
+        public RepositoryBuilder WithIsPrivateOf(bool isPrivate)
+        {
+            _isPrivate = isPrivate;
             return this;
         }
     }

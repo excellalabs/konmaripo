@@ -12,8 +12,10 @@ namespace Konmaripo.Web.Models
         public DateTimeOffset CreatedDate { get; }
         public DateTimeOffset UpdatedDate { get; }
         public long Id { get; }
+        public string Description { get; }
+        public bool IsPrivate { get; }
 
-        public GitHubRepo(long repoId, string name, int starCount, bool isArchived, int forkCount, int openIssues, DateTimeOffset createdDate, DateTimeOffset updatedDate)
+        public GitHubRepo(long repoId, string name, int starCount, bool isArchived, int forkCount, int openIssues, DateTimeOffset createdDate, DateTimeOffset updatedDate, string description, bool isPrivate)
         {
             Name = name;
             StarCount = starCount;
@@ -23,6 +25,8 @@ namespace Konmaripo.Web.Models
             CreatedDate = createdDate;
             UpdatedDate = updatedDate;
             Id = repoId;
+            Description = description;
+            IsPrivate = isPrivate;
         }
     }
 }

@@ -233,13 +233,43 @@ namespace Konmaripo.Web.Tests.Unit.Services
             [Fact]
             public async Task ReturnsTheDescriptionFromTheGithubClient()
             {
-                throw new NotImplementedException();
+                var descriptionList = new List<string> { "blah", "blahblah", "blahblahblah"};
+
+                var repositoryObjects = descriptionList.Select(desc =>
+                {
+                    var repo = new RepositoryBuilder().WithDescription(desc).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultDescriptions = result.Select(repoResult => repoResult.Description).ToList();
+
+                resultDescriptions.Should().BeEquivalentTo(descriptionList);
             }
 
             [Fact]
             public async Task ReturnsWhetherPrivateFromTheGithubClient()
             {
-                throw new NotImplementedException();
+                var isPrivateList = new List<bool> { false, true, true };
+
+                var repositoryObjects = isPrivateList.Select(isPrivate =>
+                {
+                    var repo = new RepositoryBuilder().WithIsPrivateOf(isPrivate).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultPrivateFlags = result.Select(repoResult => repoResult.IsPrivate).ToList();
+
+                resultPrivateFlags.Should().BeEquivalentTo(isPrivateList);
             }
 
             [Fact]
