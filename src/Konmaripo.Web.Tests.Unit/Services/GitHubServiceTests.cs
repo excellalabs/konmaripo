@@ -225,7 +225,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
                     .Returns(Task.FromResult(repositoryObjects));
 
                 var result = await _sut.GetRepositoriesForOrganizationAsync();
-                var resultDates = result.Select(repoResult => repoResult.PushedDate).ToList();
+                var resultDates = result.Select(repoResult => repoResult.PushedDate.Value).ToList();
 
                 resultDates.Should().BeEquivalentTo(dateList);
             }
