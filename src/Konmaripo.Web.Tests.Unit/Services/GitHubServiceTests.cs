@@ -147,6 +147,42 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
+            public async Task ReturnsTheNumberOfOpenIssuesFromTheGithubClient()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Fact]
+            public async Task ReturnsTheCreatedDateFromTheGithubClient()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Fact]
+            public async Task ReturnsTheUpdatedDateFromTheGithubClient()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Fact]
+            public async Task ReturnsTheRepositoryIdFromTheGithubClient()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Fact]
+            public async Task ReturnsTheDescriptionFromTheGithubClient()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Fact]
+            public async Task ReturnsWhetherPrivateFromTheGithubClient()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Fact]
             public async Task UsesTheOrganizationNameFromSettings()
             {
                 var testOrgName = "MyTestOrg";
