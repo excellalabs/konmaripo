@@ -15,8 +15,8 @@ namespace Konmaripo.Web.Services
 
     public class GitHubService : IGitHubService
     {
-        private IGitHubClient _githubClient;
-        private GitHubSettings _gitHubSettings;
+        private readonly IGitHubClient _githubClient;
+        private readonly GitHubSettings _gitHubSettings;
         public GitHubService(IGitHubClient githubClient, IOptions<GitHubSettings> githubSettings)
         {
             _githubClient = githubClient ?? throw new ArgumentNullException(nameof(githubClient));
