@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Konmaripo.Web.Models;
@@ -13,6 +13,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
 {
     public class CachedGitHubServiceTests
     {
+        [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
         public class Ctor
         {
             [Fact]
@@ -34,16 +35,23 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
             }
         }
-        public class GetRepositoriesForOrganizationAsync
+        public class GetRepositoriesForOrganizationAsync : IDisposable
         {
-            private Mock<IGitHubService> _mockService;
-            private Mock<IMemoryCache> _memoryCache;
-            private CachedGitHubService _sut;
+            private readonly Mock<IGitHubService> _mockService;
+            private readonly MemoryCache _memoryCache;
+            private readonly CachedGitHubService _sut;
             public GetRepositoriesForOrganizationAsync()
             {
                 _mockService = new Mock<IGitHubService>();
-                _memoryCache = new Mock<IMemoryCache>();
-                _sut = new CachedGitHubService(_mockService.Object, _memoryCache.Object);
+                _mockService.Setup(x => x.GetRepositoriesForOrganizationAsync())
+                    .Returns(Task.FromResult(new List<GitHubRepo>()));
+
+                _memoryCache = new MemoryCache(new MemoryCacheOptions());
+                _sut = new CachedGitHubService(_mockService.Object, _memoryCache);
+            }
+            public void Dispose()
+            {
+                _memoryCache?.Dispose();
             }
 
             [Fact]
@@ -76,7 +84,6 @@ namespace Konmaripo.Web.Tests.Unit.Services
             public async Task WhenCalledMultipleTimes_CallsUnderlyingGitHubServiceOnlyOnce()
             {
                 await _sut.GetRepositoriesForOrganizationAsync();
-
                 await _sut.GetRepositoriesForOrganizationAsync();
                 await _sut.GetRepositoriesForOrganizationAsync();
 
@@ -88,6 +95,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             {
                 throw new NotImplementedException();
             }
+
         }
 
         public class GitHubRepoBuilder

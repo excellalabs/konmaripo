@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
 using Microsoft.Extensions.Caching.Memory;
@@ -10,8 +8,11 @@ namespace Konmaripo.Web.Services
 {
     public class CachedGitHubService
     {
-        private IGitHubService _gitHubService;
-        private IMemoryCache _memoryCache;
+        private const string REPO_CACHE_KEY = "repoList";
+
+        private readonly IGitHubService _gitHubService;
+        private readonly IMemoryCache _memoryCache;
+
         public CachedGitHubService(IGitHubService gitHubService, IMemoryCache memoryCache)
         {
             _gitHubService = gitHubService ?? throw new ArgumentNullException(nameof(gitHubService));
@@ -20,8 +21,13 @@ namespace Konmaripo.Web.Services
 
         public async Task<List<GitHubRepo>> GetRepositoriesForOrganizationAsync()
         {
-            var result = await _gitHubService.GetRepositoriesForOrganizationAsync();
-            return result;
+            var gotFromCache = _memoryCache.TryGetValue(REPO_CACHE_KEY, out List<GitHubRepo> cachedRepoList);
+            if (gotFromCache) { return cachedRepoList; }
+
+            var repoList = await _gitHubService.GetRepositoriesForOrganizationAsync();
+            var cacheEntry = _memoryCache.Set(REPO_CACHE_KEY, repoList, TimeSpan.FromDays(1));
+
+            return cacheEntry;
         }
     }
 }
