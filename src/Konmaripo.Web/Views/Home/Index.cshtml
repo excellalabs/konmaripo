@@ -19,26 +19,36 @@
 <table class="table table-striped">
     <thead class="thead-dark">
         <tr>
+            <th scope="col"><!--Private icon--></th>
             <th scope="col">Name</th>
             <th scope="col">Stars</th>
             <th scope="col">Forks</th>
             <th scope="col">Issues</th>
             <th scope="col" title="Date the repository was created">Created</th>
             <th scope="col" title="Date the repository was updated, e.g. title, language, settings, properties">Updated</th>
-            <th scope="col">Private?</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in nonArchivedRepos)
         {
             <tr>
+                <td>
+                    @if (item.IsPrivate)
+                    {
+                        <i class="fas fa-lock"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-lock-open"></i>
+                    }
+
+                </td>
                 <th scope="row" title="@item.Description">@item.Name</th>
                 <td>@item.StarCount</td>
                 <td>@item.ForkCount</td>
                 <td>@item.OpenIssueCount</td>
                 <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
                 <td title="@item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
-                <td>@item.IsPrivate</td>
             </tr>
         }
     </tbody>
@@ -53,26 +63,36 @@
 <table class="table table-striped">
     <thead class="thead-dark">
         <tr>
+            <th scope="col"><!--Private icon--></th>
             <th scope="col">Name</th>
             <th scope="col">Stars</th>
             <th scope="col">Forks</th>
             <th scope="col">Issues</th>
             <th scope="col" title="Date the repository was created">Created</th>
             <th scope="col" title="Date the repository was updated, e.g. title, language, settings, properties">Updated</th>
-            <th scope="col">Private?</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in alreadyArchivedRepos)
         {
             <tr>
+                <td>
+                    @if (item.IsPrivate)
+                    {
+                        <i class="fas fa-lock"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-lock-open"></i>
+                    }
+
+                </td>
                 <th scope="row" title="@item.Description">@item.Name</th>
                 <td>@item.StarCount</td>
                 <td>@item.ForkCount</td>
                 <td>@item.OpenIssueCount</td>
                 <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
                 <td title="@item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
-                <td>@item.IsPrivate</td>
             </tr>
         }
     </tbody>
