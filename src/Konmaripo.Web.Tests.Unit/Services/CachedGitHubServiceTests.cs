@@ -91,9 +91,24 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
-            public void WhenCalledMultipleTimes_StillGetsFullRepositoryListFromUnderlyingService()
+            public async Task WhenCalledMultipleTimes_StillGetsFullRepositoryListFromUnderlyingService()
             {
-                throw new NotImplementedException();
+                var fakeRepos = new List<GitHubRepo>
+                {
+                    new GitHubRepoBuilder().WithId(1).Build(),
+                    new GitHubRepoBuilder().WithId(12).Build(),
+                    new GitHubRepoBuilder().WithId(123).Build()
+                };
+
+                _mockService.Setup(x => x.GetRepositoriesForOrganizationAsync())
+                    .Returns(Task.FromResult(fakeRepos));
+
+                await _sut.GetRepositoriesForOrganizationAsync();
+                await _sut.GetRepositoriesForOrganizationAsync();
+                
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+    
+                result.Should().BeEquivalentTo(fakeRepos);
             }
 
         }
