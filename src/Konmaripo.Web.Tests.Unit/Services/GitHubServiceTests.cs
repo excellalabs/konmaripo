@@ -80,7 +80,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 var result = await _sut.GetRepositoriesForOrganizationAsync();
                 var resultNames = result.Select(repoResult => repoResult.Name).ToList();
 
-                resultNames.Should().Contain(repositoryNames);
+                resultNames.Should().BeEquivalentTo(repositoryNames);
             }
 
             [Fact]
@@ -101,7 +101,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 var result = await _sut.GetRepositoriesForOrganizationAsync();
                 var resultStars = result.Select(repoResult => repoResult.StarCount).ToList();
 
-                resultStars.Should().Contain(starCountList);
+                resultStars.Should().BeEquivalentTo(starCountList);
             }
 
 
