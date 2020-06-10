@@ -50,7 +50,7 @@ namespace Konmaripo.Web
             services.AddOptions();
             
             services.Configure<GitHubSettings>(Configuration.GetSection("GitHubSettings"));
-            services.AddTransient<GitHubClient>(serviceProvider =>
+            services.AddTransient(serviceProvider =>
             {
                 var settings = serviceProvider.GetService<IOptions<GitHubSettings>>();
                 var credentials = new Credentials(token: settings.Value.AccessToken);
