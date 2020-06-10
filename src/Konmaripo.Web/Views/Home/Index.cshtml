@@ -32,17 +32,18 @@
         @foreach (var item in nonArchivedRepos)
         {
             <tr>
-                <td>
-                    @if (item.IsPrivate)
-                    {
+                @if (item.IsPrivate)
+                {
+                    <td title="Private repository">
                         <i class="fas fa-lock"></i>
-                    }
-                    else
-                    {
+                    </td>
+                }
+                else
+                {
+                    <td title="Public repository">
                         <i class="fas fa-lock-open"></i>
-                    }
-
-                </td>
+                    </td>
+                }
                 <th scope="row" title="@item.Description">@item.Name</th>
                 <td>@item.StarCount</td>
                 <td>@item.ForkCount</td>
@@ -75,24 +76,27 @@
     <tbody>
         @foreach (var item in alreadyArchivedRepos)
         {
-            <tr>
-                <td>
-                    @if (item.IsPrivate)
-                    {
-                        <i class="fas fa-lock"></i>
-                    }
-                    else
-                    {
-                        <i class="fas fa-lock-open"></i>
-                    }
+        <tr>
+            @if (item.IsPrivate)
+            {
+                <td title="Private repository">
+                    <i class="fas fa-lock"></i>
                 </td>
-                <th scope="row" title="@item.Description">@item.Name</th>
-                <td>@item.StarCount</td>
-                <td>@item.ForkCount</td>
-                <td>@item.OpenIssueCount</td>
-                <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
-                <td title="@item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
-            </tr>
+            }
+            else
+            {
+                <td title="Public repository">
+                    <i class="fas fa-lock-open"></i>
+                </td>
+            }
+
+            <th scope="row" title="@item.Description">@item.Name</th>
+            <td>@item.StarCount</td>
+            <td>@item.ForkCount</td>
+            <td>@item.OpenIssueCount</td>
+            <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
+            <td title="@item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
+        </tr>
         }
     </tbody>
 
