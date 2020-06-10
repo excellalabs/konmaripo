@@ -1,20 +1,58 @@
 ﻿@model List<GitHubRepo>
 @{
+    var alreadyArchivedRepos = Model.Where(x => x.IsArchived).ToList();
+    var nonArchivedRepos = Model.Where(x => !x.IsArchived).ToList();
 
     ViewData["Title"] = "Home Page";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome!!!</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Repository Overview</h1>
+    <p>Check out the repositories below to see if they could use some sunsetting.</p>
 </div>
 
+<div class="text-center">
+    <h2 class="display-4">Active</h2>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Stars</th>
+        <th>Forks</th>
+        <th>Open Issues</th>
+        <th>Created</th>
+        <th>Updated</th>
+        <th>Private?</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach(var item in nonArchivedRepos)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.StarCount</td>
+            <td>@item.ForkCount</td>
+            <td>@item.OpenIssueCount</td>
+            <td>@item.CreatedDate</td>
+            <td>@item.UpdatedDate</td>
+            <td>@item.IsPrivate</td>
+        </tr>
+    }
+    </tbody>
+
+</table>
+@foreach (var item in Model)
+{
+    <li>@item.Name</li>
+}
+
+
+<div class="text-center">
+    <h2 class="display-4">Archived</h2>
+</div>
 <div>
     <ul>
-        @foreach (var item in Model)
-        {
-            <li>@item.Name</li>
-        }
     </ul>
     <h1 class="display-4">Welcome!!!</h1>
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
