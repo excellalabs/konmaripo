@@ -35,13 +35,13 @@
                 @if (item.IsPrivate)
                 {
                     <td title="Private repository">
-                        <i class="fas fa-lock"></i>
+                        <i class="fas fa-lock text-success"></i>
                     </td>
                 }
                 else
                 {
                     <td title="Public repository">
-                        <i class="fas fa-lock-open"></i>
+                        <i class="fas fa-lock-open text-danger"></i>
                     </td>
                 }
                 <th scope="row" title="@item.Description">@item.Name</th>
@@ -80,16 +80,15 @@
             @if (item.IsPrivate)
             {
                 <td title="Private repository">
-                    <i class="fas fa-lock"></i>
+                    <i class="fas fa-lock text-success"></i>
                 </td>
             }
             else
             {
                 <td title="Public repository">
-                    <i class="fas fa-lock-open"></i>
+                    <i class="fas fa-lock-open text-danger"></i>
                 </td>
             }
-
             <th scope="row" title="@item.Description">@item.Name</th>
             <td>@item.StarCount</td>
             <td>@item.ForkCount</td>
