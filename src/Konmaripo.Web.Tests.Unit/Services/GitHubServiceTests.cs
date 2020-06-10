@@ -67,7 +67,11 @@ namespace Konmaripo.Web.Tests.Unit.Services
             {
                 var repositoryNames = new List<string> {"repo1", "repo2", "repo3"};
                 
-                var repositoryObjects = GetDummyRepositoryObjectsForNames(repositoryNames);
+                var repositoryObjects = repositoryNames.Select(repoName =>
+                {
+                    var repo = new RepositoryBuilder().WithName(repoName).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
 
                 _mockRepoClient.Setup(x => 
                         x.GetAllForOrg(It.IsAny<string>()))
@@ -102,16 +106,6 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 var resultNames = result.Select(repoResult => repoResult.Name).ToList();
 
                 resultNames.Should().BeEmpty();
-            }
-
-            private static IReadOnlyList<Repository> GetDummyRepositoryObjectsForNames(List<string> repositoryNames)
-            {
-                var repositoryObjects = repositoryNames.Select(repoName =>
-                {
-                    var repo = new RepositoryBuilder().WithName(repoName).Build();
-                    return repo;
-                }).ToList().As<IReadOnlyList<Repository>>();
-                return repositoryObjects;
             }
         }
 
