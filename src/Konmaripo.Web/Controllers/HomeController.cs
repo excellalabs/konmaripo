@@ -28,11 +28,9 @@ namespace Konmaripo.Web.Controllers
             // Pass through to the view
             var repos = await _gitHubService.GetRepositoriesForOrganizationAsync();
 
-            var resultList = repos.Select(x => new GitHubRepo(x.Name, x.StarCount, x.IsArchived)).ToList();
-            
-            _logger.LogInformation("Returning {RepoCount} repositories", resultList.Count);
+            _logger.LogInformation("Returning {RepoCount} repositories", repos.Count);
 
-            return View(resultList);
+            return View(repos);
 
         }
 
