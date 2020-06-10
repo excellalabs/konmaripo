@@ -42,7 +42,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
             var repositoryPermissions = new RepositoryPermissions(false, false, false);
             var owner = new User();
 
-            var repo = new Repository(_repoUrl, DummyString, DummyString, DummyString, DummyString, DummyString,
+            var repo = new Repository(DummyString, _repoUrl, DummyString, DummyString, DummyString, DummyString,
                 DummyString, _repoId, DummyString, owner, _repositoryName, DummyString, false, _description,
                 DummyString, DummyString, _isPrivate, false, _forkCount, _starCount, DummyString, _openIssueCount, _pushedDate,
                 _createdDate, _updatedDate, repositoryPermissions,
