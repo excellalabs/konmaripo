@@ -5,11 +5,13 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
 {
     public class RepositoryBuilder
     {
-        private string _repositoryName = "";
         const string DummyString = "";
         const long DummyLong = 0;
         const int DummyInt = 0;
         private readonly DateTimeOffset _dummyDateTimeOffset;
+
+        private string _repositoryName = "";
+        private int _starCount = 0;
 
         public RepositoryBuilder()
         {
@@ -32,7 +34,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
 
             var repo = new Repository(DummyString, DummyString, DummyString, DummyString, DummyString, DummyString,
                 DummyString, DummyLong, DummyString, owner, _repositoryName, DummyString, false, DummyString,
-                DummyString, DummyString, false, false, DummyInt, DummyInt, DummyString, DummyInt, _dummyDateTimeOffset,
+                DummyString, DummyString, false, false, DummyInt, _starCount, DummyString, DummyInt, _dummyDateTimeOffset,
                 _dummyDateTimeOffset, _dummyDateTimeOffset, repositoryPermissions,
                 dummyInternalRepository, dummyInternalRepository,
                 licenseMetadata,
@@ -41,6 +43,11 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
             return repo;
         }
 
+        public RepositoryBuilder WithStarCount(int starCount)
+        {
+            _starCount = starCount;
+            return this;
+        }
     }
 
 }

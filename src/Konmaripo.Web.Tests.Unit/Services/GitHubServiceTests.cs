@@ -84,6 +84,28 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
+            public async Task ReturnsTheNumberOfStarsFromTheGithubClient()
+            {
+                var starCountList = new List<int> { 1, 123, 123_456 };
+
+                var repositoryObjects = starCountList.Select(starCount =>
+                {
+                    var repo = new RepositoryBuilder().WithStarCount(starCount).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultStars = result.Select(repoResult => repoResult.StarCount).ToList();
+
+                resultStars.Should().Contain(starCountList);
+            }
+
+
+            [Fact]
             public void UsesTheOrganizationNameFromSettings()
             {
                 var testOrgName = "MyTestOrg";
