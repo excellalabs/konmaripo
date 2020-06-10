@@ -47,6 +47,18 @@ namespace Konmaripo.Web.Controllers
             return View("Repo", vm);
         }
 
+        public async Task<IActionResult> ArchiveRepo(long repoId, string repoName)
+        {
+            _logger.LogInformation("Archiving Repo ID {RepoId}", repoId);
+            var currentUser = this.User.Identity.Name;
+            _logger.LogInformation("User is {UserId}", currentUser);
+
+            await _gitHubService.CreateArchiveIssueInRepo(repoId, currentUser);
+            await _gitHubService.ArchiveRepository(repoId, repoName);
+
+            return View("ArchiveSuccess");
+        }
+
 
         public IActionResult Privacy()
         {

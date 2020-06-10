@@ -5,7 +5,7 @@
     ViewData["Title"] = "Repo";
 }
 
-<div class="text-center">
+<div>
     <h1 class="display-4">Repository: @Model.RepoInfo.Name</h1>
     <p>Details on the repository in case you want to archive.</p>
 </div>
@@ -56,7 +56,7 @@
     </tbody>
 </table>
 
-<div class="text-center">
+<div>
     <h1 class="display-4">Extended Information</h1>
     <p>Use this information in your decision making process as well.</p>
 </div>
@@ -77,3 +77,20 @@
         </tr>
     </tbody>
 </table>
+
+<div>
+    <h1 class="display-4">Archive this Repository?</h1>
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Clicking this will archive the repository!</h4>
+        <p>This will make the repository, issues, pull requests, labels, milestones, projects, wiki, releases, commits, tags, branches, reactions and comments read-only and disable any future comments. The repository can still be forked.</p>
+
+        <p>Clicking this button will: </p>
+        <ul>
+            <li>Create a pinned issue in the repository noting that it has been archived</li>
+            <li>Mention you as the user who archived it</li>
+            <li>Actually archive the repository</li>
+        </ul>
+
+        @Html.ActionLink($"Archive {Model.RepoInfo.Name}", "ArchiveRepo", new {repoId = Model.RepoInfo.Id, repoName = Model.RepoInfo.Name}, new{@class = "btn btn-danger", role="button"})
+    </div>
+</div>
