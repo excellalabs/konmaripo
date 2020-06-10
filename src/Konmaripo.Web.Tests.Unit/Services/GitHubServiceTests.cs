@@ -120,9 +120,9 @@ namespace Konmaripo.Web.Tests.Unit.Services
                     .Returns(Task.FromResult(repositoryObjects));
 
                 var result = await _sut.GetRepositoriesForOrganizationAsync();
-                var resultStars = result.Select(repoResult => repoResult.IsArchived).ToList();
+                var resultArchivedFlags = result.Select(repoResult => repoResult.IsArchived).ToList();
 
-                resultStars.Should().BeEquivalentTo(archivedList);
+                resultArchivedFlags.Should().BeEquivalentTo(archivedList);
             }
 
             [Fact]
@@ -141,21 +141,51 @@ namespace Konmaripo.Web.Tests.Unit.Services
                     .Returns(Task.FromResult(repositoryObjects));
 
                 var result = await _sut.GetRepositoriesForOrganizationAsync();
-                var resultStars = result.Select(repoResult => repoResult.ForkCount).ToList();
+                var resultForkCounts = result.Select(repoResult => repoResult.ForkCount).ToList();
 
-                resultStars.Should().BeEquivalentTo(forkCountList);
+                resultForkCounts.Should().BeEquivalentTo(forkCountList);
             }
 
             [Fact]
             public async Task ReturnsTheNumberOfOpenIssuesFromTheGithubClient()
             {
-                throw new NotImplementedException();
+                var openIssueCountList = new List<int> { 1, 123, 123_456 };
+
+                var repositoryObjects = openIssueCountList.Select(openIssueCount =>
+                {
+                    var repo = new RepositoryBuilder().WithOpenIssues(openIssueCount).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultIssueCounts = result.Select(repoResult => repoResult.OpenIssueCount).ToList();
+
+                resultIssueCounts.Should().BeEquivalentTo(openIssueCountList);
             }
 
             [Fact]
             public async Task ReturnsTheCreatedDateFromTheGithubClient()
             {
-                throw new NotImplementedException();
+                var dateList = new List<DateTimeOffset> { DateTimeOffset.Now.AddDays(-1), DateTimeOffset.Now.AddDays(-12), DateTimeOffset.Now.AddDays(-123) };
+
+                var repositoryObjects = dateList.Select(createdDate =>
+                {
+                    var repo = new RepositoryBuilder().WithCreatedDate(createdDate).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultDates = result.Select(repoResult => repoResult.CreatedDate).ToList();
+
+                resultDates.Should().BeEquivalentTo(dateList);
             }
 
             [Fact]

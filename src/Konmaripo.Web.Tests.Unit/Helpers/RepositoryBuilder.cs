@@ -14,6 +14,8 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         private int _starCount = 0;
         private bool _isArchived = false;
         private int _forkCount = 0;
+        private int _openIssueCount = 0;
+        private DateTimeOffset _createdDate = DateTimeOffset.Now;
 
         public RepositoryBuilder()
         {
@@ -36,8 +38,8 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
 
             var repo = new Repository(DummyString, DummyString, DummyString, DummyString, DummyString, DummyString,
                 DummyString, DummyLong, DummyString, owner, _repositoryName, DummyString, false, DummyString,
-                DummyString, DummyString, false, false, _forkCount, _starCount, DummyString, DummyInt, _dummyDateTimeOffset,
-                _dummyDateTimeOffset, _dummyDateTimeOffset, repositoryPermissions,
+                DummyString, DummyString, false, false, _forkCount, _starCount, DummyString, _openIssueCount, _dummyDateTimeOffset,
+                _createdDate, _dummyDateTimeOffset, repositoryPermissions,
                 dummyInternalRepository, dummyInternalRepository,
                 licenseMetadata,
                 false, false, false, false, 0, 0, false, false, false, _isArchived);
@@ -60,6 +62,18 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         public RepositoryBuilder WithForkCount(int forkCount)
         {
             _forkCount = forkCount;
+            return this;
+        }
+
+        public RepositoryBuilder WithOpenIssues(int openIssueCount)
+        {
+            _openIssueCount = openIssueCount;
+            return this;
+        }
+
+        public RepositoryBuilder WithCreatedDate(DateTimeOffset createdDate)
+        {
+            _createdDate = createdDate;
             return this;
         }
     }

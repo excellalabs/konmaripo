@@ -1,4 +1,6 @@
-﻿namespace Konmaripo.Web.Models
+﻿using System;
+
+namespace Konmaripo.Web.Models
 {
     public class GitHubRepo
     {
@@ -6,13 +8,17 @@
         public int StarCount { get; }
         public bool IsArchived { get; }
         public int ForkCount { get; }
+        public int OpenIssueCount { get; }
+        public DateTimeOffset CreatedDate { get; set; }
 
-        public GitHubRepo(string name, int starCount, bool isArchived, int forkCount)
+        public GitHubRepo(string name, int starCount, bool isArchived, int forkCount, int openIssues, DateTimeOffset createdDate)
         {
             Name = name;
             StarCount = starCount;
             IsArchived = isArchived;
             ForkCount = forkCount;
+            OpenIssueCount = openIssues;
+            CreatedDate = createdDate;
         }
     }
 }
