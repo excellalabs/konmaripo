@@ -12,6 +12,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
 
         private string _repositoryName = "";
         private int _starCount = 0;
+        private bool _isArchived = false;
 
         public RepositoryBuilder()
         {
@@ -38,7 +39,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
                 _dummyDateTimeOffset, _dummyDateTimeOffset, repositoryPermissions,
                 dummyInternalRepository, dummyInternalRepository,
                 licenseMetadata,
-                false, false, false, false, 0, 0, false, false, false, false);
+                false, false, false, false, 0, 0, false, false, false, _isArchived);
 
             return repo;
         }
@@ -46,6 +47,12 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         public RepositoryBuilder WithStarCount(int starCount)
         {
             _starCount = starCount;
+            return this;
+        }
+
+        public RepositoryBuilder WithArchivedOf(bool archived)
+        {
+            _isArchived = archived;
             return this;
         }
     }

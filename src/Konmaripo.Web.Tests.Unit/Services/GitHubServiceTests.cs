@@ -104,15 +104,40 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 resultStars.Should().BeEquivalentTo(starCountList);
             }
 
+            [Fact]
+            public async Task ReturnsIsArchivedFromTheGithubClient()
+            {
+                var archivedList = new List<bool> { false, true, true };
+
+                var repositoryObjects = archivedList.Select(archived =>
+                {
+                    var repo = new RepositoryBuilder().WithArchivedOf(archived).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultStars = result.Select(repoResult => repoResult.IsArchived).ToList();
+
+                resultStars.Should().BeEquivalentTo(archivedList);
+            }
+
 
             [Fact]
-            public void UsesTheOrganizationNameFromSettings()
+            public async Task UsesTheOrganizationNameFromSettings()
             {
                 var testOrgName = "MyTestOrg";
 
                 _settingsObject.OrganizationName = testOrgName;
 
-                _sut.GetRepositoriesForOrganizationAsync();
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(new List<Repository>().As<IReadOnlyList<Repository>>()));
+
+                await _sut.GetRepositoriesForOrganizationAsync();
 
                 _mockClient.Verify(x=>x.Repository.GetAllForOrg(testOrgName), Times.Once);
             }
