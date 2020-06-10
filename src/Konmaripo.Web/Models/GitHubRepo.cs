@@ -13,7 +13,7 @@ namespace Konmaripo.Web.Models
         public DateTimeOffset UpdatedDate { get; }
         public long Id { get; }
 
-        public GitHubRepo(string name, int starCount, bool isArchived, int forkCount, int openIssues, DateTimeOffset createdDate, DateTimeOffset updatedDate, long repoId)
+        public GitHubRepo(long repoId, string name, int starCount, bool isArchived, int forkCount, int openIssues, DateTimeOffset createdDate, DateTimeOffset updatedDate)
         {
             Name = name;
             StarCount = starCount;
