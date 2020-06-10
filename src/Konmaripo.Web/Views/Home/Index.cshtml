@@ -2,7 +2,7 @@
 @model List<GitHubRepo>
 @{
     var alreadyArchivedRepos = Model.Where(x => x.IsArchived).ToList();
-    var nonArchivedRepos = Model.Where(x => !x.IsArchived).ToList();
+    var nonArchivedRepos = Model.Where(x => !x.IsArchived).OrderBy(x=>x.UpdatedDate).ToList();
 
     ViewData["Title"] = "Home Page";
 }
