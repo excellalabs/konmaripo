@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Konmaripo.Web.Controllers;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
 using Microsoft.AspNetCore.Authentication;
@@ -11,13 +6,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Logging;
 using Octokit;
 using Octokit.Internal;
 
@@ -56,7 +50,7 @@ namespace Konmaripo.Web
             services.AddOptions();
             
             services.Configure<GitHubSettings>(Configuration.GetSection("GitHubSettings"));
-            services.AddTransient<GitHubClient>(serviceProvider =>
+            services.AddTransient(serviceProvider =>
             {
                 var settings = serviceProvider.GetService<IOptions<GitHubSettings>>();
                 var credentials = new Credentials(token: settings.Value.AccessToken);
@@ -65,14 +59,16 @@ namespace Konmaripo.Web
                     new InMemoryCredentialStore(credentials));
             });
 
-            services.AddTransient<IGitHubService>(provider =>
+            services.AddSingleton<IGitHubService>(provider =>
             {
                 var gitHubClient = provider.GetRequiredService<GitHubClient>();
                 var githubSettings = provider.GetService<IOptions<GitHubSettings>>();
 
                 var service = new GitHubService(gitHubClient, githubSettings);
 
-                return service;
+                var cachedService = new CachedGitHubService(service, new MemoryCache(new MemoryCacheOptions()));
+
+                return cachedService;
             });
         }
 
@@ -98,6 +94,7 @@ namespace Konmaripo.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        // ReSharper disable once UnusedMember.Global
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseForwardedHeaders();

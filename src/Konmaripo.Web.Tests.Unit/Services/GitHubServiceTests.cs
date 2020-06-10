@@ -44,10 +44,9 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
         public class GetRepositoriesForOrganization
         {
-            private GitHubService _sut;
+            private readonly GitHubService _sut;
             private readonly Mock<IGitHubClient> _mockClient;
             private readonly Mock<IRepositoriesClient> _mockRepoClient;
-            private readonly Mock<IOptions<GitHubSettings>> _mockSettings;
             private readonly GitHubSettings _settingsObject = new GitHubSettings();
 
             public GetRepositoriesForOrganization()
@@ -57,9 +56,9 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
                 _mockClient.Setup(x => x.Repository).Returns(_mockRepoClient.Object);
  
-                _mockSettings = new Mock<IOptions<GitHubSettings>>();
-                _mockSettings.Setup(x => x.Value).Returns(_settingsObject);
-                _sut = new GitHubService(_mockClient.Object, _mockSettings.Object);
+                var mockSettings = new Mock<IOptions<GitHubSettings>>();
+                mockSettings.Setup(x => x.Value).Returns(_settingsObject);
+                _sut = new GitHubService(_mockClient.Object, mockSettings.Object);
             }
 
             [Fact]
