@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
 using Microsoft.Extensions.Options;
@@ -31,8 +32,10 @@ namespace Konmaripo.Web.Services
         {
             var watchers = await _githubClient.Activity.Watching.GetAllWatchers(repoId);
             var views = await _githubClient.Repository.Traffic.GetViews(repoId, new RepositoryTrafficRequest(TrafficDayOrWeek.Week));
+            var commitActivity = await _githubClient.Repository.Statistics.GetCommitActivity(repoId);
 
-            var extendedRepoInfo = new ExtendedRepoInformation(repoId, watchers.Count, views.Count);
+            var commitActivityInLast4Weeks = commitActivity.Activity.OrderByDescending(x => x.WeekTimestamp).Take(4).Sum(x => x.Total);
+            var extendedRepoInfo = new ExtendedRepoInformation(repoId, watchers.Count, views.Count, commitActivityInLast4Weeks);
 
             return extendedRepoInfo;
         }
