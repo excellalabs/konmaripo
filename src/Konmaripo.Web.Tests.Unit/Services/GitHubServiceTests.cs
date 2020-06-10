@@ -91,6 +91,19 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 _mockClient.Verify(x=>x.Repository.GetAllForOrg(testOrgName), Times.Once);
             }
 
+            [Fact]
+            public async Task ReturnsEmptyListWhenGitHubClientReturnsEmptyList()
+            {
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(new List<Repository>().ToList().As<IReadOnlyList<Repository>>()));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultNames = result.Select(repoResult => repoResult.Name).ToList();
+
+                resultNames.Should().BeEmpty();
+            }
+
             private static IReadOnlyList<Repository> GetDummyRepositoryObjectsForNames(List<string> repositoryNames)
             {
                 var repositoryObjects = repositoryNames.Select(repoName =>
