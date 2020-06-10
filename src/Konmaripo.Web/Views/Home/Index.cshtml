@@ -16,23 +16,23 @@
     <h2 class="display-4">Active</h2>
 </div>
 
-<table>
-    <thead>
+<table class="table table-striped">
+    <thead class="thead-dark">
         <tr>
-            <th>Name</th>
-            <th>Stars</th>
-            <th>Forks</th>
-            <th>Issues</th>
-            <th>Created</th>
-            <th>Updated</th>
-            <th>Private?</th>
+            <th scope="col">Name</th>
+            <th scope="col">Stars</th>
+            <th scope="col">Forks</th>
+            <th scope="col">Issues</th>
+            <th scope="col">Created</th>
+            <th scope="col">Updated</th>
+            <th scope="col">Private?</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in nonArchivedRepos)
         {
             <tr>
-                <td>@item.Name</td>
+                <th scope="row">@item.Name</th>
                 <td>@item.StarCount</td>
                 <td>@item.ForkCount</td>
                 <td>@item.OpenIssueCount</td>
@@ -50,23 +50,23 @@
     <h2 class="display-4">Archived</h2>
 </div>
 
-<table>
-    <thead>
+<table class="table table-striped">
+    <thead class="thead-dark">
         <tr>
-            <th>Name</th>
-            <th>Stars</th>
-            <th>Forks</th>
-            <th>Issues</th>
-            <th>Created</th>
-            <th>Updated</th>
-            <th>Private?</th>
+            <th scope="col">Name</th>
+            <th scope="col">Stars</th>
+            <th scope="col">Forks</th>
+            <th scope="col">Issues</th>
+            <th scope="col">Created</th>
+            <th scope="col">Updated</th>
+            <th scope="col">Private?</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in alreadyArchivedRepos)
         {
             <tr>
-                <td>@item.Name</td>
+                <th scope="row">@item.Name</th>
                 <td>@item.StarCount</td>
                 <td>@item.ForkCount</td>
                 <td>@item.OpenIssueCount</td>
