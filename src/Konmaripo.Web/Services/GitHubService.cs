@@ -15,8 +15,8 @@ namespace Konmaripo.Web.Services
 
     public class GitHubService : IGitHubService
     {
-        private IGitHubClient _githubClient;
-        private GitHubSettings _gitHubSettings;
+        private readonly IGitHubClient _githubClient;
+        private readonly GitHubSettings _gitHubSettings;
         public GitHubService(IGitHubClient githubClient, IOptions<GitHubSettings> githubSettings)
         {
             _githubClient = githubClient ?? throw new ArgumentNullException(nameof(githubClient));
@@ -29,7 +29,7 @@ namespace Konmaripo.Web.Services
 
             var repos = await _githubClient.Repository.GetAllForOrg(orgName);
 
-            return repos.Select(x => new GitHubRepo(x.Name)).ToList();
+            return repos.Select(x => new GitHubRepo(x.Id, x.Name, x.StargazersCount, x.Archived, x.ForksCount, x.OpenIssuesCount, x.CreatedAt, x.UpdatedAt, x.Description, x.Private)).ToList();
         }
     }
 }

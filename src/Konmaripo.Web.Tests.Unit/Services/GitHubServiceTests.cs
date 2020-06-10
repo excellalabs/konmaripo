@@ -67,7 +67,11 @@ namespace Konmaripo.Web.Tests.Unit.Services
             {
                 var repositoryNames = new List<string> {"repo1", "repo2", "repo3"};
                 
-                var repositoryObjects = GetDummyRepositoryObjectsForNames(repositoryNames);
+                var repositoryObjects = repositoryNames.Select(repoName =>
+                {
+                    var repo = new RepositoryBuilder().WithName(repoName).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
 
                 _mockRepoClient.Setup(x => 
                         x.GetAllForOrg(It.IsAny<string>()))
@@ -76,29 +80,225 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 var result = await _sut.GetRepositoriesForOrganizationAsync();
                 var resultNames = result.Select(repoResult => repoResult.Name).ToList();
 
-                resultNames.Should().Contain(repositoryNames);
+                resultNames.Should().BeEquivalentTo(repositoryNames);
             }
 
             [Fact]
-            public void UsesTheOrganizationNameFromSettings()
+            public async Task ReturnsTheNumberOfStarsFromTheGithubClient()
+            {
+                var starCountList = new List<int> { 1, 123, 123_456 };
+
+                var repositoryObjects = starCountList.Select(starCount =>
+                {
+                    var repo = new RepositoryBuilder().WithStarCount(starCount).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultStars = result.Select(repoResult => repoResult.StarCount).ToList();
+
+                resultStars.Should().BeEquivalentTo(starCountList);
+            }
+
+            [Fact]
+            public async Task ReturnsIsArchivedFromTheGithubClient()
+            {
+                var archivedList = new List<bool> { false, true, true };
+
+                var repositoryObjects = archivedList.Select(archived =>
+                {
+                    var repo = new RepositoryBuilder().WithArchivedOf(archived).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultArchivedFlags = result.Select(repoResult => repoResult.IsArchived).ToList();
+
+                resultArchivedFlags.Should().BeEquivalentTo(archivedList);
+            }
+
+            [Fact]
+            public async Task ReturnsTheNumberOfForksFromTheGithubClient()
+            {
+                var forkCountList = new List<int> { 1, 123, 123_456 };
+
+                var repositoryObjects = forkCountList.Select(forkCount =>
+                {
+                    var repo = new RepositoryBuilder().WithForkCount(forkCount).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultForkCounts = result.Select(repoResult => repoResult.ForkCount).ToList();
+
+                resultForkCounts.Should().BeEquivalentTo(forkCountList);
+            }
+
+            [Fact]
+            public async Task ReturnsTheNumberOfOpenIssuesFromTheGithubClient()
+            {
+                var openIssueCountList = new List<int> { 1, 123, 123_456 };
+
+                var repositoryObjects = openIssueCountList.Select(openIssueCount =>
+                {
+                    var repo = new RepositoryBuilder().WithOpenIssues(openIssueCount).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultIssueCounts = result.Select(repoResult => repoResult.OpenIssueCount).ToList();
+
+                resultIssueCounts.Should().BeEquivalentTo(openIssueCountList);
+            }
+
+            [Fact]
+            public async Task ReturnsTheCreatedDateFromTheGithubClient()
+            {
+                var dateList = new List<DateTimeOffset> { DateTimeOffset.Now.AddDays(-1), DateTimeOffset.Now.AddDays(-12), DateTimeOffset.Now.AddDays(-123) };
+
+                var repositoryObjects = dateList.Select(createdDate =>
+                {
+                    var repo = new RepositoryBuilder().WithCreatedDate(createdDate).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultDates = result.Select(repoResult => repoResult.CreatedDate).ToList();
+
+                resultDates.Should().BeEquivalentTo(dateList);
+            }
+
+            [Fact]
+            public async Task ReturnsTheUpdatedDateFromTheGithubClient()
+            {
+                var dateList = new List<DateTimeOffset> { DateTimeOffset.Now.AddDays(-1), DateTimeOffset.Now.AddDays(-12), DateTimeOffset.Now.AddDays(-123) };
+
+                var repositoryObjects = dateList.Select(updatedDate =>
+                {
+                    var repo = new RepositoryBuilder().WithUpdatedDate(updatedDate).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultDates = result.Select(repoResult => repoResult.UpdatedDate).ToList();
+
+                resultDates.Should().BeEquivalentTo(dateList);
+            }
+
+            [Fact]
+            public async Task ReturnsTheRepositoryIdFromTheGithubClient()
+            {
+                var idList = new List<long> { 1, 123, 12345 };
+
+                var repositoryObjects = idList.Select(repoId =>
+                {
+                    var repo = new RepositoryBuilder().WithId(repoId).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultIds = result.Select(repoResult => repoResult.Id).ToList();
+
+                resultIds.Should().BeEquivalentTo(idList);
+            }
+
+            [Fact]
+            public async Task ReturnsTheDescriptionFromTheGithubClient()
+            {
+                var descriptionList = new List<string> { "blah", "blahblah", "blahblahblah"};
+
+                var repositoryObjects = descriptionList.Select(desc =>
+                {
+                    var repo = new RepositoryBuilder().WithDescription(desc).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultDescriptions = result.Select(repoResult => repoResult.Description).ToList();
+
+                resultDescriptions.Should().BeEquivalentTo(descriptionList);
+            }
+
+            [Fact]
+            public async Task ReturnsWhetherPrivateFromTheGithubClient()
+            {
+                var isPrivateList = new List<bool> { false, true, true };
+
+                var repositoryObjects = isPrivateList.Select(isPrivate =>
+                {
+                    var repo = new RepositoryBuilder().WithIsPrivateOf(isPrivate).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultPrivateFlags = result.Select(repoResult => repoResult.IsPrivate).ToList();
+
+                resultPrivateFlags.Should().BeEquivalentTo(isPrivateList);
+            }
+
+            [Fact]
+            public async Task UsesTheOrganizationNameFromSettings()
             {
                 var testOrgName = "MyTestOrg";
 
                 _settingsObject.OrganizationName = testOrgName;
 
-                _sut.GetRepositoriesForOrganizationAsync();
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(new List<Repository>().As<IReadOnlyList<Repository>>()));
+
+                await _sut.GetRepositoriesForOrganizationAsync();
 
                 _mockClient.Verify(x=>x.Repository.GetAllForOrg(testOrgName), Times.Once);
             }
 
-            private static IReadOnlyList<Repository> GetDummyRepositoryObjectsForNames(List<string> repositoryNames)
+            [Fact]
+            public async Task ReturnsEmptyListWhenGitHubClientReturnsEmptyList()
             {
-                var repositoryObjects = repositoryNames.Select(repoName =>
-                {
-                    var repo = new RepositoryBuilder().WithName(repoName).Build();
-                    return repo;
-                }).ToList().As<IReadOnlyList<Repository>>();
-                return repositoryObjects;
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(new List<Repository>().ToList().As<IReadOnlyList<Repository>>()));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultNames = result.Select(repoResult => repoResult.Name).ToList();
+
+                resultNames.Should().BeEmpty();
             }
         }
 
