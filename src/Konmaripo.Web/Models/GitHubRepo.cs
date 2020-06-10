@@ -9,9 +9,11 @@ namespace Konmaripo.Web.Models
         public bool IsArchived { get; }
         public int ForkCount { get; }
         public int OpenIssueCount { get; }
-        public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset CreatedDate { get; }
+        public DateTimeOffset UpdatedDate { get; }
+        public long Id { get; }
 
-        public GitHubRepo(string name, int starCount, bool isArchived, int forkCount, int openIssues, DateTimeOffset createdDate)
+        public GitHubRepo(string name, int starCount, bool isArchived, int forkCount, int openIssues, DateTimeOffset createdDate, DateTimeOffset updatedDate, long repoId)
         {
             Name = name;
             StarCount = starCount;
@@ -19,6 +21,8 @@ namespace Konmaripo.Web.Models
             ForkCount = forkCount;
             OpenIssueCount = openIssues;
             CreatedDate = createdDate;
+            UpdatedDate = updatedDate;
+            Id = repoId;
         }
     }
 }

@@ -16,6 +16,8 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         private int _forkCount = 0;
         private int _openIssueCount = 0;
         private DateTimeOffset _createdDate = DateTimeOffset.Now;
+        private DateTimeOffset _updatedDate = DateTimeOffset.Now;
+        private long _repoId = 0;
 
         public RepositoryBuilder()
         {
@@ -37,9 +39,9 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
             var owner = new User();
 
             var repo = new Repository(DummyString, DummyString, DummyString, DummyString, DummyString, DummyString,
-                DummyString, DummyLong, DummyString, owner, _repositoryName, DummyString, false, DummyString,
+                DummyString, _repoId, DummyString, owner, _repositoryName, DummyString, false, DummyString,
                 DummyString, DummyString, false, false, _forkCount, _starCount, DummyString, _openIssueCount, _dummyDateTimeOffset,
-                _createdDate, _dummyDateTimeOffset, repositoryPermissions,
+                _createdDate, _updatedDate, repositoryPermissions,
                 dummyInternalRepository, dummyInternalRepository,
                 licenseMetadata,
                 false, false, false, false, 0, 0, false, false, false, _isArchived);
@@ -74,6 +76,18 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         public RepositoryBuilder WithCreatedDate(DateTimeOffset createdDate)
         {
             _createdDate = createdDate;
+            return this;
+        }
+
+        public RepositoryBuilder WithUpdatedDate(DateTimeOffset updatedDate)
+        {
+            _updatedDate = updatedDate;
+            return this;
+        }
+
+        public RepositoryBuilder WithId(long repoId)
+        {
+            _repoId = repoId;
             return this;
         }
     }
