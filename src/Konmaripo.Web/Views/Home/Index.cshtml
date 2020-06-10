@@ -18,31 +18,40 @@
                     <th scope="col" title="Issues"><i class="fas fa-exclamation-circle"></i></th>
                     <th scope="col" title="Date the repository was created">Created</th>
                     <th scope="col" title="Date the repository was updated, e.g. title, language, settings, properties">Updated</th>
+                    <th scope="col" title="Date the Repository last had changes pushed to it">Pushed</th>
                 </tr>
             </thead>
             <tbody>
              @foreach (var item in repoList)
                 {
-                    <tr>
-                     @if (item.IsPrivate)
-                        {
+                <tr>
+                    @if (item.IsPrivate)
+                    {
                         <td title="Private repository">
-                        <i class="fas fa-lock text-success"></i>
+                            <i class="fas fa-lock text-success"></i>
                         </td>
-                        }
+                    }
                     else
-                        {
+                    {
                         <td title="Public repository">
-                        <i class="fas fa-lock-open text-danger"></i>
+                            <i class="fas fa-lock-open text-danger"></i>
                         </td>
-                        }
-                        <th scope="row" title="@item.Description">@item.Name</th>
-                        <td>@item.StarCount</td>
-                        <td>@item.ForkCount</td>
-                        <td>@item.OpenIssueCount</td>
-                        <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
-                        <td title="@item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
-                    </tr>
+                    }
+                    <th scope="row" title="@item.Description">@item.Name</th>
+                    <td>@item.StarCount</td>
+                    <td>@item.ForkCount</td>
+                    <td>@item.OpenIssueCount</td>
+                    <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
+                    <td title="@item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
+                    @if (item.PushedDate.HasValue)
+                    {
+                        <td title="@item.PushedDate">@item.PushedDate.Value.Humanize()</td>
+                    }
+                    else
+                    {
+                    <td>Never</td>
+                    }
+                </tr>
                 }
             </tbody>
         </table>
