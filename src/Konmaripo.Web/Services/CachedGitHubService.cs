@@ -6,9 +6,9 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace Konmaripo.Web.Services
 {
-    public class CachedGitHubService
+    public class CachedGitHubService : IGitHubService
     {
-        private const string REPO_CACHE_KEY = "repoList";
+        private const string RepoCacheKey = "repoList";
 
         private readonly IGitHubService _gitHubService;
         private readonly IMemoryCache _memoryCache;
@@ -21,11 +21,11 @@ namespace Konmaripo.Web.Services
 
         public async Task<List<GitHubRepo>> GetRepositoriesForOrganizationAsync()
         {
-            var gotFromCache = _memoryCache.TryGetValue(REPO_CACHE_KEY, out List<GitHubRepo> cachedRepoList);
+            var gotFromCache = _memoryCache.TryGetValue(RepoCacheKey, out List<GitHubRepo> cachedRepoList);
             if (gotFromCache) { return cachedRepoList; }
 
             var repoList = await _gitHubService.GetRepositoriesForOrganizationAsync();
-            var cacheEntry = _memoryCache.Set(REPO_CACHE_KEY, repoList, TimeSpan.FromDays(1));
+            var cacheEntry = _memoryCache.Set(RepoCacheKey, repoList, TimeSpan.FromDays(1));
 
             return cacheEntry;
         }
