@@ -29,5 +29,12 @@ namespace Konmaripo.Web.Services
 
             return cacheEntry;
         }
+
+        public Task<ExtendedRepoInformation> GetExtendedRepoInformationFor(long repoId)
+        {
+            // TODO: Actually add caching
+
+            return _gitHubService.GetExtendedRepoInformationFor(repoId);
+        }
     }
 }

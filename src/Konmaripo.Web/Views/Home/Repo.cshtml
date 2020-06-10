@@ -1,0 +1,57 @@
+﻿@using Humanizer
+@model Konmaripo.Web.Models.IndividualRepoViewModel
+
+@{
+    ViewData["Title"] = "Repo";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Repository: @Model.RepoInfo.Name</h1>
+    <p>Details on the repository in case you want to archive.</p>
+</div>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col"><!--Private icon--></th>
+        <th scope="col">Name</th>
+        <th scope="col" title="Stars"><i class="fas fa-star"></i></th>
+        <th scope="col" title="Forks"><i class="fas fa-code-branch"></i></th>
+        <th scope="col" title="Issues"><i class="fas fa-exclamation-circle"></i></th>
+        <th scope="col" title="Date the repository was created">Created</th>
+        <th scope="col" title="Date the repository was updated, e.g. title, language, settings, properties">Updated</th>
+        <th scope="col" title="Date the Repository last had changes pushed to it">Pushed</th>
+    </tr>
+    </thead>
+    @{ var item = Model.RepoInfo;}
+    <tbody>
+            <tr>
+                @if (item.IsPrivate)
+                {
+                    <td title="Private repository">
+                        <i class="fas fa-lock text-success"></i>
+                    </td>
+                }
+                else
+                {
+                    <td title="Public repository">
+                        <i class="fas fa-lock-open text-danger"></i>
+                    </td>
+                }
+                <th scope="row" title="@item.Description"><a href="@item.RepoUrl" target="_blank"><i class="fas fa-external-link-alt"></i></a> @item.Name</th>
+                <td>@item.StarCount</td>
+                <td>@item.ForkCount</td>
+                <td>@item.OpenIssueCount</td>
+                <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
+                <td title="@item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
+                @if (item.PushedDate.HasValue)
+                {
+                    <td title="@item.PushedDate">@item.PushedDate.Value.Humanize()</td>
+                }
+                else
+                {
+                    <td>Never</td>
+                }
+            </tr>
+    </tbody>
+</table>

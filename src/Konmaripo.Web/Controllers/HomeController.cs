@@ -34,6 +34,19 @@ namespace Konmaripo.Web.Controllers
 
         }
 
+        public async Task<IActionResult> RepositoryInfo(long repoId)
+        {
+            var repoInfo = await _gitHubService.GetRepositoriesForOrganizationAsync();
+            var extendedInfo = await _gitHubService.GetExtendedRepoInformationFor(repoId);
+
+            var matchingRepo = repoInfo.Single(x => x.Id == repoId);
+
+
+            var vm = new IndividualRepoViewModel(matchingRepo, extendedInfo);
+
+            return View("Repo", vm);
+        }
+
 
         public IActionResult Privacy()
         {
