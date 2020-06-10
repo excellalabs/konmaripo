@@ -293,6 +293,27 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
+            public async Task ReturnsRepoUrlFromTheGithubClient()
+            {
+                var urlList = new List<string> { "url1", "url2", "url3" };
+
+                var repositoryObjects = urlList.Select(url =>
+                {
+                    var repo = new RepositoryBuilder().WithUrlOf(url).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultUrls = result.Select(repoResult => repoResult.RepoUrl).ToList();
+
+                resultUrls.Should().BeEquivalentTo(urlList);
+            }
+
+            [Fact]
             public async Task UsesTheOrganizationNameFromSettings()
             {
                 var testOrgName = "MyTestOrg";

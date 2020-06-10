@@ -29,7 +29,7 @@ namespace Konmaripo.Web.Services
 
             var repos = await _githubClient.Repository.GetAllForOrg(orgName);
 
-            return repos.Select(x => new GitHubRepo(x.Id, x.Name, x.StargazersCount, x.Archived, x.ForksCount, x.OpenIssuesCount, x.CreatedAt, x.UpdatedAt, x.Description, x.Private, x.PushedAt)).ToList();
+            return repos.Select(x => new GitHubRepo(x.Id, x.Name, x.StargazersCount, x.Archived, x.ForksCount, x.OpenIssuesCount, x.CreatedAt, x.UpdatedAt, x.Description, x.Private, x.PushedAt, x.Url)).ToList();
         }
     }
 }

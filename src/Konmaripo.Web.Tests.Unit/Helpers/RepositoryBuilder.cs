@@ -21,6 +21,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         private string _description = "";
         private bool _isPrivate = false;
         private DateTimeOffset _pushedDate = DateTimeOffset.Now;
+        private string _repoUrl = "";
 
         public RepositoryBuilder()
         {
@@ -41,7 +42,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
             var repositoryPermissions = new RepositoryPermissions(false, false, false);
             var owner = new User();
 
-            var repo = new Repository(DummyString, DummyString, DummyString, DummyString, DummyString, DummyString,
+            var repo = new Repository(_repoUrl, DummyString, DummyString, DummyString, DummyString, DummyString,
                 DummyString, _repoId, DummyString, owner, _repositoryName, DummyString, false, _description,
                 DummyString, DummyString, _isPrivate, false, _forkCount, _starCount, DummyString, _openIssueCount, _pushedDate,
                 _createdDate, _updatedDate, repositoryPermissions,
@@ -109,6 +110,12 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         public RepositoryBuilder WithPushedDate(DateTimeOffset pushedDate)
         {
             _pushedDate = pushedDate;
+            return this;
+        }
+
+        public RepositoryBuilder WithUrlOf(string url)
+        {
+            _repoUrl = url;
             return this;
         }
     }
