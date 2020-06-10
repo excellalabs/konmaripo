@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
+using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Xunit;
 
@@ -17,20 +18,32 @@ namespace Konmaripo.Web.Tests.Unit.Services
             [Fact]
             public void WithNullGithubService_ThrowsException()
             {
-                Action act = () => new CachedGitHubService(null);
+                Action act = () => new CachedGitHubService(null, new Mock<IMemoryCache>().Object);
 
                 act.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("gitHubService");
+            }
+
+            [Fact]
+            public void WithNullMemoryCache_ThrowsException()
+            {
+                Action act = () => new CachedGitHubService(new Mock<IGitHubService>().Object, null);
+
+                act.Should().Throw<ArgumentNullException>()
+                    .And.ParamName.Should().Be("memoryCache");
+
             }
         }
         public class GetRepositoriesForOrganizationAsync
         {
             private Mock<IGitHubService> _mockService;
+            private Mock<IMemoryCache> _memoryCache;
             private CachedGitHubService _sut;
             public GetRepositoriesForOrganizationAsync()
             {
                 _mockService = new Mock<IGitHubService>();
-                _sut = new CachedGitHubService(_mockService.Object);
+                _memoryCache = new Mock<IMemoryCache>();
+                _sut = new CachedGitHubService(_mockService.Object, _memoryCache.Object);
             }
 
             [Fact]
@@ -60,14 +73,18 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
-            public void WhenCalledMultipleTimes_StillGetsFullRepositoryListFromUnderlyingService()
+            public async Task WhenCalledMultipleTimes_CallsUnderlyingGitHubServiceOnlyOnce()
             {
-                throw new NotImplementedException();
+                await _sut.GetRepositoriesForOrganizationAsync();
+
+                await _sut.GetRepositoriesForOrganizationAsync();
+                await _sut.GetRepositoriesForOrganizationAsync();
+
+                _mockService.Verify(x => x.GetRepositoriesForOrganizationAsync(), Times.Once);
             }
 
-
             [Fact]
-            public void WhenCalledMultipleTimes_CallsUnderlyingGitHubServiceOnlyOnce()
+            public void WhenCalledMultipleTimes_StillGetsFullRepositoryListFromUnderlyingService()
             {
                 throw new NotImplementedException();
             }
