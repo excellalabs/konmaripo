@@ -13,6 +13,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         private string _repositoryName = "";
         private int _starCount = 0;
         private bool _isArchived = false;
+        private int _forkCount = 0;
 
         public RepositoryBuilder()
         {
@@ -35,7 +36,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
 
             var repo = new Repository(DummyString, DummyString, DummyString, DummyString, DummyString, DummyString,
                 DummyString, DummyLong, DummyString, owner, _repositoryName, DummyString, false, DummyString,
-                DummyString, DummyString, false, false, DummyInt, _starCount, DummyString, DummyInt, _dummyDateTimeOffset,
+                DummyString, DummyString, false, false, _forkCount, _starCount, DummyString, DummyInt, _dummyDateTimeOffset,
                 _dummyDateTimeOffset, _dummyDateTimeOffset, repositoryPermissions,
                 dummyInternalRepository, dummyInternalRepository,
                 licenseMetadata,
@@ -53,6 +54,12 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         public RepositoryBuilder WithArchivedOf(bool archived)
         {
             _isArchived = archived;
+            return this;
+        }
+
+        public RepositoryBuilder WithForkCount(int forkCount)
+        {
+            _forkCount = forkCount;
             return this;
         }
     }

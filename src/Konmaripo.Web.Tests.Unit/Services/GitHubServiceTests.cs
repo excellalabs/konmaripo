@@ -125,6 +125,26 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 resultStars.Should().BeEquivalentTo(archivedList);
             }
 
+            [Fact]
+            public async Task ReturnsTheNumberOfForksFromTheGithubClient()
+            {
+                var forkCountList = new List<int> { 1, 123, 123_456 };
+
+                var repositoryObjects = forkCountList.Select(forkCount =>
+                {
+                    var repo = new RepositoryBuilder().WithForkCount(forkCount).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultStars = result.Select(repoResult => repoResult.ForkCount).ToList();
+
+                resultStars.Should().BeEquivalentTo(forkCountList);
+            }
 
             [Fact]
             public async Task UsesTheOrganizationNameFromSettings()
