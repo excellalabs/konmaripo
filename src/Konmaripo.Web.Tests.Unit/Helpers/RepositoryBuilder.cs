@@ -20,6 +20,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         private long _repoId = 0;
         private string _description = "";
         private bool _isPrivate = false;
+        private int _watcherCount = 0;
 
         public RepositoryBuilder()
         {
@@ -46,7 +47,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
                 _createdDate, _updatedDate, repositoryPermissions,
                 dummyInternalRepository, dummyInternalRepository,
                 licenseMetadata,
-                false, false, false, false, 0, 0, false, false, false, _isArchived);
+                false, false, false, false, _watcherCount, 0, false, false, false, _isArchived);
 
             return repo;
         }
@@ -102,6 +103,12 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         public RepositoryBuilder WithIsPrivateOf(bool isPrivate)
         {
             _isPrivate = isPrivate;
+            return this;
+        }
+
+        public RepositoryBuilder WithWatcherCount(int watcherCount)
+        {
+            _watcherCount = watcherCount;
             return this;
         }
     }
