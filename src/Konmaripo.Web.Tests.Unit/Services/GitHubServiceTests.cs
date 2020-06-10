@@ -210,6 +210,27 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
+            public async Task ReturnsThePushedDateFromTheGithubClient()
+            {
+                var dateList = new List<DateTimeOffset> { DateTimeOffset.Now.AddDays(-1), DateTimeOffset.Now.AddDays(-12), DateTimeOffset.Now.AddDays(-123) };
+
+                var repositoryObjects = dateList.Select(updatedDate =>
+                {
+                    var repo = new RepositoryBuilder().WithPushedDate(updatedDate).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultDates = result.Select(repoResult => repoResult.PushedDate.Value).ToList();
+
+                resultDates.Should().BeEquivalentTo(dateList);
+            }
+
+            [Fact]
             public async Task ReturnsTheRepositoryIdFromTheGithubClient()
             {
                 var idList = new List<long> { 1, 123, 12345 };
