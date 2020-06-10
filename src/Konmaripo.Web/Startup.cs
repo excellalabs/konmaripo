@@ -65,7 +65,7 @@ namespace Konmaripo.Web
                     new InMemoryCredentialStore(credentials));
             });
 
-            services.AddTransient<GitHubService>(provider =>
+            services.AddTransient<IGitHubService>(provider =>
             {
                 var gitHubClient = provider.GetRequiredService<GitHubClient>();
                 var githubSettings = provider.GetService<IOptions<GitHubSettings>>();
