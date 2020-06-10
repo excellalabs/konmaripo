@@ -39,5 +39,25 @@ namespace Konmaripo.Web.Services
 
             return extendedRepoInfo;
         }
+
+        public async Task CreateArchiveIssueInRepo(long repoId, string currentUser)
+        {
+            var newIssue = new NewIssue("This repository is being archived")
+            {
+                Body = @$"Archive process initiated by {currentUser} via the Konmaripo tool."
+            };
+
+            await _githubClient.Issue.Create(repoId, newIssue);
+        }
+
+        public async Task ArchiveRepository(long repoId, string repoName)
+        {
+            var makeArchived = new RepositoryUpdate(repoName)
+            {
+                Archived = true
+            };
+
+            await _githubClient.Repository.Edit(repoId, makeArchived);
+        }
     }
 }

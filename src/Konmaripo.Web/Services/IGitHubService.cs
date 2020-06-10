@@ -8,5 +8,7 @@ namespace Konmaripo.Web.Services
     {
         Task<List<GitHubRepo>> GetRepositoriesForOrganizationAsync();
         Task<ExtendedRepoInformation> GetExtendedRepoInformationFor(long repoId);
+        Task CreateArchiveIssueInRepo(long repoId, string currentUser);
+        Task ArchiveRepository(long repoId, string repoName);
     }
 }
