@@ -1,4 +1,5 @@
-﻿@model List<GitHubRepo>
+﻿@using Humanizer
+@model List<GitHubRepo>
 @{
     var alreadyArchivedRepos = Model.Where(x => x.IsArchived).ToList();
     var nonArchivedRepos = Model.Where(x => !x.IsArchived).ToList();
@@ -35,8 +36,8 @@
                 <td>@item.StarCount</td>
                 <td>@item.ForkCount</td>
                 <td>@item.OpenIssueCount</td>
-                <td>@item.CreatedDate</td>
-                <td>@item.UpdatedDate</td>
+                <td>@item.CreatedDate.Humanize()</td>
+                <td>@item.UpdatedDate.Humanize()</td>
                 <td>@item.IsPrivate</td>
             </tr>
         }
@@ -69,8 +70,8 @@
                 <td>@item.StarCount</td>
                 <td>@item.ForkCount</td>
                 <td>@item.OpenIssueCount</td>
-                <td>@item.CreatedDate</td>
-                <td>@item.UpdatedDate</td>
+                <td>@item.CreatedDate.Humanize()</td>
+                <td>@item.UpdatedDate.Humanize()</td>
                 <td>@item.IsPrivate</td>
             </tr>
         }
