@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
+using Functional.Maybe;
 using Konmaripo.Web.Models;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -12,6 +14,7 @@ namespace Konmaripo.Web.Services
 
         private readonly IGitHubService _gitHubService;
         private readonly IMemoryCache _memoryCache;
+        private readonly TimeSpan _cacheTimeout = TimeSpan.FromDays(1);
 
         public CachedGitHubService(IGitHubService gitHubService, IMemoryCache memoryCache)
         {
@@ -25,7 +28,7 @@ namespace Konmaripo.Web.Services
             if (gotFromCache) { return cachedRepoList; }
 
             var repoList = await _gitHubService.GetRepositoriesForOrganizationAsync();
-            var cacheEntry = _memoryCache.Set(RepoCacheKey, repoList, TimeSpan.FromDays(1));
+            var cacheEntry = _memoryCache.Set(RepoCacheKey, repoList, _cacheTimeout);
 
             return cacheEntry;
         }
@@ -33,6 +36,7 @@ namespace Konmaripo.Web.Services
         public Task<ExtendedRepoInformation> GetExtendedRepoInformationFor(long repoId)
         {
             // TODO: Actually add caching
+
             return _gitHubService.GetExtendedRepoInformationFor(repoId);
         }
 
@@ -44,6 +48,15 @@ namespace Konmaripo.Web.Services
         public async Task ArchiveRepository(long repoId, string repoName)
         {
             await _gitHubService.ArchiveRepository(repoId, repoName);
+
+            var repos = _memoryCache.Get<List<GitHubRepo>>(RepoCacheKey);
+            var item = repos.First(x => x.Id == repoId);
+
+            var archivedItem = new GitHubRepo(item.Id, item.Name, item.StarCount, true, item.ForkCount, item.OpenIssueCount, item.CreatedDate, item.UpdatedDate, item.Description, item.IsPrivate, item.PushedDate.ToNullable(), item.RepoUrl);
+            repos.Remove(item);
+            repos.Add(archivedItem);
+
+            _memoryCache.Set(RepoCacheKey, repos, _cacheTimeout);
         }
     }
 }
