@@ -32,18 +32,8 @@ namespace Konmaripo.Web
         {
             ConfigureHackyHttpsEnforcement(services);
 
-            services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
-                .AddAzureAD(options =>
-                {
-                    Configuration.Bind("AzureAd", options);
-                });
-
             services.AddControllersWithViews(options =>
             {
-                var policy = new AuthorizationPolicyBuilder()
-                    .RequireAuthenticatedUser()
-                    .Build();
-                options.Filters.Add(new AuthorizeFilter(policy));
             });
             services.AddRazorPages();
 
@@ -112,9 +102,6 @@ namespace Konmaripo.Web
             app.UseStaticFiles();
 
             app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
