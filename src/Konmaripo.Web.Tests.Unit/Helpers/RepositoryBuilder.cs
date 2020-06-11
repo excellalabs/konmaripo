@@ -49,7 +49,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
                 _createdDate, _updatedDate, repositoryPermissions,
                 dummyInternalRepository, dummyInternalRepository,
                 licenseMetadata,
-                false, false, false, false, 0, 0, false, false, false, _isArchived, 0);
+                false, false, false, false, 0, 0, false, false, false, _isArchived, _watcherCount);
 
             return repo;
         }
