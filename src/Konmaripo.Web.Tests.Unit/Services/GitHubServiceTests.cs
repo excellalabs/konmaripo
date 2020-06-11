@@ -314,6 +314,27 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
+            public async Task ReturnsTheWatcherCountFromTheGitHubClient()
+            {
+                var watcherCountList = new List<int> { 1, 123, 123_456 };
+
+                var repositoryObjects = watcherCountList.Select(watcherCount =>
+                {
+                    var repo = new RepositoryBuilder().WithWatcherCount(watcherCount).Build();
+                    return repo;
+                }).ToList().As<IReadOnlyList<Repository>>();
+
+                _mockRepoClient.Setup(x =>
+                        x.GetAllForOrg(It.IsAny<string>()))
+                    .Returns(Task.FromResult(repositoryObjects));
+
+                var result = await _sut.GetRepositoriesForOrganizationAsync();
+                var resultWatcherCounts = result.Select(repoResult => repoResult.WatcherCount).ToList();
+
+                resultWatcherCounts.Should().BeEquivalentTo(watcherCountList);
+            }
+
+            [Fact]
             public async Task UsesTheOrganizationNameFromSettings()
             {
                 var testOrgName = "MyTestOrg";
