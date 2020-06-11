@@ -66,12 +66,14 @@
 <table class="table table-striped">
     <thead class="thead-dark">
         <tr>
+            <th scope="col">Watchers</th>
             <th scope="col">Views in Past 14 days</th>
             <th scope="col">Commit Activity in Last 4 Weeks</th>
         </tr>
     </thead>
     <tbody>
         <tr>
+            <td>@Model.ExtendedInfo.NumberOfWatchers</td>
             <td>@Model.ExtendedInfo.ViewsInTheLast14Days</td>
             <td>@Model.ExtendedInfo.CommitActivityInTheLast4Weeks</td>
         </tr>
