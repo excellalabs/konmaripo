@@ -38,16 +38,15 @@
                             <i class="fas fa-lock-open text-danger"></i>
                         </td>
                     }
-                    <th scope="row" title="@item.Description"><a href="@item.RepoUrl" target="_blank"><i class="fas fa-external-link-alt"></i></a>&nbsp;@Html.ActionLink(item.Name, "RepositoryInfo", new { repoId = item.Id })</th>
-                    <td>@item.StarCount</td>
-                    <td>@item.WatcherCount</td>
-                    <td>@item.ForkCount</td>
-                    <td>@item.OpenIssueCount</td>
-                    <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
-                    <td title="@item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
+                    <th scope="row" title="@item.Description"><a href="@item.RepoUrl" target="_blank"><i class="fas fa-external-link-alt"></i></a>&nbsp;@Html.ActionLink(item.Name, "RepositoryInfo", new {repoId = item.Id})</th>
+                    <td title="@item.StarCount stars">@item.StarCount</td>
+                    <td title="@item.ForkCount forks">@item.ForkCount</td>
+                    <td title="@item.OpenIssueCount issues">@item.OpenIssueCount</td>
+                    <td title="Created @item.CreatedDate">@item.CreatedDate.Humanize()</td>
+                    <td title="Updated @item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
                     @if (item.PushedDate.HasValue)
                     {
-                        <td title="@item.PushedDate">@item.PushedDate.Value.Humanize()</td>
+                        <td title="Pushed @item.PushedDate">@item.PushedDate.Value.Humanize()</td>
                     }
                     else
                     {
