@@ -9,24 +9,24 @@ using Xunit;
 
 namespace Konmaripo.Web.Tests.Unit.Controllers
 {
-    public class HomeControllerTests
+    public class SunsettingControllerTests
     {
         [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
         public class Ctor
         {
-            private readonly Mock<ILogger<HomeController>> _mockLogger;
+            private readonly Mock<ILogger<SunsettingController>> _mockLogger;
             private readonly Mock<IGitHubService> _mockGitHubService;
 
             public Ctor()
             {
-                _mockLogger = new Mock<ILogger<HomeController>>();
+                _mockLogger = new Mock<ILogger<SunsettingController>>();
                 _mockGitHubService = new Mock<IGitHubService>();
             }
 
             [Fact]
             public void NullLogger_ThrowsException()
             {
-                Action act = () => new HomeController(null, _mockGitHubService.Object);
+                Action act = () => new SunsettingController(null, _mockGitHubService.Object);
 
                 act.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("logger");
@@ -35,7 +35,7 @@ namespace Konmaripo.Web.Tests.Unit.Controllers
             [Fact]
             public void NullGitHubService_ThrowsException()
             {
-                Action act = () => new HomeController(_mockLogger.Object, null);
+                Action act = () => new SunsettingController(_mockLogger.Object, null);
 
                 act.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("gitHubService");
