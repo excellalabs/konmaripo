@@ -9,7 +9,6 @@ using Konmaripo.Web.Services;
 
 namespace Konmaripo.Web.Controllers
 {
-    [Authorize]
     public class SunsettingController : Controller
     {
         private readonly ILogger<SunsettingController> _logger;
