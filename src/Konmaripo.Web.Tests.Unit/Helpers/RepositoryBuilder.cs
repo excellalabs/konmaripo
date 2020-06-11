@@ -22,6 +22,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         private bool _isPrivate = false;
         private DateTimeOffset _pushedDate = DateTimeOffset.Now;
         private string _repoUrl = "";
+        private int _watcherCount = 0;
 
         public RepositoryBuilder()
         {
@@ -116,6 +117,12 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         public RepositoryBuilder WithUrlOf(string url)
         {
             _repoUrl = url;
+            return this;
+        }
+
+        public RepositoryBuilder WithWatcherCount(int watcherCount)
+        {
+            _watcherCount = watcherCount;
             return this;
         }
     }
