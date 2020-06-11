@@ -40,7 +40,7 @@
                     }
                     <th scope="row" title="@item.Description"><a href="@item.RepoUrl" target="_blank"><i class="fas fa-external-link-alt"></i></a>&nbsp;@Html.ActionLink(item.Name, "RepositoryInfo", new { repoId = item.Id })</th>
                     <td>@item.StarCount</td>
-                    <td>@item.WatchersCount</td>
+                    <td>@item.WatcherCount</td>
                     <td>@item.ForkCount</td>
                     <td>@item.OpenIssueCount</td>
                     <td title="@item.CreatedDate">@item.CreatedDate.Humanize()</td>
