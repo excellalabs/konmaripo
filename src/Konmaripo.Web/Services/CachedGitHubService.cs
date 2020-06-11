@@ -33,11 +33,16 @@ namespace Konmaripo.Web.Services
             return cacheEntry;
         }
 
-        public Task<ExtendedRepoInformation> GetExtendedRepoInformationFor(long repoId)
+        public async Task<ExtendedRepoInformation> GetExtendedRepoInformationFor(long repoId)
         {
-            // TODO: Actually add caching
+            var result = await _memoryCache.GetOrCreateAsync($"extendedInfo-{repoId}",
+                async entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = _cacheTimeout;
+                    return await _gitHubService.GetExtendedRepoInformationFor(repoId);
+                });
 
-            return _gitHubService.GetExtendedRepoInformationFor(repoId);
+            return result;
         }
 
         public async Task CreateArchiveIssueInRepo(long repoId, string currentUser)
