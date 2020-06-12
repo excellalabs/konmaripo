@@ -1,4 +1,4 @@
-## Konmaripo: Konmari your GitHub Org's Repositories
+## Konmaripo: Konmari your GitHub Org and Its Repositories
 
 **NOTE:** This tool is in early and experimental stages; it is not currently recommended for use.
 
