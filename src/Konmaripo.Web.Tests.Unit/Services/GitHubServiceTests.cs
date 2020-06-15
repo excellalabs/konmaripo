@@ -8,6 +8,7 @@ using FluentAssertions;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
 using Konmaripo.Web.Tests.Unit.Helpers;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Octokit;
@@ -23,11 +24,12 @@ namespace Konmaripo.Web.Tests.Unit.Services
         {
             readonly Mock<IGitHubClient> _dummyClient = new Mock<IGitHubClient>();
             readonly Mock<IOptions<GitHubSettings>> _dummySettings = new Mock<IOptions<GitHubSettings>>();
+            readonly Mock<ILogger<GitHubService>> _mockLogger = new Mock<ILogger<GitHubService>>();
 
             [Fact]
             public void NullGitHubClient_ThrowsException()
             {
-                Action sut = () => new GitHubService(githubClient: null, _dummySettings.Object);
+                Action sut = () => new GitHubService(githubClient: null, _dummySettings.Object, _mockLogger.Object);
 
                 sut.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("githubClient");
@@ -36,11 +38,21 @@ namespace Konmaripo.Web.Tests.Unit.Services
             [Fact]
             public void NullOptions_ThrowsException()
             {
-                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, null);
+                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, null, _mockLogger.Object);
 
                 sut.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("githubSettings");
             }
+
+            [Fact]
+            public void NullLogger_ThrowsException()
+            {
+                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, _dummySettings.Object, null);
+
+                sut.Should().Throw<ArgumentNullException>()
+                    .And.ParamName.Should().Be("logger");
+            }
+
         }
 
         public class GetRepositoriesForOrganization
@@ -49,17 +61,19 @@ namespace Konmaripo.Web.Tests.Unit.Services
             private readonly Mock<IGitHubClient> _mockClient;
             private readonly Mock<IRepositoriesClient> _mockRepoClient;
             private readonly GitHubSettings _settingsObject = new GitHubSettings();
+            readonly Mock<ILogger<GitHubService>> _mockLogger;
 
             public GetRepositoriesForOrganization()
             {
                 _mockClient = new Mock<IGitHubClient>();
                 _mockRepoClient = new Mock<IRepositoriesClient>();
+                _mockLogger = new Mock<ILogger<GitHubService>>();
 
                 _mockClient.Setup(x => x.Repository).Returns(_mockRepoClient.Object);
  
                 var mockSettings = new Mock<IOptions<GitHubSettings>>();
                 mockSettings.Setup(x => x.Value).Returns(_settingsObject);
-                _sut = new GitHubService(_mockClient.Object, mockSettings.Object);
+                _sut = new GitHubService(_mockClient.Object, mockSettings.Object, _mockLogger.Object);
             }
 
             [Fact]
@@ -350,17 +364,19 @@ namespace Konmaripo.Web.Tests.Unit.Services
             private readonly Mock<IGitHubClient> _mockClient;
             private readonly Mock<IRepositoriesClient> _mockRepoClient;
             private readonly GitHubSettings _settingsObject = new GitHubSettings();
+            readonly Mock<ILogger<GitHubService>> _mockLogger;
 
             public CreateArchiveIssueInRepo()
             {
                 _mockClient = new Mock<IGitHubClient>();
                 _mockRepoClient = new Mock<IRepositoriesClient>();
+                _mockLogger = new Mock<ILogger<GitHubService>>();
 
                 _mockClient.Setup(x => x.Repository).Returns(_mockRepoClient.Object);
 
                 var mockSettings = new Mock<IOptions<GitHubSettings>>();
                 mockSettings.Setup(x => x.Value).Returns(_settingsObject);
-                _sut = new GitHubService(_mockClient.Object, mockSettings.Object);
+                _sut = new GitHubService(_mockClient.Object, mockSettings.Object, _mockLogger.Object);
             }
 
             [Fact]
