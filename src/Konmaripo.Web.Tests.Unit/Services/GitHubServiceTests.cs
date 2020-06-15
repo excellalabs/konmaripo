@@ -394,7 +394,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
-            public async Task WhenIssuesAreDisabled_DoesntThrowException()
+            public void WhenIssuesAreDisabled_DoesntThrowException()
             {
                 const int idThatDoesntMatter = 0;
                 const string nameThatDoesntMatter = "name";
