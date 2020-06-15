@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Konmaripo.Web.Models;
@@ -343,5 +344,43 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
         }
 
+        public class CreateArchiveIssueInRepo
+        {
+            private readonly GitHubService _sut;
+            private readonly Mock<IGitHubClient> _mockClient;
+            private readonly Mock<IRepositoriesClient> _mockRepoClient;
+            private readonly GitHubSettings _settingsObject = new GitHubSettings();
+
+            public CreateArchiveIssueInRepo()
+            {
+                _mockClient = new Mock<IGitHubClient>();
+                _mockRepoClient = new Mock<IRepositoriesClient>();
+
+                _mockClient.Setup(x => x.Repository).Returns(_mockRepoClient.Object);
+
+                var mockSettings = new Mock<IOptions<GitHubSettings>>();
+                mockSettings.Setup(x => x.Value).Returns(_settingsObject);
+                _sut = new GitHubService(_mockClient.Object, mockSettings.Object);
+            }
+
+            [Fact]
+            public async Task WhenIssuesAreDisabled_DoesntThrowException()
+            {
+                const int idThatDoesntMatter = 0;
+                const string nameThatDoesntMatter = "name";
+
+                var issuesDisabledException = new ApiException("Issues are disabled for this repo", HttpStatusCode.BadRequest);
+
+                var mockIssuesClient = new Mock<IIssuesClient>();
+                mockIssuesClient.Setup(x => x.Create(It.IsAny<long>(), It.IsAny<NewIssue>()))
+                    .Throws(issuesDisabledException);
+
+                _mockClient.Setup(x => x.Issue).Returns(mockIssuesClient.Object);
+
+                Func<Task> act = async () => await _sut.CreateArchiveIssueInRepo(idThatDoesntMatter, nameThatDoesntMatter);
+
+                act.Should().NotThrow();
+            }
+        }
     }
 }
