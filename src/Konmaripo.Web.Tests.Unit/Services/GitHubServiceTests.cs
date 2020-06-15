@@ -413,7 +413,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
-            public void WhenClientThrowsErrorUnrelatedToDisbabledIssues_ThrowsException()
+            public void WhenClientThrowsErrorUnrelatedToDisabledIssues_ThrowsException()
             {
                 const int idThatDoesntMatter = 0;
                 const string nameThatDoesntMatter = "name";
