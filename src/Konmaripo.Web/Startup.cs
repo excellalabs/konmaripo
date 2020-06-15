@@ -11,6 +11,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
 using Octokit.Internal;
@@ -63,8 +64,9 @@ namespace Konmaripo.Web
             {
                 var gitHubClient = provider.GetRequiredService<GitHubClient>();
                 var githubSettings = provider.GetService<IOptions<GitHubSettings>>();
+                var logger = provider.GetService<ILogger<GitHubService>>();
 
-                var service = new GitHubService(gitHubClient, githubSettings);
+                var service = new GitHubService(gitHubClient, githubSettings, logger);
 
                 var cachedService = new CachedGitHubService(service, new MemoryCache(new MemoryCacheOptions()));
 

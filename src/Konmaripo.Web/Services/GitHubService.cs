@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Octokit;
 
@@ -13,9 +14,11 @@ namespace Konmaripo.Web.Services
     {
         private readonly IGitHubClient _githubClient;
         private readonly GitHubSettings _gitHubSettings;
-        public GitHubService(IGitHubClient githubClient, IOptions<GitHubSettings> githubSettings)
+        private readonly ILogger<GitHubService> _logger;
+        public GitHubService(IGitHubClient githubClient, IOptions<GitHubSettings> githubSettings, ILogger<GitHubService> logger)
         {
             _githubClient = githubClient ?? throw new ArgumentNullException(nameof(githubClient));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _gitHubSettings = githubSettings?.Value ?? throw new ArgumentNullException(nameof(githubSettings));
         }
 
@@ -47,7 +50,17 @@ namespace Konmaripo.Web.Services
                 Body = @$"Archive process initiated by {currentUser} via the Konmaripo tool."
             };
 
-            await _githubClient.Issue.Create(repoId, newIssue);
+            try
+            {
+                await _githubClient.Issue.Create(repoId, newIssue);
+            }
+            catch(ApiException ex)
+            {
+                if (ex.Message != "Issues are disabled for this repo")
+                {
+                    throw;
+                }
+            }
         }
 
         public async Task ArchiveRepository(long repoId, string repoName)

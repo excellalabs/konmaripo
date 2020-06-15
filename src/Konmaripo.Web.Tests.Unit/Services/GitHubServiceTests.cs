@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
 using Konmaripo.Web.Tests.Unit.Helpers;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Octokit;
@@ -21,12 +23,27 @@ namespace Konmaripo.Web.Tests.Unit.Services
         public class Ctor
         {
             readonly Mock<IGitHubClient> _dummyClient = new Mock<IGitHubClient>();
+            readonly GitHubSettings _dummySettingsObj = new GitHubSettings();
             readonly Mock<IOptions<GitHubSettings>> _dummySettings = new Mock<IOptions<GitHubSettings>>();
+            readonly Mock<ILogger<GitHubService>> _mockLogger = new Mock<ILogger<GitHubService>>();
+
+            public Ctor()
+            {
+                _dummySettings.Setup(x => x.Value).Returns(_dummySettingsObj);
+            }
+
+            [Fact]
+            public void HasAllDependencies_DoesntThrow()
+            {
+                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, _dummySettings.Object, _mockLogger.Object);
+
+                sut.Should().NotThrow();
+            }
 
             [Fact]
             public void NullGitHubClient_ThrowsException()
             {
-                Action sut = () => new GitHubService(githubClient: null, _dummySettings.Object);
+                Action sut = () => new GitHubService(githubClient: null, _dummySettings.Object, _mockLogger.Object);
 
                 sut.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("githubClient");
@@ -35,11 +52,21 @@ namespace Konmaripo.Web.Tests.Unit.Services
             [Fact]
             public void NullOptions_ThrowsException()
             {
-                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, null);
+                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, null, _mockLogger.Object);
 
                 sut.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("githubSettings");
             }
+
+            [Fact]
+            public void NullLogger_ThrowsException()
+            {
+                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, _dummySettings.Object, null);
+
+                sut.Should().Throw<ArgumentNullException>()
+                    .And.ParamName.Should().Be("logger");
+            }
+
         }
 
         public class GetRepositoriesForOrganization
@@ -48,17 +75,19 @@ namespace Konmaripo.Web.Tests.Unit.Services
             private readonly Mock<IGitHubClient> _mockClient;
             private readonly Mock<IRepositoriesClient> _mockRepoClient;
             private readonly GitHubSettings _settingsObject = new GitHubSettings();
+            readonly Mock<ILogger<GitHubService>> _mockLogger;
 
             public GetRepositoriesForOrganization()
             {
                 _mockClient = new Mock<IGitHubClient>();
                 _mockRepoClient = new Mock<IRepositoriesClient>();
+                _mockLogger = new Mock<ILogger<GitHubService>>();
 
                 _mockClient.Setup(x => x.Repository).Returns(_mockRepoClient.Object);
  
                 var mockSettings = new Mock<IOptions<GitHubSettings>>();
                 mockSettings.Setup(x => x.Value).Returns(_settingsObject);
-                _sut = new GitHubService(_mockClient.Object, mockSettings.Object);
+                _sut = new GitHubService(_mockClient.Object, mockSettings.Object, _mockLogger.Object);
             }
 
             [Fact]
@@ -343,5 +372,66 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
         }
 
+        public class CreateArchiveIssueInRepo
+        {
+            private readonly GitHubService _sut;
+            private readonly Mock<IGitHubClient> _mockClient;
+            private readonly Mock<IRepositoriesClient> _mockRepoClient;
+            private readonly GitHubSettings _settingsObject = new GitHubSettings();
+            readonly Mock<ILogger<GitHubService>> _mockLogger;
+
+            public CreateArchiveIssueInRepo()
+            {
+                _mockClient = new Mock<IGitHubClient>();
+                _mockRepoClient = new Mock<IRepositoriesClient>();
+                _mockLogger = new Mock<ILogger<GitHubService>>();
+
+                _mockClient.Setup(x => x.Repository).Returns(_mockRepoClient.Object);
+
+                var mockSettings = new Mock<IOptions<GitHubSettings>>();
+                mockSettings.Setup(x => x.Value).Returns(_settingsObject);
+                _sut = new GitHubService(_mockClient.Object, mockSettings.Object, _mockLogger.Object);
+            }
+
+            [Fact]
+            public void WhenIssuesAreDisabled_DoesntThrowException()
+            {
+                const int idThatDoesntMatter = 0;
+                const string nameThatDoesntMatter = "name";
+
+                var issuesDisabledException = new ApiException("Issues are disabled for this repo", HttpStatusCode.BadRequest);
+
+                var mockIssuesClient = new Mock<IIssuesClient>();
+                mockIssuesClient.Setup(x => x.Create(It.IsAny<long>(), It.IsAny<NewIssue>()))
+                    .Throws(issuesDisabledException);
+
+                _mockClient.Setup(x => x.Issue).Returns(mockIssuesClient.Object);
+
+                Func<Task> act = async () => await _sut.CreateArchiveIssueInRepo(idThatDoesntMatter, nameThatDoesntMatter);
+
+                act.Should().NotThrow();
+            }
+
+            [Fact]
+            public void WhenClientThrowsErrorUnrelatedToDisabledIssues_ThrowsException()
+            {
+                const int idThatDoesntMatter = 0;
+                const string nameThatDoesntMatter = "name";
+
+                // ReSharper disable once StringLiteralTypo
+                var messageUnrelatedToDisabledIssues = "Blahblahblahblah";
+                var issuesDisabledException = new ApiException(messageUnrelatedToDisabledIssues, HttpStatusCode.BadRequest);
+
+                var mockIssuesClient = new Mock<IIssuesClient>();
+                mockIssuesClient.Setup(x => x.Create(It.IsAny<long>(), It.IsAny<NewIssue>()))
+                    .Throws(issuesDisabledException);
+
+                _mockClient.Setup(x => x.Issue).Returns(mockIssuesClient.Object);
+
+                Func<Task> act = async () => await _sut.CreateArchiveIssueInRepo(idThatDoesntMatter, nameThatDoesntMatter);
+
+                act.Should().Throw<ApiException>();
+}
+        }
     }
 }
