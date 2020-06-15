@@ -23,8 +23,22 @@ namespace Konmaripo.Web.Tests.Unit.Services
         public class Ctor
         {
             readonly Mock<IGitHubClient> _dummyClient = new Mock<IGitHubClient>();
+            readonly GitHubSettings _dummySettingsObj = new GitHubSettings();
             readonly Mock<IOptions<GitHubSettings>> _dummySettings = new Mock<IOptions<GitHubSettings>>();
             readonly Mock<ILogger<GitHubService>> _mockLogger = new Mock<ILogger<GitHubService>>();
+
+            public Ctor()
+            {
+                _dummySettings.Setup(x => x.Value).Returns(_dummySettingsObj);
+            }
+
+            [Fact]
+            public void HasAllDependencies_DoesntThrow()
+            {
+                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, _dummySettings.Object, _mockLogger.Object);
+
+                sut.Should().NotThrow();
+            }
 
             [Fact]
             public void NullGitHubClient_ThrowsException()

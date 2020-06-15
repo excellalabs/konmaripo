@@ -18,8 +18,8 @@ namespace Konmaripo.Web.Services
         public GitHubService(IGitHubClient githubClient, IOptions<GitHubSettings> githubSettings, ILogger<GitHubService> logger)
         {
             _githubClient = githubClient ?? throw new ArgumentNullException(nameof(githubClient));
-            _gitHubSettings = githubSettings?.Value ?? throw new ArgumentNullException(nameof(githubSettings));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _gitHubSettings = githubSettings?.Value ?? throw new ArgumentNullException(nameof(githubSettings));
         }
 
         public async Task<List<GitHubRepo>> GetRepositoriesForOrganizationAsync()
