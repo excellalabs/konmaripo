@@ -51,9 +51,12 @@ namespace Konmaripo.Web.Services
             {
                 await _githubClient.Issue.Create(repoId, newIssue);
             }
-            catch(ApiException)
+            catch(ApiException ex)
             {
-                // Do nothing; it's OK.
+                if (ex.Message != "Issues are disabled for this repo")
+                {
+                    throw;
+                }
             }
         }
 

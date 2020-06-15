@@ -381,6 +381,27 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
                 act.Should().NotThrow();
             }
+
+            [Fact]
+            public void WhenClientThrowsErrorUnrelatedToDisbabledIssues_ThrowsException()
+            {
+                const int idThatDoesntMatter = 0;
+                const string nameThatDoesntMatter = "name";
+
+                // ReSharper disable once StringLiteralTypo
+                var messageUnrelatedToDisabledIssues = "Blahblahblahblah";
+                var issuesDisabledException = new ApiException(messageUnrelatedToDisabledIssues, HttpStatusCode.BadRequest);
+
+                var mockIssuesClient = new Mock<IIssuesClient>();
+                mockIssuesClient.Setup(x => x.Create(It.IsAny<long>(), It.IsAny<NewIssue>()))
+                    .Throws(issuesDisabledException);
+
+                _mockClient.Setup(x => x.Issue).Returns(mockIssuesClient.Object);
+
+                Func<Task> act = async () => await _sut.CreateArchiveIssueInRepo(idThatDoesntMatter, nameThatDoesntMatter);
+
+                act.Should().Throw<ApiException>();
+}
         }
     }
 }
