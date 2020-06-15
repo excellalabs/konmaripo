@@ -47,7 +47,14 @@ namespace Konmaripo.Web.Services
                 Body = @$"Archive process initiated by {currentUser} via the Konmaripo tool."
             };
 
-            await _githubClient.Issue.Create(repoId, newIssue);
+            try
+            {
+                await _githubClient.Issue.Create(repoId, newIssue);
+            }
+            catch(ApiException)
+            {
+                // Do nothing; it's OK.
+            }
         }
 
         public async Task ArchiveRepository(long repoId, string repoName)
