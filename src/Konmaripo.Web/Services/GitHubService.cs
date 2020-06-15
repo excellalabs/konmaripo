@@ -58,7 +58,6 @@ namespace Konmaripo.Web.Services
             {
                 if (ex.Message != "Issues are disabled for this repo")
                 {
-                    _logger.LogWarning("Issues disabled for repository ID '{repoId}'", repoId);
                     throw;
                 }
             }
