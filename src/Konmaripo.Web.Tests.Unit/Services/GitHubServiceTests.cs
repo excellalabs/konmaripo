@@ -413,6 +413,27 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
+            public async Task WhenIssuesAreDisabled_LogsWarning()
+            {
+                const int repositoryId = 1234;
+
+                const string nameThatDoesntMatter = "name";
+
+                var issuesDisabledException = new ApiException("Issues are disabled for this repo", HttpStatusCode.BadRequest);
+
+                var mockIssuesClient = new Mock<IIssuesClient>();
+                mockIssuesClient.Setup(x => x.Create(It.IsAny<long>(), It.IsAny<NewIssue>()))
+                    .Throws(issuesDisabledException);
+
+                _mockClient.Setup(x => x.Issue).Returns(mockIssuesClient.Object);
+
+                await _sut.CreateArchiveIssueInRepo(repositoryId, nameThatDoesntMatter);
+
+                _mockLogger.Verify(x=>x.LogWarning("Issues disabled for repository ID '{repoId}'", repositoryId));
+
+            }
+
+            [Fact]
             public void WhenClientThrowsErrorUnrelatedToDisbabledIssues_ThrowsException()
             {
                 const int idThatDoesntMatter = 0;
