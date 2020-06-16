@@ -56,6 +56,7 @@ namespace Konmaripo.Web.Services
             }
             catch(ApiException ex)
             {
+                _logger.Warning("Issues are disabled for repository ID '{RepositoryID}'; could not create archive issue.", repoId);
                 if (ex.Message != "Issues are disabled for this repo")
                 {
                     throw;
