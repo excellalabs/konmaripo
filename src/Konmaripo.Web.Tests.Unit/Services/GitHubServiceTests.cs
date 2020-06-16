@@ -8,10 +8,10 @@ using FluentAssertions;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
 using Konmaripo.Web.Tests.Unit.Helpers;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using Octokit;
+using Serilog;
 using Xunit;
 
 namespace Konmaripo.Web.Tests.Unit.Services
@@ -25,7 +25,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             readonly Mock<IGitHubClient> _dummyClient = new Mock<IGitHubClient>();
             readonly GitHubSettings _dummySettingsObj = new GitHubSettings();
             readonly Mock<IOptions<GitHubSettings>> _dummySettings = new Mock<IOptions<GitHubSettings>>();
-            readonly Mock<ILogger<GitHubService>> _mockLogger = new Mock<ILogger<GitHubService>>();
+            readonly Mock<ILogger> _mockLogger = new Mock<ILogger>();
 
             public Ctor()
             {
@@ -75,13 +75,13 @@ namespace Konmaripo.Web.Tests.Unit.Services
             private readonly Mock<IGitHubClient> _mockClient;
             private readonly Mock<IRepositoriesClient> _mockRepoClient;
             private readonly GitHubSettings _settingsObject = new GitHubSettings();
-            readonly Mock<ILogger<GitHubService>> _mockLogger;
+            readonly Mock<ILogger> _mockLogger;
 
             public GetRepositoriesForOrganization()
             {
                 _mockClient = new Mock<IGitHubClient>();
                 _mockRepoClient = new Mock<IRepositoriesClient>();
-                _mockLogger = new Mock<ILogger<GitHubService>>();
+                _mockLogger = new Mock<ILogger>();
 
                 _mockClient.Setup(x => x.Repository).Returns(_mockRepoClient.Object);
  
@@ -378,13 +378,13 @@ namespace Konmaripo.Web.Tests.Unit.Services
             private readonly Mock<IGitHubClient> _mockClient;
             private readonly Mock<IRepositoriesClient> _mockRepoClient;
             private readonly GitHubSettings _settingsObject = new GitHubSettings();
-            readonly Mock<ILogger<GitHubService>> _mockLogger;
+            readonly Mock<ILogger> _mockLogger;
 
             public CreateArchiveIssueInRepo()
             {
                 _mockClient = new Mock<IGitHubClient>();
                 _mockRepoClient = new Mock<IRepositoriesClient>();
-                _mockLogger = new Mock<ILogger<GitHubService>>();
+                _mockLogger = new Mock<ILogger>();
 
                 _mockClient.Setup(x => x.Repository).Returns(_mockRepoClient.Object);
 
