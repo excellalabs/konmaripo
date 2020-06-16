@@ -16,7 +16,6 @@ namespace Konmaripo.Web
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
-                .WriteTo.Seq(Environment.GetEnvironmentVariable("SeqUrl") ?? "http://localhost:5341")
                 .CreateLogger();
 
             try
