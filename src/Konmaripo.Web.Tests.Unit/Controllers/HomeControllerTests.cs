@@ -3,8 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Konmaripo.Web.Controllers;
 using Konmaripo.Web.Services;
-using Microsoft.Extensions.Logging;
 using Moq;
+using Serilog;
 using Xunit;
 
 namespace Konmaripo.Web.Tests.Unit.Controllers
@@ -14,12 +14,12 @@ namespace Konmaripo.Web.Tests.Unit.Controllers
         [SuppressMessage("ReSharper", "ObjectCreationAsStatement")]
         public class Ctor
         {
-            private readonly Mock<ILogger<SunsettingController>> _mockLogger;
+            private readonly Mock<ILogger> _mockLogger;
             private readonly Mock<IGitHubService> _mockGitHubService;
 
             public Ctor()
             {
-                _mockLogger = new Mock<ILogger<SunsettingController>>();
+                _mockLogger = new Mock<ILogger>();
                 _mockGitHubService = new Mock<IGitHubService>();
             }
 
