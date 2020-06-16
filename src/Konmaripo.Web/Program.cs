@@ -8,13 +8,11 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Serilog;
 using Serilog.Events;
-using Serilog.Extensions.Logging;
 
 namespace Konmaripo.Web
 {
     public class Program
     {
-        static readonly LoggerProviderCollection Providers = new LoggerProviderCollection();
         public static void Main(string[] args)
         {
             Log.Logger = new LoggerConfiguration()
@@ -23,7 +21,6 @@ namespace Konmaripo.Web
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
                 .Enrich.FromLogContext()
                 .WriteTo.Console()
-                .WriteTo.Providers(Providers)
                 .CreateLogger();
 
             try
@@ -43,7 +40,7 @@ namespace Konmaripo.Web
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
-                .UseSerilog(providers: Providers)
+                .UseSerilog()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
