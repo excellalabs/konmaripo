@@ -431,7 +431,28 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 Func<Task> act = async () => await _sut.CreateArchiveIssueInRepo(idThatDoesntMatter, nameThatDoesntMatter);
 
                 act.Should().Throw<ApiException>();
-}
+            }
+
+            [Fact]
+            public async Task WhenIssuesAreDisabled_LogsWarning()
+            {
+                const long repositoryId = 1234;
+
+                const string nameThatDoesntMatter = "name";
+
+                var issuesDisabledException = new ApiException("Issues are disabled for this repo", HttpStatusCode.BadRequest);
+
+                var mockIssuesClient = new Mock<IIssuesClient>();
+                mockIssuesClient.Setup(x => x.Create(It.IsAny<long>(), It.IsAny<NewIssue>()))
+                    .Throws(issuesDisabledException);
+
+                _mockClient.Setup(x => x.Issue).Returns(mockIssuesClient.Object);
+
+                await _sut.CreateArchiveIssueInRepo(repositoryId, nameThatDoesntMatter);
+
+                _mockLogger.Verify(x=>x.Warning("Issues are disabled for repository ID '{RepositoryID}'; could not create archive issue.", repositoryId), Times.Once);
+                // TODO: Verify that the logger was called
+            }
         }
     }
 }
