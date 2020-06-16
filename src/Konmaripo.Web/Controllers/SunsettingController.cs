@@ -3,19 +3,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
-using Serilog;
 
 namespace Konmaripo.Web.Controllers
 {
     [Authorize]
     public class SunsettingController : Controller
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<SunsettingController> _logger;
         private readonly IGitHubService _gitHubService;
 
-        public SunsettingController(ILogger logger, IGitHubService gitHubService)
+        public SunsettingController(ILogger<SunsettingController> logger, IGitHubService gitHubService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _gitHubService = gitHubService ?? throw new ArgumentNullException(nameof(gitHubService));
@@ -27,7 +27,7 @@ namespace Konmaripo.Web.Controllers
             // Pass through to the view
             var repos = await _gitHubService.GetRepositoriesForOrganizationAsync();
 
-            _logger.Information("Returning {RepoCount} repositories", repos.Count);
+            _logger.LogInformation("Returning {RepoCount} repositories", repos.Count);
 
             return View(repos);
 
@@ -48,9 +48,9 @@ namespace Konmaripo.Web.Controllers
 
         public async Task<IActionResult> ArchiveRepo(long repoId, string repoName)
         {
-            _logger.Information("Archiving Repo ID {RepoId}", repoId);
+            _logger.LogInformation("Archiving Repo ID {RepoId}", repoId);
             var currentUser = this.User.Identity.Name;
-            _logger.Information("User is {UserId}", currentUser);
+            _logger.LogInformation("User is {UserId}", currentUser);
 
             await _gitHubService.CreateArchiveIssueInRepo(repoId, currentUser);
             await _gitHubService.ArchiveRepository(repoId, repoName);
