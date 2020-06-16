@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Konmaripo.Web.Models;
-using Serilog;
 using Activity = System.Diagnostics.Activity;
 
 namespace Konmaripo.Web.Controllers
@@ -10,9 +10,9 @@ namespace Konmaripo.Web.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger logger)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
