@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Bogus;
 using FluentAssertions;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
@@ -529,30 +528,5 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
         }
 
-        public class OrganizationBuilder
-        {
-            private readonly Faker<Organization> _faker = new Faker<Organization>();
-            private readonly Faker<Plan> _planFaker = new Faker<Plan>();
-
-            public OrganizationBuilder WithPrivateRepoLimit(long limit)
-            {
-                _planFaker.RuleFor(pl => pl.PrivateRepos, limit);
-                return this;
-            }
-
-            public Organization Build()
-            {
-                var plan = _planFaker.Generate();
-                _faker.RuleFor(x => x.Plan, plan);
-                _faker.AssertConfigurationIsValid();
-                return _faker.Generate();
-            }
-
-            public OrganizationBuilder WithPrivateRepoCount(int privateRepoCount)
-            {
-                _faker.RuleFor(x => x.TotalPrivateRepos, privateRepoCount);
-                return this;
-            }
-        }
     }
 }
