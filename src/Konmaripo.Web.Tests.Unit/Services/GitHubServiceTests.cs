@@ -454,5 +454,45 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 // TODO: Verify that the logger was called
             }
         }
+
+        public class GetRepoQuotaForOrg
+        {
+            private readonly GitHubService _sut;
+            private readonly Mock<IGitHubClient> _mockClient;
+            private readonly Mock<IRepositoriesClient> _mockRepoClient;
+            private readonly GitHubSettings _settingsObject = new GitHubSettings();
+            readonly Mock<ILogger> _mockLogger;
+
+            public GetRepoQuotaForOrg()
+            {
+                _mockClient = new Mock<IGitHubClient>();
+                _mockRepoClient = new Mock<IRepositoriesClient>();
+                _mockLogger = new Mock<ILogger>();
+
+                _mockClient.Setup(x => x.Repository).Returns(_mockRepoClient.Object);
+
+                var mockSettings = new Mock<IOptions<GitHubSettings>>();
+                mockSettings.Setup(x => x.Value).Returns(_settingsObject);
+                _sut = new GitHubService(_mockClient.Object, mockSettings.Object, _mockLogger.Object);
+            }
+
+            [Fact]
+            public void UsesOrgFromSettings()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Fact]
+            public void GetsRepoLimitFromOrganizationPlan()
+            {
+                throw new NotImplementedException();
+            }
+
+            [Fact]
+            public void GetsPrivateRepositoryCountFromOrganizationInfo()
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }
