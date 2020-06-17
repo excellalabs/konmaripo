@@ -485,7 +485,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
                 _mockOrgClient.Setup(x =>
                         x.Get(It.IsAny<string>()))
-                    .Returns(Task.FromResult(new Organization()));
+                    .Returns(Task.FromResult(new OrganizationBuilder().Build()));
 
                 await _sut.GetRepoQuotaForOrg();
 
@@ -497,7 +497,8 @@ namespace Konmaripo.Web.Tests.Unit.Services
             {
                 var privateRepoLimit = 123;
 
-                var orgResult = new OrganizationBuilder().WithPrivateRepoLimit(privateRepoLimit)
+                var orgResult = new OrganizationBuilder()
+                    .WithPrivateRepoLimit(privateRepoLimit)
                     .Build();
 
                 _mockOrgClient.Setup(x =>
@@ -510,21 +511,28 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
-            public void GetsPrivateRepositoryCountFromOrganizationInfo()
+            public async Task GetsPrivateRepositoryCountFromOrganizationInfo()
             {
-                throw new NotImplementedException();
+                var privateRepoCount = 123;
+
+                var orgResult = new OrganizationBuilder()
+                    .WithPrivateRepoCount(privateRepoCount)
+                    .Build();
+
+                _mockOrgClient.Setup(x =>
+                        x.Get(It.IsAny<string>()))
+                    .Returns(Task.FromResult(orgResult));
+
+                var result = await _sut.GetRepoQuotaForOrg();
+
+                result.PrivateRepoCount.Should().Be(privateRepoCount);
             }
         }
 
         public class OrganizationBuilder
         {
-            private Faker<Organization> _faker = new Faker<Organization>();
-            private Faker<Plan> _planFaker = new Faker<Plan>();
-
-            public OrganizationBuilder()
-            {
-                _faker.RuleFor(x => x.Plan, _planFaker);
-            }
+            private readonly Faker<Organization> _faker = new Faker<Organization>();
+            private readonly Faker<Plan> _planFaker = new Faker<Plan>();
 
             public OrganizationBuilder WithPrivateRepoLimit(long limit)
             {
@@ -534,10 +542,17 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
             public Organization Build()
             {
+                var plan = _planFaker.Generate();
+                _faker.RuleFor(x => x.Plan, plan);
                 _faker.AssertConfigurationIsValid();
                 return _faker.Generate();
             }
 
+            public OrganizationBuilder WithPrivateRepoCount(int privateRepoCount)
+            {
+                _faker.RuleFor(x => x.TotalPrivateRepos, privateRepoCount);
+                return this;
+            }
         }
     }
 }
