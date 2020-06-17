@@ -74,9 +74,20 @@ namespace Konmaripo.Web.Services
             await _githubClient.Repository.Edit(repoId, makeArchived);
         }
 
-        public async Task GetRepoQuotaForOrg()
+        public async Task<RepoQuota> GetRepoQuotaForOrg()
         {
-            await _githubClient.Organization.Get(_gitHubSettings.OrganizationName);
+            var org = await _githubClient.Organization.Get(_gitHubSettings.OrganizationName);
+            return new RepoQuota(org.Plan.PrivateRepos);
+        }
+    }
+
+    public class RepoQuota
+    {
+        public long PrivateRepoLimit { get; }
+        
+        public RepoQuota(long privateRepoLimit)
+        {
+            PrivateRepoLimit = privateRepoLimit;
         }
     }
 }

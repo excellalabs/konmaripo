@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Bogus;
 using FluentAssertions;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
@@ -492,20 +493,20 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
-            public void GetsRepoLimitFromOrganizationPlan()
+            public async Task GetsRepoLimitFromOrganizationPlan()
             {
                 var privateRepoLimit = 123;
-                var orgWithPrivateRepoLimit = new Organization();
-                orgWithPrivateRepoLimit.Plan = new Plan(0,string.Empty, privateRepoLimit,0,string.Empty);
+
+                var orgResult = new OrganizationBuilder().WithPrivateRepoLimit(privateRepoLimit)
+                    .Build();
 
                 _mockOrgClient.Setup(x =>
                         x.Get(It.IsAny<string>()))
-                    .Returns(Task.FromResult(orgWithPrivateRepoLimit));
+                    .Returns(Task.FromResult(orgResult));
 
-                await _sut.GetRepoQuotaForOrg();
+                var result = await _sut.GetRepoQuotaForOrg();
 
-                _mockClient.Verify(x => x.Organization.Get(testOrgName), Times.Once);
-                throw new NotImplementedException();
+                result.PrivateRepoLimit.Should().Be(privateRepoLimit);
             }
 
             [Fact]
@@ -517,11 +518,24 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
         public class OrganizationBuilder
         {
-            private int _privateRepoLimit = 0;
-            public OrganizationBuilder WithPrivateRepoLimit(int limit)
+            private Faker<Organization> _faker = new Faker<Organization>();
+            private Faker<Plan> _planFaker = new Faker<Plan>();
+
+            public OrganizationBuilder()
             {
-                _privateRepoLimit = limit;
+                _faker.RuleFor(x => x.Plan, _planFaker);
+            }
+
+            public OrganizationBuilder WithPrivateRepoLimit(long limit)
+            {
+                _planFaker.RuleFor(pl => pl.PrivateRepos, limit);
                 return this;
+            }
+
+            public Organization Build()
+            {
+                _faker.AssertConfigurationIsValid();
+                return _faker.Generate();
             }
 
         }
