@@ -451,7 +451,6 @@ namespace Konmaripo.Web.Tests.Unit.Services
                 await _sut.CreateArchiveIssueInRepo(repositoryId, nameThatDoesntMatter);
 
                 _mockLogger.Verify(x=>x.Warning("Issues are disabled for repository ID '{RepositoryID}'; could not create archive issue.", repositoryId), Times.Once);
-                // TODO: Verify that the logger was called
             }
         }
 
@@ -459,17 +458,17 @@ namespace Konmaripo.Web.Tests.Unit.Services
         {
             private readonly GitHubService _sut;
             private readonly Mock<IGitHubClient> _mockClient;
-            private readonly Mock<IRepositoriesClient> _mockRepoClient;
+            private readonly Mock<IOrganizationsClient> _mockOrgClient;
             private readonly GitHubSettings _settingsObject = new GitHubSettings();
             readonly Mock<ILogger> _mockLogger;
 
             public GetRepoQuotaForOrg()
             {
                 _mockClient = new Mock<IGitHubClient>();
-                _mockRepoClient = new Mock<IRepositoriesClient>();
+                _mockOrgClient = new Mock<IOrganizationsClient>();
                 _mockLogger = new Mock<ILogger>();
 
-                _mockClient.Setup(x => x.Repository).Returns(_mockRepoClient.Object);
+                _mockClient.Setup(x => x.Organization).Returns(_mockOrgClient.Object);
 
                 var mockSettings = new Mock<IOptions<GitHubSettings>>();
                 mockSettings.Setup(x => x.Value).Returns(_settingsObject);
@@ -477,14 +476,35 @@ namespace Konmaripo.Web.Tests.Unit.Services
             }
 
             [Fact]
-            public void UsesOrgFromSettings()
+            public async Task UsesOrgFromSettings()
             {
-                throw new NotImplementedException();
+                var testOrgName = "MyTestOrg";
+
+                _settingsObject.OrganizationName = testOrgName;
+
+                _mockOrgClient.Setup(x =>
+                        x.Get(It.IsAny<string>()))
+                    .Returns(Task.FromResult(new Organization()));
+
+                await _sut.GetRepoQuotaForOrg();
+
+                _mockClient.Verify(x => x.Organization.Get(testOrgName), Times.Once);
             }
 
             [Fact]
             public void GetsRepoLimitFromOrganizationPlan()
             {
+                var privateRepoLimit = 123;
+                var orgWithPrivateRepoLimit = new Organization();
+                orgWithPrivateRepoLimit.Plan = new Plan(0,string.Empty, privateRepoLimit,0,string.Empty);
+
+                _mockOrgClient.Setup(x =>
+                        x.Get(It.IsAny<string>()))
+                    .Returns(Task.FromResult(orgWithPrivateRepoLimit));
+
+                await _sut.GetRepoQuotaForOrg();
+
+                _mockClient.Verify(x => x.Organization.Get(testOrgName), Times.Once);
                 throw new NotImplementedException();
             }
 
@@ -493,6 +513,17 @@ namespace Konmaripo.Web.Tests.Unit.Services
             {
                 throw new NotImplementedException();
             }
+        }
+
+        public class OrganizationBuilder
+        {
+            private int _privateRepoLimit = 0;
+            public OrganizationBuilder WithPrivateRepoLimit(int limit)
+            {
+                _privateRepoLimit = limit;
+                return this;
+            }
+
         }
     }
 }

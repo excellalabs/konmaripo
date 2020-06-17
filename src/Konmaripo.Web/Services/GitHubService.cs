@@ -73,5 +73,10 @@ namespace Konmaripo.Web.Services
 
             await _githubClient.Repository.Edit(repoId, makeArchived);
         }
+
+        public async Task GetRepoQuotaForOrg()
+        {
+            await _githubClient.Organization.Get(_gitHubSettings.OrganizationName);
+        }
     }
 }
