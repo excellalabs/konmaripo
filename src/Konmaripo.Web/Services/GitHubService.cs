@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
+using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.Extensions.Options;
 using Octokit;
 using Serilog;
@@ -72,6 +73,12 @@ namespace Konmaripo.Web.Services
             };
 
             await _githubClient.Repository.Edit(repoId, makeArchived);
+        }
+
+        public async Task<RepoQuota> GetRepoQuotaForOrg()
+        {
+            var org = await _githubClient.Organization.Get(_gitHubSettings.OrganizationName);
+            return new RepoQuota(org.Plan.PrivateRepos, org.TotalPrivateRepos);
         }
     }
 }

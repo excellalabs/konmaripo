@@ -63,5 +63,10 @@ namespace Konmaripo.Web.Services
 
             _memoryCache.Set(RepoCacheKey, repos, _cacheTimeout);
         }
+
+        public Task<RepoQuota> GetRepoQuotaForOrg()
+        {
+            return _gitHubService.GetRepoQuotaForOrg();
+        }
     }
 }

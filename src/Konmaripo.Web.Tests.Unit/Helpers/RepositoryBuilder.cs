@@ -1,4 +1,5 @@
 ﻿using System;
+using Bogus;
 using Octokit;
 
 namespace Konmaripo.Web.Tests.Unit.Helpers
@@ -23,6 +24,8 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
         private DateTimeOffset _pushedDate = DateTimeOffset.Now;
         private string _repoUrl = "";
 
+        private Faker<Repository> _faker = new Faker<Repository>();
+
         public RepositoryBuilder()
         {
             _dummyDateTimeOffset = DateTimeOffset.Now;
@@ -30,92 +33,79 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
 
         public RepositoryBuilder WithName(string repoName)
         {
-            _repositoryName = repoName;
+            _faker.RuleFor(x => x.Name, repoName);
 
             return this;
         }
 
         public Repository Build()
         {
-            var dummyInternalRepository = new Repository(1);
-            var licenseMetadata = new LicenseMetadata(DummyString, DummyString, DummyString, DummyString, DummyString, false);
-            var repositoryPermissions = new RepositoryPermissions(false, false, false);
-            var owner = new User();
-
-            var repo = new Repository(DummyString, _repoUrl, DummyString, DummyString, DummyString, DummyString,
-                DummyString, _repoId, DummyString, owner, _repositoryName, DummyString, false, _description,
-                DummyString, DummyString, _isPrivate, false, _forkCount, _starCount, DummyString, _openIssueCount, _pushedDate,
-                _createdDate, _updatedDate, repositoryPermissions,
-                dummyInternalRepository, dummyInternalRepository,
-                licenseMetadata,
-                false, false, false, false, 0, 0, false, false, false, _isArchived, 0);
-
-            return repo;
+            return _faker.Generate();
         }
 
         public RepositoryBuilder WithStarCount(int starCount)
         {
-            _starCount = starCount;
+            _faker.RuleFor(x => x.StargazersCount, starCount);
             return this;
         }
 
         public RepositoryBuilder WithArchivedOf(bool archived)
         {
-            _isArchived = archived;
+            _faker.RuleFor(x => x.Archived, archived);
             return this;
         }
 
         public RepositoryBuilder WithForkCount(int forkCount)
         {
-            _forkCount = forkCount;
+            _faker.RuleFor(x => x.ForksCount, forkCount);
             return this;
         }
 
         public RepositoryBuilder WithOpenIssues(int openIssueCount)
         {
-            _openIssueCount = openIssueCount;
+            _faker.RuleFor(x => x.OpenIssuesCount, openIssueCount);
             return this;
         }
 
         public RepositoryBuilder WithCreatedDate(DateTimeOffset createdDate)
         {
-            _createdDate = createdDate;
+            _faker.RuleFor(x => x.CreatedAt, createdDate);
             return this;
         }
 
         public RepositoryBuilder WithUpdatedDate(DateTimeOffset updatedDate)
         {
-            _updatedDate = updatedDate;
+            _faker.RuleFor(x => x.UpdatedAt, updatedDate);
             return this;
         }
 
         public RepositoryBuilder WithId(long repoId)
         {
-            _repoId = repoId;
+            _faker.RuleFor(x => x.Id, repoId);
             return this;
         }
 
         public RepositoryBuilder WithDescription(string desc)
         {
-            _description = desc;
+            _faker.RuleFor(x => x.Description, desc);
             return this;
         }
 
         public RepositoryBuilder WithIsPrivateOf(bool isPrivate)
         {
-            _isPrivate = isPrivate;
+            _faker.RuleFor(x => x.Private, isPrivate);
             return this;
         }
 
         public RepositoryBuilder WithPushedDate(DateTimeOffset pushedDate)
         {
-            _pushedDate = pushedDate;
+            _faker.RuleFor(x => x.PushedAt, pushedDate);
             return this;
         }
 
         public RepositoryBuilder WithUrlOf(string url)
         {
-            _repoUrl = url;
+            _faker.RuleFor(x => x.HtmlUrl, url);
             return this;
         }
     }
