@@ -24,7 +24,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
 
         public OrganizationBuilder WithPrivateRepoCount(int privateRepoCount)
         {
-            _faker.RuleFor(x => x.TotalPrivateRepos, privateRepoCount);
+            _faker.RuleFor(x => x.OwnedPrivateRepos, privateRepoCount);
             return this;
         }
     }
