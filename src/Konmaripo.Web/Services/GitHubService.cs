@@ -78,7 +78,7 @@ namespace Konmaripo.Web.Services
         public async Task<RepoQuota> GetRepoQuotaForOrg()
         {
             var org = await _githubClient.Organization.Get(_gitHubSettings.OrganizationName);
-            return new RepoQuota(org.Plan.PrivateRepos, org.TotalPrivateRepos);
+            return new RepoQuota(org.Plan.PrivateRepos, org.OwnedPrivateRepos);
         }
     }
 }
