@@ -57,6 +57,10 @@ namespace Konmaripo.Web.Controllers
 
             return View("ArchiveSuccess");
         }
+        public async Task<IActionResult> DownloadRepo(long repoId, string repoName)
+        {
+            return RedirectToAction(nameof(RepositoryInfo), new {repoId});
+        }
 
     }
 }

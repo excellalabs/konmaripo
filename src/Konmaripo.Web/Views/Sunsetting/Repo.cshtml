@@ -91,6 +91,14 @@
             <li>Actually archive the repository</li>
         </ul>
 
-        @Html.ActionLink($"Archive {Model.RepoInfo.Name}", "ArchiveRepo", new {repoId = Model.RepoInfo.Id, repoName = Model.RepoInfo.Name}, new{@class = "btn btn-danger", role="button"})
+        @Html.ActionLink($"Archive {Model.RepoInfo.Name}", "ArchiveRepo", new { repoId = Model.RepoInfo.Id, repoName = Model.RepoInfo.Name }, new { @class = "btn btn-danger", role = "button" })
     </div>
+</div>
+
+<div>
+    <h1 class="display-4">Delete this Repository?</h1>
+    
+    <h2>Step 1: Clone and Download the Repository</h2>
+    @Html.ActionLink("Click here to clone and download the repository from GitHub.", "DownloadRepo", new { repoId = Model.RepoInfo.Id, repoName = Model.RepoInfo.Name })
+    
 </div>
