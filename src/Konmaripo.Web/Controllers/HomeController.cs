@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Konmaripo.Web.Models;
+using Konmaripo.Web.Services;
 using Serilog;
 using Activity = System.Diagnostics.Activity;
 
@@ -11,10 +12,12 @@ namespace Konmaripo.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger _logger;
+        private readonly IGitHubService _gitHubService;
 
-        public HomeController(ILogger logger)
+        public HomeController(ILogger logger, IGitHubService gitHubService)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            _gitHubService = gitHubService ?? throw new ArgumentNullException(nameof(gitHubService));
         }
 
         public IActionResult Index()
