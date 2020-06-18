@@ -1,4 +1,5 @@
-﻿@{
+﻿@model RepoQuota
+@{
 
     ViewData["Title"] = "Home Page";
 }
@@ -7,4 +8,9 @@
     <h1 class="display-4">Welcome to Konmaripo!</h1>
     <p>A tool to enable easier GitHub repo and organization management.</p>
     <p>Currently, this tool enables you to @Html.ActionLink("sunset and archive repositories", "Index", "Sunsetting").</p>
+</div>
+
+<div class="text-center">
+    <h1 class="display-4">Current Stats</h1>
+    <p>We are using @Model.PrivateRepoCount of @Model.PrivateRepoLimit private repositories</p>
 </div>

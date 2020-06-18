@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Konmaripo.Web.Models;
@@ -20,9 +21,10 @@ namespace Konmaripo.Web.Controllers
             _gitHubService = gitHubService ?? throw new ArgumentNullException(nameof(gitHubService));
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var repoQuota = await _gitHubService.GetRepoQuotaForOrg();
+            return View(repoQuota);
         }
 
         [AllowAnonymous]
