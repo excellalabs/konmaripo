@@ -81,16 +81,4 @@ namespace Konmaripo.Web.Services
             return new RepoQuota(org.Plan.PrivateRepos, org.TotalPrivateRepos);
         }
     }
-
-    public class RepoQuota
-    {
-        public long PrivateRepoLimit { get; }
-        public int PrivateRepoCount { get; }
-
-        public RepoQuota(long privateRepoLimit, int privateRepoCount)
-        {
-            PrivateRepoLimit = privateRepoLimit;
-            PrivateRepoCount = privateRepoCount;
-        }
-    }
 }
