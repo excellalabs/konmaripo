@@ -23,6 +23,7 @@ FROM build AS publish
 RUN dotnet publish "Konmaripo.Web.csproj" -c Release -o /app/publish
 
 FROM base AS final
+RUN sudo apt-get install -y libgit2-dev
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Konmaripo.Web.dll"]

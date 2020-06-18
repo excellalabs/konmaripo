@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
+using LibGit2Sharp;
+using Microsoft.Net.Http.Headers;
 using Serilog;
 
 namespace Konmaripo.Web.Controllers
@@ -59,7 +61,7 @@ namespace Konmaripo.Web.Controllers
         }
         public async Task<IActionResult> DownloadRepo(long repoId, string repoName)
         {
-            return RedirectToAction(nameof(RepositoryInfo), new {repoId});
+            return new FileStreamResult(_gitHubService.ZippedRepositoryStream(repoName), MediaTypeHeaderValue.Parse("application/zip"));
         }
 
     }

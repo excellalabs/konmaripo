@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
+using LibGit2Sharp;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.Extensions.Options;
+using Microsoft.Win32.SafeHandles;
 using Octokit;
 using Serilog;
 
@@ -79,6 +83,27 @@ namespace Konmaripo.Web.Services
         {
             var org = await _githubClient.Organization.Get(_gitHubSettings.OrganizationName);
             return new RepoQuota(org.Plan.PrivateRepos, org.OwnedPrivateRepos);
+        }
+
+        public Stream ZippedRepositoryStream(string repoName)
+        {
+            var url = $"https://github.com/{_gitHubSettings.OrganizationName}/{repoName}.git".ToLowerInvariant();
+            var options = new CloneOptions
+            {
+                Checkout = true,
+                IsBare = false,
+                RecurseSubmodules = true,
+                CredentialsProvider = (_url, _user, _cred) =>
+                    new UsernamePasswordCredentials
+                    {
+                        Username = _gitHubSettings.AccessToken, 
+                        Password = string.Empty
+                    }
+            };
+            
+            var repoPath = LibGit2Sharp.Repository.Clone(url, $"./Data/{repoName}", options);
+
+            return Stream.Null;
         }
     }
 }

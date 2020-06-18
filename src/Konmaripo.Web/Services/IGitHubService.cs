@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
 
@@ -11,5 +12,6 @@ namespace Konmaripo.Web.Services
         Task CreateArchiveIssueInRepo(long repoId, string currentUser);
         Task ArchiveRepository(long repoId, string repoName);
         Task<RepoQuota> GetRepoQuotaForOrg();
+        Stream ZippedRepositoryStream(string repoName);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Functional.Maybe;
@@ -67,6 +68,11 @@ namespace Konmaripo.Web.Services
         public Task<RepoQuota> GetRepoQuotaForOrg()
         {
             return _gitHubService.GetRepoQuotaForOrg();
+        }
+
+        public Stream ZippedRepositoryStream(string repoName)
+        {
+            return _gitHubService.ZippedRepositoryStream(repoName);
         }
     }
 }
