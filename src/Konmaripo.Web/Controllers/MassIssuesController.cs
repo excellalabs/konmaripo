@@ -12,9 +12,7 @@ namespace Konmaripo.Web.Controllers
 {
     public class MassIssue
     {
-        [Display(Name = "Issue Subject")]
         public string Subject { get; }
-        [Display(Name = "Issue Body")]
         public string Body { get; }
 
         [Display(Name = "Pin Issue?")]
