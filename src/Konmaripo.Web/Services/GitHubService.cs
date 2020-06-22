@@ -84,7 +84,6 @@ namespace Konmaripo.Web.Services
         public int RemainingAPIRequests()
         {
             return _githubClient.GetLastApiInfo().RateLimit.Remaining;
-            throw new NotImplementedException();
         }
     }
 }
