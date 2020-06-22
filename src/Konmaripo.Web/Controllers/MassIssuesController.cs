@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -11,8 +12,12 @@ namespace Konmaripo.Web.Controllers
 {
     public class MassIssue
     {
+        [Display(Name = "Issue Subject")]
         public string Subject { get; }
+        [Display(Name = "Issue Body")]
         public string Body { get; }
+
+        [Display(Name = "Pin Issue?")]
         public bool ShouldBePinned { get; }
 
         public MassIssue(string subject, string body, bool shouldBePinned)
