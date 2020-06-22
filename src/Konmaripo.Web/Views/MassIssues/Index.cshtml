@@ -22,7 +22,7 @@
          
         <div class="form-group">
             @Html.LabelFor(x => x.MassIssue.Body)
-            @Html.TextAreaFor(x => x.MassIssue.Subject, htmlAttributes: new {@class = "form-control"})
+            @Html.TextAreaFor(x => x.MassIssue.Subject, htmlAttributes: new {@class = "form-control", rows=10})
         </div>
         
         <div class="form-check">
