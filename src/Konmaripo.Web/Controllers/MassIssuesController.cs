@@ -12,14 +12,21 @@ namespace Konmaripo.Web.Controllers
 {
     public class MassIssue
     {
-        public string Subject { get; }
+        [Required]
+        public string Subject { get; set; }
 
+        [Required]
         [DataType(DataType.MultilineText)]
-        public string Body { get; }
+        public string Body { get; set; }
 
         [Display(Name = "Pin Issue?")]
-        public bool ShouldBePinned { get; }
+        public bool ShouldBePinned { get; set; }
 
+        // ReSharper disable once UnusedMember.Global
+        public MassIssue()
+        {
+            // this is here because the model binding uses it
+        }
         public MassIssue(string subject, string body, bool shouldBePinned)
         {
             Subject = subject;
@@ -29,10 +36,15 @@ namespace Konmaripo.Web.Controllers
     }
     public class MassIssueViewModel
     {
-        public MassIssue MassIssue { get; }
-        public int NonArchivedRepos { get; }
-        public int RemainingAPIRequests { get; }
+        public MassIssue MassIssue { get; set; }
+        public int NonArchivedRepos { get; set; }
+        public int RemainingAPIRequests { get; set; }
 
+        // ReSharper disable once UnusedMember.Global
+        public MassIssueViewModel()
+        {
+            // This is here because the model binding uses it
+        }
         public MassIssueViewModel(MassIssue massIssue, int nonArchivedRepos, int remainingApiRequests)
         {
             MassIssue = massIssue;
@@ -57,13 +69,32 @@ namespace Konmaripo.Web.Controllers
         {
             var remainingRequests = _gitHubService.RemainingAPIRequests();
             var allRepos = await _gitHubService.GetRepositoriesForOrganizationAsync();
-            var nonArchivedRepos = allRepos.Count(x => !x.IsArchived);
+            var nonArchivedRepos = await NonArchivedRepos();
             var issue = new MassIssue(string.Empty, string.Empty, false);
 
             var vm = new MassIssueViewModel(issue, nonArchivedRepos, remainingRequests);
 
             return View(vm);
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> Index(MassIssueViewModel vm)
+        {
+            if (!ModelState.IsValid)
+            {
+                // TODO: Log?
+                vm.NonArchivedRepos = await NonArchivedRepos();
+                vm.RemainingAPIRequests = _gitHubService.RemainingAPIRequests();
+                return View(vm);
+            }
+
+            return await Index(); // TODO: Do something
+        }
+
+        private async Task<int> NonArchivedRepos()
+        {
+            var repos = await _gitHubService.GetRepositoriesForOrganizationAsync();
+            return repos.Count(x => !x.IsArchived);
         }
     }
 }

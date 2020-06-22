@@ -8,27 +8,30 @@
     <p>Create an issue that will be posted in all of your organization's repositories.</p>
 </div>
 
-@using (Html.BeginForm("CreateMassIssue", "MassIssues", FormMethod.Post))
+@using (Html.BeginForm("Index", "MassIssues", FormMethod.Post))
 {
 
     <div>
         <h1 class="display-4">Issue Contents</h1>
-        @Html.ValidationSummary(true)
+        @Html.ValidationSummary(false, null, htmlAttributes: new { @class = "text-danger" })
 
         <div class="form-group">
             @Html.LabelFor(x => x.MassIssue.Subject)
             @Html.TextBoxFor(x => x.MassIssue.Subject, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(x=>x.MassIssue.Subject, null, htmlAttributes: new { @class = "text-danger" })
         </div>
 
 
         <div class="form-group">
             @Html.LabelFor(x => x.MassIssue.Body)
             @Html.TextAreaFor(x => x.MassIssue.Subject, htmlAttributes: new { @class = "form-control", rows = 10 })
+            @Html.ValidationMessageFor(x => x.MassIssue.Body, null, htmlAttributes: new { @class = "text-danger" })
         </div>
 
         <div class="form-check">
             @Html.CheckBoxFor(x => x.MassIssue.ShouldBePinned, htmlAttributes: new { @class = "form-check-input" })
             @Html.LabelFor(x => x.MassIssue.ShouldBePinned, htmlAttributes: new { @class = "form-check-label" })
+            @Html.ValidationMessageFor(x=>x.MassIssue.ShouldBePinned, null, htmlAttributes: new { @class = "text-danger" })
         </div>
 
     </div>
