@@ -58,7 +58,6 @@
     <script src="https://unpkg.com/showdown/dist/showdown.min.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            console.log('loading script');
             var options = {
                 ghCompatibleHeaderId: true,
                 smoothLivePreview: true,
@@ -66,16 +65,11 @@
                 openLinksInNewWindow: true
             };
 
-            console.log('creating converter');
             var converter = new window.showdown.Converter(options);
-            converter.setFlavor('github');
 
-            console.log('setting change event');
             $('textarea#MassIssue_Subject').keyup(function () {
-                console.log('change event fired');
                 var txt = $('textarea#MassIssue_Subject').val();
 
-                console.log('setting html');
                 $('div#preview-content').html(converter.makeHtml(txt));
             });
         });
