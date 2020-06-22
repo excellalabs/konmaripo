@@ -11,5 +11,6 @@ namespace Konmaripo.Web.Services
         Task CreateArchiveIssueInRepo(long repoId, string currentUser);
         Task ArchiveRepository(long repoId, string repoName);
         Task<RepoQuota> GetRepoQuotaForOrg();
+        int RemainingAPIRequests();
     }
 }

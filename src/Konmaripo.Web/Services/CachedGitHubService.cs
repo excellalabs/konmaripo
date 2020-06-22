@@ -68,5 +68,10 @@ namespace Konmaripo.Web.Services
         {
             return _gitHubService.GetRepoQuotaForOrg();
         }
+
+        public int RemainingAPIRequests()
+        {
+            return _gitHubService.RemainingAPIRequests();
+        }
     }
 }

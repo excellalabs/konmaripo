@@ -9,6 +9,33 @@ using Serilog;
 
 namespace Konmaripo.Web.Controllers
 {
+    public class MassIssue
+    {
+        public string Subject { get; }
+        public string Body { get; }
+        public bool ShouldBePinned { get; }
+
+        public MassIssue(string subject, string body, bool shouldBePinned)
+        {
+            Subject = subject;
+            Body = body;
+            ShouldBePinned = shouldBePinned;
+        }
+    }
+    public class MassIssueViewModel
+    {
+        public MassIssue MassIssue { get; }
+        public int NonArchivedRepos { get; }
+        public int RemainingAPIRequests { get; }
+
+        public MassIssueViewModel(MassIssue massIssue, int nonArchivedRepos, int remainingApiRequests)
+        {
+            MassIssue = massIssue;
+            NonArchivedRepos = nonArchivedRepos;
+            RemainingAPIRequests = remainingApiRequests;
+        }
+    }
+
     [Authorize]
     public class MassIssuesController : Controller
     {
@@ -23,13 +50,14 @@ namespace Konmaripo.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // Obtain list of GitHub Repos
-            // Pass through to the view
-            var repos = await _gitHubService.GetRepositoriesForOrganizationAsync();
+            var remainingRequests = _gitHubService.RemainingAPIRequests();
+            var allRepos = await _gitHubService.GetRepositoriesForOrganizationAsync();
+            var nonArchivedRepos = allRepos.Count(x => !x.IsArchived);
+            var issue = new MassIssue(string.Empty, string.Empty, false);
 
-            _logger.Information("Returning {RepoCount} repositories", repos.Count);
+            var vm = new MassIssueViewModel(issue, nonArchivedRepos, remainingRequests);
 
-            return View(repos);
+            return View(vm);
 
         }
     }

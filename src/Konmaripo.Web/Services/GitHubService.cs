@@ -80,5 +80,11 @@ namespace Konmaripo.Web.Services
             var org = await _githubClient.Organization.Get(_gitHubSettings.OrganizationName);
             return new RepoQuota(org.Plan.PrivateRepos, org.OwnedPrivateRepos);
         }
+
+        public int RemainingAPIRequests()
+        {
+            return _githubClient.GetLastApiInfo().RateLimit.Remaining;
+            throw new NotImplementedException();
+        }
     }
 }
