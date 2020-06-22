@@ -13,6 +13,8 @@ namespace Konmaripo.Web.Controllers
     public class MassIssue
     {
         public string Subject { get; }
+
+        [DataType(DataType.MultilineText)]
         public string Body { get; }
 
         [Display(Name = "Pin Issue?")]
