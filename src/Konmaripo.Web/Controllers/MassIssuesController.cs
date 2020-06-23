@@ -95,12 +95,14 @@ namespace Konmaripo.Web.Controllers
             }
 
             var currentUser = this.User.Identity.Name;
-            var newIssue = new NewIssue(vm.MassIssue.IssueSubject);
-            newIssue.Body = @$"{vm.MassIssue.IssueBody}
+            var newIssue = new NewIssue(vm.MassIssue.IssueSubject)
+            {
+                Body = @$"{vm.MassIssue.IssueBody}
 
 ----
 
-Created by {currentUser} using the Konmaripo tool";
+Created by {currentUser} using the Konmaripo tool"
+            };
 
             try
             {
