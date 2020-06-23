@@ -85,24 +85,37 @@ namespace Konmaripo.Web.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.Warning("Mass issue model is invalid; returning validation error messages.");
+                vm.MassIssue.Subject = vm.MassIssue.Subject;
+                vm.MassIssue.Body = vm.MassIssue.Body;
                 vm.NonArchivedRepos = nonArchivedReposCount;
                 vm.RemainingAPIRequests = _gitHubService.RemainingAPIRequests();
                 return View(vm);
             }
-
-            var currentUser = this.User.Identity.Name;
-            var newIssue = new NewIssue(vm.MassIssue.Subject);
-            newIssue.Body = @$"{vm.MassIssue.Body}
+            else
+            {
+                var currentUser = this.User.Identity.Name;
+                var newIssue = new NewIssue(vm.MassIssue.Subject);
+                newIssue.Body = @$"{vm.MassIssue.Body}
 
 ----
 
 Created by {currentUser} using the Konmaripo tool";
 
-            var repos= await _gitHubService.GetRepositoriesForOrganizationAsync();
-            var nonArchivedRepos = repos.Where(x => !x.IsArchived).ToList();
-            await Task.WhenAll(_massIssueCreator.CreateIssue(newIssue, nonArchivedRepos));
+                try
+                {
+                    var repos = await _gitHubService.GetRepositoriesForOrganizationAsync();
+                    var nonArchivedRepos = repos.Where(x => !x.IsArchived).ToList();
+                    await Task.WhenAll(_massIssueCreator.CreateIssue(newIssue, nonArchivedRepos));
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error(ex, "An error occurred while creating the mass issues.");
+                }
 
-            return View("IssueSuccess");
+                return View("IssueSuccess");
+            }
+
+
         }
 
         private async Task<int> NonArchivedReposCount()
