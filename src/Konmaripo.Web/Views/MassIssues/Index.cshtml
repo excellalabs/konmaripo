@@ -31,8 +31,9 @@
 
     <div>
         <h1 class="display-4">Double-check: Preview</h1>
+        <p>Your issue will look roughly like what is inside the box.</p>
     </div>
-    <div id="preview-content">
+    <div id="preview-content" style="border: 1px solid">
 
     </div>
 
@@ -42,10 +43,12 @@
         <p>We have @Model.RemainingAPIRequests API requests remaining before it resets.</p>
     </div>
 
-    <div>
-        <h1 class="display-4">Submit</h1>
-        <p>This will be sent to @Model.NonArchivedRepos repositories</p>
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="alert alert-danger" role="alert">
+        <h1 class="display-4">Create @Model.NonArchivedRepos issues?</h1>
+        <h4 class="alert-heading">Clicking this will create an issue in every non-archived repository!</h4>
+        <p>Once the process has begun, it is not cancelable.</p>
+
+        <button type="submit" class="btn btn-danger" role="button">Submit</button>
     </div>
 
 }
@@ -53,19 +56,20 @@
 @section Scripts {
     <script src="https://unpkg.com/showdown/dist/showdown.min.js" type="text/javascript"></script>
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             var options = {
                 ghCompatibleHeaderId: true,
                 smoothLivePreview: true,
                 ghMentions: true,
-                openLinksInNewWindow: true
+                openLinksInNewWindow: true,
+                tables: true
             };
 
             var converter = new window.showdown.Converter(options);
+            converter.setFlavor('github');
 
-            $('textarea#MassIssue_IssueSubject').keyup(function () {
-                var txt = $('textarea#MassIssue_IssueSubject').val();
-
+            $('textarea#MassIssue_IssueBody').keyup(function () {
+                var txt = $('textarea#MassIssue_IssueBody').val();
                 $('div#preview-content').html(converter.makeHtml(txt));
             });
         });
