@@ -70,8 +70,8 @@
 
             var converter = new window.showdown.Converter(options);
 
-            $('textarea#MassIssue_Subject').keyup(function () {
-                var txt = $('textarea#MassIssue_Subject').val();
+            $('textarea#MassIssue_IssueSubject').keyup(function () {
+                var txt = $('textarea#MassIssue_IssueSubject').val();
 
                 $('div#preview-content').html(converter.makeHtml(txt));
             });
