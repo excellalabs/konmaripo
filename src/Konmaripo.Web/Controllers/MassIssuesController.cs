@@ -37,17 +37,19 @@ namespace Konmaripo.Web.Controllers
         public MassIssue MassIssue { get; set; }
         public int NonArchivedRepos { get; set; }
         public int RemainingAPIRequests { get; set; }
+        public DateTimeOffset APITokenResetTime { get; set; }
 
         // ReSharper disable once UnusedMember.Global
         public MassIssueViewModel()
         {
             // This is here because the model binding uses it
         }
-        public MassIssueViewModel(MassIssue massIssue, int nonArchivedRepos, int remainingApiRequests)
+        public MassIssueViewModel(MassIssue massIssue, int nonArchivedRepos, int remainingApiRequests, DateTimeOffset apiTokenResetTime)
         {
             MassIssue = massIssue;
             NonArchivedRepos = nonArchivedRepos;
             RemainingAPIRequests = remainingApiRequests;
+            APITokenResetTime = apiTokenResetTime;
         }
     }
 
@@ -68,10 +70,11 @@ namespace Konmaripo.Web.Controllers
         public async Task<IActionResult> Index()
         {
             var remainingRequests = _gitHubService.RemainingAPIRequests();
+            var tokenResetTime = _gitHubService.APITokenResetTime();
             var nonArchivedRepos = await NonArchivedReposCount();
             var issue = new MassIssue(string.Empty, string.Empty);
 
-            var vm = new MassIssueViewModel(issue, nonArchivedRepos, remainingRequests);
+            var vm = new MassIssueViewModel(issue, nonArchivedRepos, remainingRequests, tokenResetTime);
 
             return View(vm);
         }
@@ -87,6 +90,7 @@ namespace Konmaripo.Web.Controllers
                 vm.MassIssue.IssueBody = vm.MassIssue.IssueBody;
                 vm.NonArchivedRepos = nonArchivedReposCount;
                 vm.RemainingAPIRequests = _gitHubService.RemainingAPIRequests();
+                vm.APITokenResetTime = _gitHubService.APITokenResetTime();
                 return View(vm);
             }
 
