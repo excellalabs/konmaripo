@@ -24,7 +24,7 @@
 
         <div class="form-group">
             @Html.LabelFor(x => x.MassIssue.IssueBody)
-            @Html.TextAreaFor(x => x.MassIssue.IssueSubject, htmlAttributes: new { @class = "form-control", rows = 10 })
+            @Html.TextAreaFor(x => x.MassIssue.IssueBody, htmlAttributes: new { @class = "form-control", rows = 10 })
             @Html.ValidationMessageFor(x => x.MassIssue.IssueBody, null, htmlAttributes: new { @class = "text-danger" })
         </div>
 
