@@ -6,6 +6,7 @@ using Konmaripo.Web.Models;
 using Microsoft.Extensions.Options;
 using Octokit;
 using Serilog;
+using TimeZoneConverter;
 
 namespace Konmaripo.Web.Services
 {
@@ -87,6 +88,16 @@ namespace Konmaripo.Web.Services
         public Task CreateIssueInRepo(NewIssue issue, long repoId)
         {
             return _githubClient.Issue.Create(repoId, issue);
+        }
+
+        public DateTimeOffset APITokenResetTime()
+        {
+            var reset = _githubClient.GetLastApiInfo().RateLimit.Reset;
+            var timeZoneToConvertTo = TZConvert.GetTimeZoneInfo(_gitHubSettings.TimeZoneDisplayId);
+
+            var resultingTime = TimeZoneInfo.ConvertTime(reset, timeZoneToConvertTo);
+
+            return resultingTime;
         }
     }
 }

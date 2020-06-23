@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
 using Octokit;
@@ -14,5 +15,6 @@ namespace Konmaripo.Web.Services
         Task<RepoQuota> GetRepoQuotaForOrg();
         int RemainingAPIRequests();
         Task CreateIssueInRepo(NewIssue issue, long repoId);
+        DateTimeOffset APITokenResetTime();
     }
 }
