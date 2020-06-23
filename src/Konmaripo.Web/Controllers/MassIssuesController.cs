@@ -93,29 +93,27 @@ namespace Konmaripo.Web.Controllers
                 vm.RemainingAPIRequests = _gitHubService.RemainingAPIRequests();
                 return View(vm);
             }
-            else
-            {
-                var currentUser = this.User.Identity.Name;
-                var newIssue = new NewIssue(vm.MassIssue.IssueSubject);
-                newIssue.Body = @$"{vm.MassIssue.IssueBody}
+
+            var currentUser = this.User.Identity.Name;
+            var newIssue = new NewIssue(vm.MassIssue.IssueSubject);
+            newIssue.Body = @$"{vm.MassIssue.IssueBody}
 
 ----
 
 Created by {currentUser} using the Konmaripo tool";
 
-                try
-                {
-                    var repos = await _gitHubService.GetRepositoriesForOrganizationAsync();
-                    var nonArchivedRepos = repos.Where(x => !x.IsArchived).ToList();
-                    await Task.WhenAll(_massIssueCreator.CreateIssue(newIssue, nonArchivedRepos));
-                }
-                catch (Exception ex)
-                {
-                    _logger.Error(ex, "An error occurred while creating the mass issues.");
-                }
-
-                return View("IssueSuccess");
+            try
+            {
+                var repos = await _gitHubService.GetRepositoriesForOrganizationAsync();
+                var nonArchivedRepos = repos.Where(x => !x.IsArchived).ToList();
+                await Task.WhenAll(_massIssueCreator.CreateIssue(newIssue, nonArchivedRepos));
             }
+            catch (Exception ex)
+            {
+                _logger.Error(ex, "An error occurred while creating the mass issues.");
+            }
+
+            return View("IssueSuccess");
 
 
         }
