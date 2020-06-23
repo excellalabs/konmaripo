@@ -11,6 +11,52 @@ using Serilog;
 
 namespace Konmaripo.Web.Services
 {
+    public interface IMassIssueCreator
+    {
+        List<Task> CreateIssue(NewIssue issue, List<GitHubRepo> repoList);
+    }
+    public class MassIssueCreator
+    {
+        private readonly System.Threading.SemaphoreSlim _batcher = new System.Threading.SemaphoreSlim(10, 10);
+        private readonly IGitHubService _gitHubService;
+        private readonly ILogger _logger;
+
+        public MassIssueCreator(IGitHubService gitHubService, ILogger logger)
+        {
+            _gitHubService = gitHubService;
+            _logger = logger;
+        }
+
+        public List<Task> CreateIssue(NewIssue issue, List<GitHubRepo> repoList)
+        {
+            _logger.Information("Queuing issues for {RepoCount}", repoList);
+            var taskList = new List<Task>();
+
+            repoList.ForEach(x=> taskList.Add(CreateIssue(issue, x.Id)));
+
+            _logger.Information("Added tasks");
+
+            return taskList;
+        }
+        private async Task CreateIssue(NewIssue issue, long repoId)
+        {
+            await _batcher.WaitAsync();
+
+            try
+            {
+                await _gitHubService.CreateIssueInRepo(issue, repoId);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e, "An error occurred while creating an issue in repoId {RepoId}", repoId);
+            }
+            finally
+            {
+                _batcher.Release();
+            }
+        }
+    }
+
     public class GitHubService : IGitHubService
     {
         private readonly IGitHubClient _githubClient;
@@ -84,6 +130,11 @@ namespace Konmaripo.Web.Services
         public int RemainingAPIRequests()
         {
             return _githubClient.GetLastApiInfo().RateLimit.Remaining;
+        }
+
+        public Task CreateIssueInRepo(NewIssue issue, long repoId)
+        {
+            return _githubClient.Issue.Create(repoId, issue);
         }
     }
 }
