@@ -60,10 +60,12 @@
                 ghCompatibleHeaderId: true,
                 smoothLivePreview: true,
                 ghMentions: true,
-                openLinksInNewWindow: true
+                openLinksInNewWindow: true,
+                tables: true
             };
 
             var converter = new window.showdown.Converter(options);
+            converter.setFlavor('github');
 
             $('textarea#MassIssue_IssueBody').keyup(function () {
                 var txt = $('textarea#MassIssue_IssueBody').val();
