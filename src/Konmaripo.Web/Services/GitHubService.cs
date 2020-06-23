@@ -29,7 +29,7 @@ namespace Konmaripo.Web.Services
 
         public List<Task> CreateIssue(NewIssue issue, List<GitHubRepo> repoList)
         {
-            _logger.Information("Queuing issues for {RepoCount}", repoList);
+            _logger.Information("Queuing issues for {RepoCount} repositories", repoList.Count);
             var taskList = new List<Task>();
 
             repoList.ForEach(x=> taskList.Add(CreateIssue(issue, x.Id)));
