@@ -15,7 +15,7 @@ namespace Konmaripo.Web.Services
     {
         List<Task> CreateIssue(NewIssue issue, List<GitHubRepo> repoList);
     }
-    public class MassIssueCreator
+    public class MassIssueCreator : IMassIssueCreator
     {
         private readonly System.Threading.SemaphoreSlim _batcher = new System.Threading.SemaphoreSlim(10, 10);
         private readonly IGitHubService _gitHubService;

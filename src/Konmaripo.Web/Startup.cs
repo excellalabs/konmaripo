@@ -72,6 +72,8 @@ namespace Konmaripo.Web
 
                 return cachedService;
             });
+
+            services.AddTransient<IMassIssueCreator, MassIssueCreator>();
         }
 
         /// <summary>
