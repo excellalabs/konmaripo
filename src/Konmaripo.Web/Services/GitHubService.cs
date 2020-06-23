@@ -88,5 +88,15 @@ namespace Konmaripo.Web.Services
         {
             return _githubClient.Issue.Create(repoId, issue);
         }
+
+        public DateTimeOffset APITokenResetTime()
+        {
+            var reset = _githubClient.GetLastApiInfo().RateLimit.Reset;
+            var timeZoneToConvertTo = TimeZoneInfo.FindSystemTimeZoneById(_gitHubSettings.TimeZoneDisplayId);
+
+            var resultingTime = TimeZoneInfo.ConvertTime(reset, timeZoneToConvertTo);
+
+            return resultingTime;
+        }
     }
 }

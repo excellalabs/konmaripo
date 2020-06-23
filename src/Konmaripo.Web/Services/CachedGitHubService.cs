@@ -79,5 +79,10 @@ namespace Konmaripo.Web.Services
         {
             return _gitHubService.CreateIssueInRepo(issue, repoId);
         }
+
+        public DateTimeOffset APITokenResetTime()
+        {
+            return _gitHubService.APITokenResetTime();
+        }
     }
 }
