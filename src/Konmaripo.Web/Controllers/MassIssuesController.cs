@@ -13,11 +13,13 @@ namespace Konmaripo.Web.Controllers
     public class MassIssue
     {
         [Required]
-        public string Subject { get; set; }
+        [Display(Name = "Subject")]
+        public string IssueSubject { get; set; }
 
         [Required]
+        [Display(Name = "Body")]
         [DataType(DataType.MultilineText)]
-        public string Body { get; set; }
+        public string IssueBody { get; set; }
 
         [Display(Name = "Pin Issue?")]
         public bool ShouldBePinned { get; set; }
@@ -27,10 +29,10 @@ namespace Konmaripo.Web.Controllers
         {
             // this is here because the model binding uses it
         }
-        public MassIssue(string subject, string body, bool shouldBePinned)
+        public MassIssue(string issueSubject, string issueBody, bool shouldBePinned)
         {
-            Subject = subject;
-            Body = body;
+            IssueSubject = issueSubject;
+            IssueBody = issueBody;
             ShouldBePinned = shouldBePinned;
         }
     }
@@ -85,8 +87,8 @@ namespace Konmaripo.Web.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.Warning("Mass issue model is invalid; returning validation error messages.");
-                vm.MassIssue.Subject = vm.MassIssue.Subject;
-                vm.MassIssue.Body = vm.MassIssue.Body;
+                vm.MassIssue.IssueSubject = vm.MassIssue.IssueSubject;
+                vm.MassIssue.IssueBody = vm.MassIssue.IssueBody;
                 vm.NonArchivedRepos = nonArchivedReposCount;
                 vm.RemainingAPIRequests = _gitHubService.RemainingAPIRequests();
                 return View(vm);
@@ -94,8 +96,8 @@ namespace Konmaripo.Web.Controllers
             else
             {
                 var currentUser = this.User.Identity.Name;
-                var newIssue = new NewIssue(vm.MassIssue.Subject);
-                newIssue.Body = @$"{vm.MassIssue.Body}
+                var newIssue = new NewIssue(vm.MassIssue.IssueSubject);
+                newIssue.Body = @$"{vm.MassIssue.IssueBody}
 
 ----
 
