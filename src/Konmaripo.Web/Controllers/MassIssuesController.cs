@@ -21,19 +21,15 @@ namespace Konmaripo.Web.Controllers
         [DataType(DataType.MultilineText)]
         public string IssueBody { get; set; }
 
-        [Display(Name = "Pin Issue?")]
-        public bool ShouldBePinned { get; set; }
-
         // ReSharper disable once UnusedMember.Global
         public MassIssue()
         {
             // this is here because the model binding uses it
         }
-        public MassIssue(string issueSubject, string issueBody, bool shouldBePinned)
+        public MassIssue(string issueSubject, string issueBody)
         {
             IssueSubject = issueSubject;
             IssueBody = issueBody;
-            ShouldBePinned = shouldBePinned;
         }
     }
     public class MassIssueViewModel
@@ -73,7 +69,7 @@ namespace Konmaripo.Web.Controllers
         {
             var remainingRequests = _gitHubService.RemainingAPIRequests();
             var nonArchivedRepos = await NonArchivedReposCount();
-            var issue = new MassIssue(string.Empty, string.Empty, false);
+            var issue = new MassIssue(string.Empty, string.Empty);
 
             var vm = new MassIssueViewModel(issue, nonArchivedRepos, remainingRequests);
 
