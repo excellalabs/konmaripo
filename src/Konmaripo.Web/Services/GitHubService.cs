@@ -6,6 +6,7 @@ using Konmaripo.Web.Models;
 using Microsoft.Extensions.Options;
 using Octokit;
 using Serilog;
+using TimeZoneConverter;
 
 namespace Konmaripo.Web.Services
 {
@@ -92,7 +93,7 @@ namespace Konmaripo.Web.Services
         public DateTimeOffset APITokenResetTime()
         {
             var reset = _githubClient.GetLastApiInfo().RateLimit.Reset;
-            var timeZoneToConvertTo = TimeZoneInfo.FindSystemTimeZoneById(_gitHubSettings.TimeZoneDisplayId);
+            var timeZoneToConvertTo = TZConvert.GetTimeZoneInfo(_gitHubSettings.TimeZoneDisplayId);
 
             var resultingTime = TimeZoneInfo.ConvertTime(reset, timeZoneToConvertTo);
 
