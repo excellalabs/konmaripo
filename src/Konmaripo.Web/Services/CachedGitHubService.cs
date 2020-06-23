@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Functional.Maybe;
 using Konmaripo.Web.Models;
 using Microsoft.Extensions.Caching.Memory;
+using Octokit;
 
 namespace Konmaripo.Web.Services
 {
@@ -67,6 +68,16 @@ namespace Konmaripo.Web.Services
         public Task<RepoQuota> GetRepoQuotaForOrg()
         {
             return _gitHubService.GetRepoQuotaForOrg();
+        }
+
+        public int RemainingAPIRequests()
+        {
+            return _gitHubService.RemainingAPIRequests();
+        }
+
+        public Task CreateIssueInRepo(NewIssue issue, long repoId)
+        {
+            return _gitHubService.CreateIssueInRepo(issue, repoId);
         }
     }
 }

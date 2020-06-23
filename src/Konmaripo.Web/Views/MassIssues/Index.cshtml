@@ -1,0 +1,80 @@
+﻿@model Konmaripo.Web.Controllers.MassIssueViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div>
+    <h1 class="display-4">Mass Issue Creation</h1>
+    <p>Create an issue that will be posted in all of your organization's repositories.</p>
+</div>
+
+@using (Html.BeginForm("Index", "MassIssues", FormMethod.Post))
+{
+
+    <div>
+        <h1 class="display-4">Issue Contents</h1>
+        @Html.ValidationSummary(false, null, htmlAttributes: new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.MassIssue.IssueSubject)
+            @Html.TextBoxFor(x => x.MassIssue.IssueSubject, htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(x=>x.MassIssue.IssueSubject, null, htmlAttributes: new { @class = "text-danger" })
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.MassIssue.IssueBody)
+            @Html.TextAreaFor(x => x.MassIssue.IssueBody, htmlAttributes: new { @class = "form-control", rows = 10 })
+            @Html.ValidationMessageFor(x => x.MassIssue.IssueBody, null, htmlAttributes: new { @class = "text-danger" })
+        </div>
+
+        <div class="form-check">
+            @Html.CheckBoxFor(x => x.MassIssue.ShouldBePinned, htmlAttributes: new { @class = "form-check-input" })
+            @Html.LabelFor(x => x.MassIssue.ShouldBePinned, htmlAttributes: new { @class = "form-check-label" })
+            @Html.ValidationMessageFor(x=>x.MassIssue.ShouldBePinned, null, htmlAttributes: new { @class = "text-danger" })
+        </div>
+
+    </div>
+
+    <div>
+        <h1 class="display-4">Double-check: Preview</h1>
+    </div>
+    <div id="preview-content">
+
+    </div>
+
+    <div>
+        <h1 class="display-4">Double-check: Distribution</h1>
+        <p>This will be sent to @Model.NonArchivedRepos repositories</p>
+        <p>We have @Model.RemainingAPIRequests API requests remaining before it resets.</p>
+    </div>
+
+    <div>
+        <h1 class="display-4">Submit</h1>
+        <p>This will be sent to @Model.NonArchivedRepos repositories</p>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+
+}
+
+@section Scripts {
+    <script src="https://unpkg.com/showdown/dist/showdown.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var options = {
+                ghCompatibleHeaderId: true,
+                smoothLivePreview: true,
+                ghMentions: true,
+                openLinksInNewWindow: true
+            };
+
+            var converter = new window.showdown.Converter(options);
+
+            $('textarea#MassIssue_IssueSubject').keyup(function () {
+                var txt = $('textarea#MassIssue_IssueSubject').val();
+
+                $('div#preview-content').html(converter.makeHtml(txt));
+            });
+        });
+    </script>
+}

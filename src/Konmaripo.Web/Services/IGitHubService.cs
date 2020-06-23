@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
+using Octokit;
 
 namespace Konmaripo.Web.Services
 {
@@ -11,5 +12,7 @@ namespace Konmaripo.Web.Services
         Task CreateArchiveIssueInRepo(long repoId, string currentUser);
         Task ArchiveRepository(long repoId, string repoName);
         Task<RepoQuota> GetRepoQuotaForOrg();
+        int RemainingAPIRequests();
+        Task CreateIssueInRepo(NewIssue issue, long repoId);
     }
 }
