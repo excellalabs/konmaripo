@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Functional.Maybe;
 using Konmaripo.Web.Models;
 using Microsoft.Extensions.Caching.Memory;
+using Octokit;
 
 namespace Konmaripo.Web.Services
 {
@@ -73,6 +74,20 @@ namespace Konmaripo.Web.Services
         public Stream ZippedRepositoryStream(string repoName)
         {
             return _gitHubService.ZippedRepositoryStream(repoName);
+        }
+        public int RemainingAPIRequests()
+        {
+            return _gitHubService.RemainingAPIRequests();
+        }
+
+        public Task CreateIssueInRepo(NewIssue issue, long repoId)
+        {
+            return _gitHubService.CreateIssueInRepo(issue, repoId);
+        }
+
+        public DateTimeOffset APITokenResetTime()
+        {
+            return _gitHubService.APITokenResetTime();
         }
     }
 }

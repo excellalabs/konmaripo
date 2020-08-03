@@ -6,30 +6,7 @@ namespace Konmaripo.Web.Tests.Unit.Helpers
 {
     public class RepositoryBuilder
     {
-        const string DummyString = "";
-        const long DummyLong = 0;
-        const int DummyInt = 0;
-        private readonly DateTimeOffset _dummyDateTimeOffset;
-
-        private string _repositoryName = "";
-        private int _starCount = 0;
-        private bool _isArchived = false;
-        private int _forkCount = 0;
-        private int _openIssueCount = 0;
-        private DateTimeOffset _createdDate = DateTimeOffset.Now;
-        private DateTimeOffset _updatedDate = DateTimeOffset.Now;
-        private long _repoId = 0;
-        private string _description = "";
-        private bool _isPrivate = false;
-        private DateTimeOffset _pushedDate = DateTimeOffset.Now;
-        private string _repoUrl = "";
-
-        private Faker<Repository> _faker = new Faker<Repository>();
-
-        public RepositoryBuilder()
-        {
-            _dummyDateTimeOffset = DateTimeOffset.Now;
-        }
+        private readonly Faker<Repository> _faker = new Faker<Repository>();
 
         public RepositoryBuilder WithName(string repoName)
         {

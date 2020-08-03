@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
 using LibGit2Sharp;
@@ -12,6 +11,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.Win32.SafeHandles;
 using Octokit;
 using Serilog;
+using TimeZoneConverter;
 
 namespace Konmaripo.Web.Services
 {
@@ -104,6 +104,25 @@ namespace Konmaripo.Web.Services
             var repoPath = LibGit2Sharp.Repository.Clone(url, $"./Data/{repoName}", options);
 
             return Stream.Null;
+        }
+        public int RemainingAPIRequests()
+        {
+            return _githubClient.GetLastApiInfo().RateLimit.Remaining;
+        }
+
+        public Task CreateIssueInRepo(NewIssue issue, long repoId)
+        {
+            return _githubClient.Issue.Create(repoId, issue);
+        }
+
+        public DateTimeOffset APITokenResetTime()
+        {
+            var reset = _githubClient.GetLastApiInfo().RateLimit.Reset;
+            var timeZoneToConvertTo = TZConvert.GetTimeZoneInfo(_gitHubSettings.TimeZoneDisplayId);
+
+            var resultingTime = TimeZoneInfo.ConvertTime(reset, timeZoneToConvertTo);
+
+            return resultingTime;
         }
     }
 }

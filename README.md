@@ -17,13 +17,4 @@ This tool uses:
 * Docker containers
 * Octokit .NET (with a GitHub Access token)
 
-## Planned Feature Roadmap
-
-* [x] Delegated access via Azure AD. Admins can choose who can triage these repositories
-* [x] See applications and statistics to enable you to make an informed decision
-* [ ] Archival: Create and pin an issue
-* [ ] Archival: Archive the repository
-* [ ] Removal: Clone a github repository
-* [ ] Removal: Zip up a repository
-* [ ] Removal: Delete repository?
-* [ ] Enforce a waiting period between archival and removal
+## [Planned Feature Roadmap](https://github.com/excellalabs/konmaripo/projects/1)
