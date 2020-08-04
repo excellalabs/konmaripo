@@ -93,7 +93,9 @@ namespace Konmaripo.Web.Services
                 Checkout = true,
                 IsBare = false,
                 RecurseSubmodules = true,
+                // ReSharper disable InconsistentNaming
                 CredentialsProvider = (_url, _user, _cred) =>
+                // ReSharper enable InconsistentNaming
                     new UsernamePasswordCredentials
                     {
                         Username = _gitHubSettings.AccessToken, 
@@ -101,7 +103,7 @@ namespace Konmaripo.Web.Services
                     }
             };
             
-            var repoPath = LibGit2Sharp.Repository.Clone(url, $"./Data/{repoName}", options);
+            var pathToRepo = LibGit2Sharp.Repository.Clone(url, $"./Data/{repoName}", options);
 
             return Stream.Null;
         }
