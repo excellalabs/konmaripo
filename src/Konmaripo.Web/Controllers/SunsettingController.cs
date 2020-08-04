@@ -59,7 +59,7 @@ namespace Konmaripo.Web.Controllers
 
             return View("ArchiveSuccess");
         }
-        public async Task<IActionResult> DownloadRepo(long repoId, string repoName)
+        public IActionResult DownloadRepo(long repoId, string repoName)
         {
             return new FileStreamResult(_gitHubService.ZippedRepositoryStream(repoName), MediaTypeHeaderValue.Parse("application/zip"));
         }
