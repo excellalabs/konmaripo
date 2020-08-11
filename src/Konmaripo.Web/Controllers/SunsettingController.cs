@@ -63,7 +63,7 @@ namespace Konmaripo.Web.Controllers
             _logger.Information("Generating zip file of {RepoName} (id {RepoId})", repoName, repoId);
             var zippedRepositoryStream = _gitHubService.ZippedRepositoryStream(repoName);
             _logger.Information("Stream generated for {RepoName} -- returning", repoName, repoId);
-            return new FileStreamResult(zippedRepositoryStream, MediaTypeHeaderValue.Parse("application/zip"));
+            return File(zippedRepositoryStream, "application/zip", $"{repoName}.zip");
         }
 
     }
