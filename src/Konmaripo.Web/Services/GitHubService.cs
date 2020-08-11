@@ -6,12 +6,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
 using LibGit2Sharp;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.Extensions.Options;
-using Microsoft.Win32.SafeHandles;
 using Octokit;
 using Serilog;
 using TimeZoneConverter;
+using FileMode = System.IO.FileMode;
 
 namespace Konmaripo.Web.Services
 {
@@ -85,7 +84,7 @@ namespace Konmaripo.Web.Services
             return new RepoQuota(org.Plan.PrivateRepos, org.OwnedPrivateRepos);
         }
 
-        public Stream ZippedRepositoryStream(string repoName)
+        public FileStream ZippedRepositoryStream(string repoName)
         {
             var url = $"https://github.com/{_gitHubSettings.OrganizationName}/{repoName}.git".ToLowerInvariant();
             var options = new CloneOptions
@@ -103,9 +102,19 @@ namespace Konmaripo.Web.Services
                     }
             };
             
-            var pathToRepo = LibGit2Sharp.Repository.Clone(url, $"./Data/{repoName}", options);
+                var startPath = "./Data";
+                var destinationArchiveFileName = Path.Combine(startPath, $"{repoName}.zip");
+                var clonePath = Path.Combine(startPath, repoName);
 
-            return Stream.Null;
+            // TODO: Make async
+            var pathToRepoGitFile = LibGit2Sharp.Repository.Clone(url, clonePath, options);
+            var pathToFullRepo = pathToRepoGitFile.Replace(".git/", ""); // Directory.GetParent didn't work for this, maybe due to the period in the directory name.
+            // TODO: Make async
+            ZipFile.CreateFromDirectory(pathToFullRepo, destinationArchiveFileName, CompressionLevel.Fastest, false);
+
+            Directory.Delete(clonePath, true);
+
+            return new FileStream(destinationArchiveFileName, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
         }
         public int RemainingAPIRequests()
         {
