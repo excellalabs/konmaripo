@@ -71,7 +71,7 @@ namespace Konmaripo.Web.Services
             return _gitHubService.GetRepoQuotaForOrg();
         }
 
-        public Stream ZippedRepositoryStream(string repoName)
+        public FileStream ZippedRepositoryStream(string repoName)
         {
             return _gitHubService.ZippedRepositoryStream(repoName);
         }

@@ -14,7 +14,7 @@ namespace Konmaripo.Web.Services
         Task CreateArchiveIssueInRepo(long repoId, string currentUser);
         Task ArchiveRepository(long repoId, string repoName);
         Task<RepoQuota> GetRepoQuotaForOrg();
-        Stream ZippedRepositoryStream(string repoName);
+        FileStream ZippedRepositoryStream(string repoName);
         int RemainingAPIRequests();
         Task CreateIssueInRepo(NewIssue issue, long repoId);
         DateTimeOffset APITokenResetTime();
