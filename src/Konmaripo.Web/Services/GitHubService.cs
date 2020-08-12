@@ -10,6 +10,7 @@ using Microsoft.Extensions.Options;
 using Octokit;
 using Serilog;
 using TimeZoneConverter;
+using Branch = LibGit2Sharp.Branch;
 using FileMode = System.IO.FileMode;
 
 namespace Konmaripo.Web.Services
@@ -19,6 +20,8 @@ namespace Konmaripo.Web.Services
         private readonly IGitHubClient _githubClient;
         private readonly GitHubSettings _gitHubSettings;
         private readonly ILogger _logger;
+        const string REMOTE_NAME = "origin"; // hard-coded since this will be the default when cloned from GitHub.
+
         public GitHubService(IGitHubClient githubClient, IOptions<GitHubSettings> githubSettings, ILogger logger)
         {
             _githubClient = githubClient ?? throw new ArgumentNullException(nameof(githubClient));
@@ -86,28 +89,69 @@ namespace Konmaripo.Web.Services
 
         public FileStream ZippedRepositoryStream(string repoName)
         {
+
             var url = $"https://github.com/{_gitHubSettings.OrganizationName}/{repoName}.git".ToLowerInvariant();
+            var creds = new UsernamePasswordCredentials
+            {
+                Username = _gitHubSettings.AccessToken,
+                Password = string.Empty
+            };
+
+            var fetchOptions = new FetchOptions()
+            {
+                TagFetchMode = TagFetchMode.All,
+                CredentialsProvider = (_url, _user, _cred) => creds,
+            };
+
             var options = new CloneOptions
             {
                 Checkout = true,
                 IsBare = false,
                 RecurseSubmodules = true,
                 // ReSharper disable InconsistentNaming
-                CredentialsProvider = (_url, _user, _cred) =>
+                CredentialsProvider = (_url, _user, _cred) => creds,FetchOptions = fetchOptions
                 // ReSharper enable InconsistentNaming
-                    new UsernamePasswordCredentials
-                    {
-                        Username = _gitHubSettings.AccessToken, 
-                        Password = string.Empty
-                    }
             };
             
-                var startPath = "./Data";
-                var destinationArchiveFileName = Path.Combine(startPath, $"{repoName}.zip");
-                var clonePath = Path.Combine(startPath, repoName);
+            var startPath = "./Data";
+            var destinationArchiveFileName = Path.Combine(startPath, $"{repoName}.zip");
+            var clonePath = Path.Combine(startPath, repoName);
 
             // TODO: Make async
             var pathToRepoGitFile = LibGit2Sharp.Repository.Clone(url, clonePath, options);
+            
+            // This ensures all branches and tags get fetched as well.
+            using (var repo = new LibGit2Sharp.Repository(pathToRepoGitFile))
+            {
+                var remoteBranches = repo.Branches.Where(x=>x.IsRemote && !x.IsTracking).ToList();
+                
+                var nonExistingRemoteBranches = remoteBranches.Where(x =>
+                {
+                    var localBranchName = GenerateLocalBranchName(x);
+                    return repo.Branches[localBranchName] == null;
+                }).ToList();
+
+                foreach (var remoteBranch in nonExistingRemoteBranches)
+                {
+                    var localBranchName = GenerateLocalBranchName(remoteBranch);
+
+                    var localCreatedBranch = repo.CreateBranch(localBranchName, remoteBranch.Tip);
+                    repo.Branches.Update(localCreatedBranch, b => b.TrackedBranch = remoteBranch.CanonicalName);
+                }
+                repo.Network.Fetch(REMOTE_NAME, new[] { $"+refs/heads/*:refs/remotes/origin/*" }, fetchOptions);
+                var mergeOptions = new MergeOptions
+                {
+                    FastForwardStrategy = FastForwardStrategy.Default,
+                    CommitOnSuccess = true,
+                    FailOnConflict = true,
+                    MergeFileFavor = MergeFileFavor.Theirs
+                };
+                var pullOptions = new PullOptions { FetchOptions = fetchOptions, MergeOptions = mergeOptions };
+                var sig = new LibGit2Sharp.Signature("Konmaripo Tool", "konmaripo@excella.com", DateTimeOffset.UtcNow);
+                Commands.Pull(repo, sig, pullOptions);
+            }
+
+
             var pathToFullRepo = pathToRepoGitFile.Replace(".git/", ""); // Directory.GetParent didn't work for this, maybe due to the period in the directory name.
             // TODO: Make async
             ZipFile.CreateFromDirectory(pathToFullRepo, destinationArchiveFileName, CompressionLevel.Fastest, false);
@@ -116,6 +160,12 @@ namespace Konmaripo.Web.Services
 
             return new FileStream(destinationArchiveFileName, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
         }
+
+        private string GenerateLocalBranchName(Branch x)
+        {
+            return x.FriendlyName.Replace($"{REMOTE_NAME}/", string.Empty);
+        }
+
         public int RemainingAPIRequests()
         {
             return _githubClient.GetLastApiInfo().RateLimit.Remaining;
