@@ -49,7 +49,8 @@ namespace Konmaripo.Web
             services.AddRazorPages();
 
             services.AddOptions();
-            
+
+            services.Configure<ArchivalSettings>(Configuration.GetSection("ArchivalSettings"));
             services.Configure<GitHubSettings>(Configuration.GetSection("GitHubSettings"));
             services.AddTransient(serviceProvider =>
             {
