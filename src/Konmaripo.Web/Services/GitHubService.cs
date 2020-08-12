@@ -131,5 +131,11 @@ namespace Konmaripo.Web.Services
 
             return resultingTime;
         }
+
+        public Task DeleteRepository(long repoId)
+        {
+            _logger.Warning("Deleting Repository {RepoId}", repoId);
+            return _githubClient.Repository.Delete(repoId);
+        }
     }
 }

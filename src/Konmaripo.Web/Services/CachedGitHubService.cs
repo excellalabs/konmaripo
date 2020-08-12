@@ -89,5 +89,17 @@ namespace Konmaripo.Web.Services
         {
             return _gitHubService.APITokenResetTime();
         }
+
+        public async Task DeleteRepository(long repoId)
+        {
+            await _gitHubService.DeleteRepository(repoId);
+
+            var repos = _memoryCache.Get<List<GitHubRepo>>(RepoCacheKey);
+            var item = repos.First(x => x.Id == repoId);
+
+            repos.Remove(item);
+
+            _memoryCache.Set(RepoCacheKey, repos, _cacheTimeout);
+        }
     }
 }

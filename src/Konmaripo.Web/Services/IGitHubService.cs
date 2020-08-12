@@ -18,5 +18,6 @@ namespace Konmaripo.Web.Services
         int RemainingAPIRequests();
         Task CreateIssueInRepo(NewIssue issue, long repoId);
         DateTimeOffset APITokenResetTime();
+        Task DeleteRepository(long repoId);
     }
 }

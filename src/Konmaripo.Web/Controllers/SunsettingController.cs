@@ -61,6 +61,17 @@ namespace Konmaripo.Web.Controllers
 
             return View("ArchiveSuccess");
         }
+        public async Task<IActionResult> DeleteRepo(long repoId)
+        {
+            _logger.Information("Deleting Repo ID {RepoId}", repoId);
+            var currentUser = this.User.Identity.Name;
+            _logger.Information("User is {UserId}", currentUser);
+
+            await _gitHubService.DeleteRepository(repoId);
+
+            return View("DeleteSuccess");
+        }
+
         public async Task<IActionResult> DownloadRepo(long repoId, string repoName)
         {
             _logger.Information("Generating zip file of {RepoName} (id {RepoId})", repoName, repoId);
