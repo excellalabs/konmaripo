@@ -80,17 +80,55 @@
 
 <div>
     <h1 class="display-4">Archive this Repository?</h1>
-    <div class="alert alert-danger" role="alert">
-        <h4 class="alert-heading">Clicking this will archive the repository!</h4>
-        <p>This will make the repository, issues, pull requests, labels, milestones, projects, wiki, releases, commits, tags, branches, reactions and comments read-only and disable any future comments. The repository can still be forked.</p>
+    @if (Model.RepoInfo.IsArchived)
+    {
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">This repository has been archived.</h4>
+            <p>If you choose, you can move on to the deletion process.</p>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            <h4 class="alert-heading">Clicking this will archive the repository!</h4>
+            <p>This will make the repository, issues, pull requests, labels, milestones, projects, wiki, releases, commits, tags, branches, reactions and comments read-only and disable any future comments. The repository can still be forked.</p>
 
-        <p>Clicking this button will: </p>
-        <ul>
-            <li>Create a pinned issue in the repository noting that it has been archived</li>
-            <li>Mention you as the user who archived it</li>
-            <li>Actually archive the repository</li>
-        </ul>
+            <p>Clicking this button will: </p>
+            <ul>
+                <li>Create a pinned issue in the repository noting that it has been archived</li>
+                <li>Mention you as the user who archived it</li>
+                <li>Actually archive the repository</li>
+            </ul>
 
-        @Html.ActionLink($"Archive {Model.RepoInfo.Name}", "ArchiveRepo", new {repoId = Model.RepoInfo.Id, repoName = Model.RepoInfo.Name}, new{@class = "btn btn-danger", role="button"})
-    </div>
+            @Html.ActionLink($"Archive {Model.RepoInfo.Name}", "ArchiveRepo", new { repoId = Model.RepoInfo.Id, repoName = Model.RepoInfo.Name }, new { @class = "btn btn-danger", role = "button" })
+        </div>
+    }
 </div>
+
+@if (Model.RepoInfo.IsArchived)
+{
+<div>
+    <h1 class="display-4">Delete this Repository?</h1>
+
+    <h2>Step 1: Clone and Download the Repository</h2>
+    <p>@Html.ActionLink("Click here to clone and download the repository from GitHub.", "DownloadRepo", new { repoId = Model.RepoInfo.Id, repoName = Model.RepoInfo.Name })</p>
+
+    <h2>Step 2: Double-check the file</h2>
+    <p>You may wish to unzip the file and check it within git locally if this repository is particularly high risk.</p>
+    <p>There's never any harm in triple-checking.</p>
+    
+    <h2>Step 3: Upload the repository to your archival location</h2>
+    <p>For your organization, this is <a href="@Model.ArchivalUrl" target="_blank">@Model.ArchivalUrl</a>.</p>
+    
+    <h2>Step 4: Delete it For Real For Real</h2>
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">DANGER: Clicking this will DELETE the repository!</h4>
+        <p>This will permanently delete this repository from GitHub.</p>
+        <p><strong>This is unrecoverable.</strong> Prior to executing this, please ensure that you have backed up the file if you wish recover it later.</p>
+
+
+        @Html.ActionLink($"Delete {Model.RepoInfo.Name}", "DeleteRepo", new { repoId = Model.RepoInfo.Id, repoName = Model.RepoInfo.Name }, new { @class = "btn btn-danger", role = "button" })
+    </div>
+
+</div>
+}

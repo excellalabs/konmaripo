@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.Options;
 using Octokit;
 using Serilog;
 using TimeZoneConverter;
+using FileMode = System.IO.FileMode;
 
 namespace Konmaripo.Web.Services
 {
@@ -15,11 +18,15 @@ namespace Konmaripo.Web.Services
         private readonly IGitHubClient _githubClient;
         private readonly GitHubSettings _gitHubSettings;
         private readonly ILogger _logger;
-        public GitHubService(IGitHubClient githubClient, IOptions<GitHubSettings> githubSettings, ILogger logger)
+        private readonly IRepositoryArchiver _archiver;
+        private const string START_PATH = "./Data"; // TODO: Extract to config
+
+        public GitHubService(IGitHubClient githubClient, IOptions<GitHubSettings> githubSettings, ILogger logger, IRepositoryArchiver archiver)
         {
             _githubClient = githubClient ?? throw new ArgumentNullException(nameof(githubClient));
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _gitHubSettings = githubSettings?.Value ?? throw new ArgumentNullException(nameof(githubSettings));
+            _archiver = archiver ?? throw new ArgumentNullException(nameof(archiver));
         }
 
         public async Task<List<GitHubRepo>> GetRepositoriesForOrganizationAsync()
@@ -80,6 +87,31 @@ namespace Konmaripo.Web.Services
             return new RepoQuota(org.Plan.PrivateRepos, org.OwnedPrivateRepos);
         }
 
+        public async Task<ZippedRepositoryStreamResult> ZippedRepositoryStreamAsync(string repoName)
+        {
+            var pathToFullRepo = _archiver.CloneRepositoryWithTagsAndBranches(repoName);
+
+            var destinationArchiveFilePath = await GenerateDestinationArchiveFilePath(START_PATH, repoName);
+            var destinationArchiveFileName = Path.GetFileName(destinationArchiveFilePath);
+            // TODO: Make async
+            ZipFile.CreateFromDirectory(pathToFullRepo.Value, destinationArchiveFilePath, CompressionLevel.Fastest, false);
+
+            Directory.Delete(pathToFullRepo.Value, true);
+
+            var stream = new FileStream(destinationArchiveFilePath, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
+
+            return new ZippedRepositoryStreamResult(stream, destinationArchiveFileName);
+        }
+
+        private async Task<string> GenerateDestinationArchiveFilePath(string startPath, string repoName)
+        {
+            var allInfo = await GetRepositoriesForOrganizationAsync();
+            var repoInfo = allInfo.Single(x => x.Name.Equals(repoName, StringComparison.InvariantCultureIgnoreCase));
+
+            var dateString = repoInfo.PushedDate.HasValue ? $"_LastPushed{repoInfo.PushedDate.Value:yyyy-MM-dd}" : "";
+            return Path.Combine(startPath, $"{repoName}{dateString}.zip");
+        }
+
         public int RemainingAPIRequests()
         {
             return _githubClient.GetLastApiInfo().RateLimit.Remaining;
@@ -98,6 +130,12 @@ namespace Konmaripo.Web.Services
             var resultingTime = TimeZoneInfo.ConvertTime(reset, timeZoneToConvertTo);
 
             return resultingTime;
+        }
+
+        public Task DeleteRepository(long repoId)
+        {
+            _logger.Warning("Deleting Repository {RepoId}", repoId);
+            return _githubClient.Repository.Delete(repoId);
         }
     }
 }

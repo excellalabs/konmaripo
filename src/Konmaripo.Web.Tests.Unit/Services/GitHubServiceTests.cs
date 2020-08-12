@@ -26,6 +26,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             readonly GitHubSettings _dummySettingsObj = new GitHubSettings();
             readonly Mock<IOptions<GitHubSettings>> _dummySettings = new Mock<IOptions<GitHubSettings>>();
             readonly Mock<ILogger> _mockLogger = new Mock<ILogger>();
+            readonly Mock<IRepositoryArchiver> _mockArchiver = new Mock<IRepositoryArchiver>();
 
             public Ctor()
             {
@@ -35,7 +36,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             [Fact]
             public void HasAllDependencies_DoesntThrow()
             {
-                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, _dummySettings.Object, _mockLogger.Object);
+                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, _dummySettings.Object, _mockLogger.Object, _mockArchiver.Object);
 
                 sut.Should().NotThrow();
             }
@@ -43,7 +44,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             [Fact]
             public void NullGitHubClient_ThrowsException()
             {
-                Action sut = () => new GitHubService(githubClient: null, _dummySettings.Object, _mockLogger.Object);
+                Action sut = () => new GitHubService(githubClient: null, _dummySettings.Object, _mockLogger.Object, _mockArchiver.Object);
 
                 sut.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("githubClient");
@@ -52,7 +53,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             [Fact]
             public void NullOptions_ThrowsException()
             {
-                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, null, _mockLogger.Object);
+                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, null, _mockLogger.Object, _mockArchiver.Object);
 
                 sut.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("githubSettings");
@@ -61,7 +62,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             [Fact]
             public void NullLogger_ThrowsException()
             {
-                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, _dummySettings.Object, null);
+                Action sut = () => new GitHubService(githubClient: _dummyClient.Object, _dummySettings.Object, null, _mockArchiver.Object);
 
                 sut.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("logger");
@@ -76,6 +77,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             private readonly Mock<IRepositoriesClient> _mockRepoClient;
             private readonly GitHubSettings _settingsObject = new GitHubSettings();
             readonly Mock<ILogger> _mockLogger;
+            readonly Mock<IRepositoryArchiver> _mockArchiver = new Mock<IRepositoryArchiver>();
 
             public GetRepositoriesForOrganization()
             {
@@ -87,7 +89,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
  
                 var mockSettings = new Mock<IOptions<GitHubSettings>>();
                 mockSettings.Setup(x => x.Value).Returns(_settingsObject);
-                _sut = new GitHubService(_mockClient.Object, mockSettings.Object, _mockLogger.Object);
+                _sut = new GitHubService(_mockClient.Object, mockSettings.Object, _mockLogger.Object, _mockArchiver.Object);
             }
 
             [Fact]
@@ -379,6 +381,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
             private readonly Mock<IRepositoriesClient> _mockRepoClient;
             private readonly GitHubSettings _settingsObject = new GitHubSettings();
             readonly Mock<ILogger> _mockLogger;
+            readonly Mock<IRepositoryArchiver> _mockArchiver = new Mock<IRepositoryArchiver>();
 
             public CreateArchiveIssueInRepo()
             {
@@ -390,7 +393,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
                 var mockSettings = new Mock<IOptions<GitHubSettings>>();
                 mockSettings.Setup(x => x.Value).Returns(_settingsObject);
-                _sut = new GitHubService(_mockClient.Object, mockSettings.Object, _mockLogger.Object);
+                _sut = new GitHubService(_mockClient.Object, mockSettings.Object, _mockLogger.Object, _mockArchiver.Object);
             }
 
             [Fact]
@@ -460,6 +463,8 @@ namespace Konmaripo.Web.Tests.Unit.Services
             private readonly Mock<IGitHubClient> _mockClient;
             private readonly Mock<IOrganizationsClient> _mockOrgClient;
             private readonly GitHubSettings _settingsObject = new GitHubSettings();
+            readonly Mock<IRepositoryArchiver> _mockArchiver = new Mock<IRepositoryArchiver>();
+
             readonly Mock<ILogger> _mockLogger;
 
             public GetRepoQuotaForOrg()
@@ -472,7 +477,8 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
                 var mockSettings = new Mock<IOptions<GitHubSettings>>();
                 mockSettings.Setup(x => x.Value).Returns(_settingsObject);
-                _sut = new GitHubService(_mockClient.Object, mockSettings.Object, _mockLogger.Object);
+                _sut = new GitHubService(_mockClient.Object, mockSettings.Object, _mockLogger.Object,
+                    _mockArchiver.Object);
             }
 
             [Fact]

@@ -2,7 +2,9 @@
 using System.Diagnostics.CodeAnalysis;
 using FluentAssertions;
 using Konmaripo.Web.Controllers;
+using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
+using Microsoft.Extensions.Options;
 using Moq;
 using Serilog;
 using Xunit;
@@ -16,6 +18,7 @@ namespace Konmaripo.Web.Tests.Unit.Controllers
         {
             private readonly Mock<ILogger> _mockLogger;
             private readonly Mock<IGitHubService> _mockGitHubService;
+            private readonly Mock<IOptions<ArchivalSettings>> _mockArchivalSettings = new Mock<IOptions<ArchivalSettings>>();
 
             public Ctor()
             {
@@ -26,7 +29,7 @@ namespace Konmaripo.Web.Tests.Unit.Controllers
             [Fact]
             public void NullLogger_ThrowsException()
             {
-                Action act = () => new SunsettingController(null, _mockGitHubService.Object);
+                Action act = () => new SunsettingController(null, _mockGitHubService.Object, _mockArchivalSettings.Object);
 
                 act.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("logger");
@@ -35,7 +38,7 @@ namespace Konmaripo.Web.Tests.Unit.Controllers
             [Fact]
             public void NullGitHubService_ThrowsException()
             {
-                Action act = () => new SunsettingController(_mockLogger.Object, null);
+                Action act = () => new SunsettingController(_mockLogger.Object, null, _mockArchivalSettings.Object);
 
                 act.Should().Throw<ArgumentNullException>()
                     .And.ParamName.Should().Be("gitHubService");
