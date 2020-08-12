@@ -87,21 +87,23 @@ namespace Konmaripo.Web.Services
             return new RepoQuota(org.Plan.PrivateRepos, org.OwnedPrivateRepos);
         }
 
-        public async Task<FileStream> ZippedRepositoryStreamAsync(string repoName)
+        public async Task<ZippedRepositoryStreamResult> ZippedRepositoryStreamAsync(string repoName)
         {
             var pathToFullRepo = _archiver.CloneRepositoryWithTagsAndBranches(repoName);
 
-            var destinationArchiveFileName = await GenerateDestinationArchiveFileName(START_PATH, repoName);
-
+            var destinationArchiveFilePath = await GenerateDestinationArchiveFilePath(START_PATH, repoName);
+            var destinationArchiveFileName = Path.GetFileName(destinationArchiveFilePath);
             // TODO: Make async
-            ZipFile.CreateFromDirectory(pathToFullRepo.Value, destinationArchiveFileName, CompressionLevel.Fastest, false);
+            ZipFile.CreateFromDirectory(pathToFullRepo.Value, destinationArchiveFilePath, CompressionLevel.Fastest, false);
 
             Directory.Delete(pathToFullRepo.Value, true);
 
-            return new FileStream(destinationArchiveFileName, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
+            var stream = new FileStream(destinationArchiveFilePath, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
+
+            return new ZippedRepositoryStreamResult(stream, destinationArchiveFileName);
         }
 
-        private async Task<string> GenerateDestinationArchiveFileName(string startPath, string repoName)
+        private async Task<string> GenerateDestinationArchiveFilePath(string startPath, string repoName)
         {
             var allInfo = await GetRepositoriesForOrganizationAsync();
             var repoInfo = allInfo.Single(x => x.Name.Equals(repoName, StringComparison.InvariantCultureIgnoreCase));

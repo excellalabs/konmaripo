@@ -61,9 +61,9 @@ namespace Konmaripo.Web.Controllers
         public async Task<IActionResult> DownloadRepo(long repoId, string repoName)
         {
             _logger.Information("Generating zip file of {RepoName} (id {RepoId})", repoName, repoId);
-            var zippedRepositoryStream = await _gitHubService.ZippedRepositoryStreamAsync(repoName);
+            var result = await _gitHubService.ZippedRepositoryStreamAsync(repoName);
             _logger.Information("Stream generated for {RepoName} -- returning", repoName, repoId);
-            return File(zippedRepositoryStream, "application/zip", $"{repoName}.zip");
+            return File(result.Stream, "application/zip", result.FileName);
         }
 
     }
