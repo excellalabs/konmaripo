@@ -58,10 +58,10 @@ namespace Konmaripo.Web.Controllers
 
             return View("ArchiveSuccess");
         }
-        public IActionResult DownloadRepo(long repoId, string repoName)
+        public async Task<IActionResult> DownloadRepo(long repoId, string repoName)
         {
             _logger.Information("Generating zip file of {RepoName} (id {RepoId})", repoName, repoId);
-            var zippedRepositoryStream = _gitHubService.ZippedRepositoryStream(repoName);
+            var zippedRepositoryStream = await _gitHubService.ZippedRepositoryStreamAsync(repoName);
             _logger.Information("Stream generated for {RepoName} -- returning", repoName, repoId);
             return File(zippedRepositoryStream, "application/zip", $"{repoName}.zip");
         }

@@ -87,11 +87,11 @@ namespace Konmaripo.Web.Services
             return new RepoQuota(org.Plan.PrivateRepos, org.OwnedPrivateRepos);
         }
 
-        public FileStream ZippedRepositoryStream(string repoName)
+        public async Task<FileStream> ZippedRepositoryStreamAsync(string repoName)
         {
             var pathToFullRepo = _archiver.CloneRepositoryWithTagsAndBranches(repoName);
 
-            var destinationArchiveFileName = Path.Combine(START_PATH, $"{repoName}.zip");
+            var destinationArchiveFileName = await GenerateDestinationArchiveFileName(START_PATH, repoName);
 
             // TODO: Make async
             ZipFile.CreateFromDirectory(pathToFullRepo.Value, destinationArchiveFileName, CompressionLevel.Fastest, false);
@@ -99,6 +99,15 @@ namespace Konmaripo.Web.Services
             Directory.Delete(pathToFullRepo.Value, true);
 
             return new FileStream(destinationArchiveFileName, FileMode.Open, FileAccess.Read, FileShare.None, 4096, FileOptions.DeleteOnClose);
+        }
+
+        private async Task<string> GenerateDestinationArchiveFileName(string startPath, string repoName)
+        {
+            var allInfo = await GetRepositoriesForOrganizationAsync();
+            var repoInfo = allInfo.Single(x => x.Name.Equals(repoName, StringComparison.InvariantCultureIgnoreCase));
+
+            var dateString = repoInfo.PushedDate.HasValue ? $"_LastPushed{repoInfo.PushedDate.Value:yyyy-MM-dd}" : "";
+            return Path.Combine(startPath, $"{repoName}{dateString}.zip");
         }
 
         public int RemainingAPIRequests()
