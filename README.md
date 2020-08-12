@@ -21,8 +21,10 @@ This tool uses:
 
 * .NET Core MVC web app
 * Azure AD Integration
-* Azure DevOps
-* Docker containers
-* Octokit .NET (with a GitHub Access token)
+* Azure DevOps for the build process
+* Docker container
+* Azure Web Apps for Containers (in our specific case; not required)
+* [Octokit .NET](https://github.com/octokit/octokit.net) (with a GitHub Access token with admin permissions)
+* [libgit2sharp](https://github.com/libgit2/libgit2sharp) for archiving and downloading repositories.
 
 ## [Planned Feature Roadmap](https://github.com/excellalabs/konmaripo/projects/1)
