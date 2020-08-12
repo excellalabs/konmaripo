@@ -8,6 +8,14 @@
 
 This tool is a simple web app to allow you to look at all of the repositories in your GitHub organization and see if it's time to archive them, with automated steps to help you sunset the repository.
 
+## Current Features
+
+* Azure AD Auth -- delegate app access only to those you trust and ensure they're authenticated.
+* Submit an issue to every repository in your organization (org-wide announcements, etc.)
+* View repository information in a list at a glance (stars, commits, description, key dates)
+* Archive a Repository (pins an issue to the repository and archives it)
+* Delete process for a repository (downloads a .zip of repository with all branches/tags pulled, allows for you to specify a URL for archival, and allows the deletion of the repository)
+
 ## Ingredients
 This tool uses: 
 
