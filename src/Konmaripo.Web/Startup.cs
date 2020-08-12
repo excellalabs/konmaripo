@@ -60,13 +60,16 @@ namespace Konmaripo.Web
                     new InMemoryCredentialStore(credentials));
             });
 
+            services.AddTransient<IRepositoryArchiver, RepositoryArchiver>();
+
             services.AddSingleton<IGitHubService>(provider =>
             {
                 var gitHubClient = provider.GetRequiredService<GitHubClient>();
                 var githubSettings = provider.GetService<IOptions<GitHubSettings>>();
+                var archiver = provider.GetService<IRepositoryArchiver>();
                 var logger = provider.GetService<ILogger>();
 
-                var service = new GitHubService(gitHubClient, githubSettings, logger);
+                var service = new GitHubService(gitHubClient, githubSettings, logger, archiver);
 
                 var cachedService = new CachedGitHubService(service, new MemoryCache(new MemoryCacheOptions()));
 
