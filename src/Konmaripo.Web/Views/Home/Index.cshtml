@@ -1,4 +1,4 @@
-﻿@model RepoQuota
+﻿@model Konmaripo.Web.Controllers.HomeIndexViewModel
 @{
 
     ViewData["Title"] = "Home Page";
@@ -6,12 +6,12 @@
 
 <div class="text-center">
     <h1 class="display-4">Welcome to Konmaripo!</h1>
+    <h3>For the @Model.OrgName Organization</h3>
     <p>A tool to enable easier GitHub repo and organization management.</p>
     <p>Currently, this tool enables you to @(Html.ActionLink("sunset and archive repositories", "Index", "MassIssues")).</p>
     <p>You can also @Html.ActionLink("Submit a mass issue", "Index", "MassIssues").</p>
 </div>
-
 <div class="text-center">
     <h1 class="display-4">Current Stats</h1>
-    <p>We are using @Model.PrivateRepoCount of @Model.PrivateRepoLimit private repositories</p>
+    <p>We are using @Model.RepoQuota.PrivateRepoCount of @Model.RepoQuota.PrivateRepoLimit private repositories</p>
 </div>
