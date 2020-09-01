@@ -31,3 +31,12 @@ This tool uses:
 
 ## About the Project Name
 It is meant as an homage to [Marie Kondo's KonMari method](https://konmari.com/), to enable you to clean up your GitHub organization when things don't quite spark joy.
+
+## Jump in! 
+
+We welcome your contributions! We're currently organizing things in this way:
+
+* A [Roadmap project](https://github.com/excellalabs/konmaripo/projects/2) that gives insight into what our next major feature push will be
+* [Projects](https://github.com/excellalabs/konmaripo/projects) for each epic we're working on, so you can see a roughly prioritized backlog within a given area.
+
+If you'd like to jump in, comment on an issue and we'll work to get you involved! Don't worry if it's daunting; we'll help you out.
