@@ -101,5 +101,10 @@ namespace Konmaripo.Web.Services
 
             _memoryCache.Set(RepoCacheKey, repos, _cacheTimeout);
         }
+
+        public Task<bool> TeamExists(string teamName)
+        {
+            return _gitHubService.TeamExists(teamName);
+        }
     }
 }

@@ -1,5 +1,33 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using Humanizer
+@model Konmaripo.Web.Controllers.OrgWideVisibilityIndexVM
 @{
+    var teamExists = Model;
+
+    ViewData["Title"] = "Org-Wide Visibility";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Org-Wide Visibility</h1>
+    <p>Ensuring all organization members can see all private repositories.</p>
+</div>
+
+<div class="text-center">
+    <h2>Org-wide team</h2>
+</div>
+
+@if (Model.TeamExists)
+{
+    <div class="alert alert-success">
+        <h4 class="alert-heading">Warning: Team does not exist!</h4>
+        <p>In this app's configuration, the <strong>@Model.OrgWideTeamName</strong> team is defined as the team that holds all the org's members.</p>
+        <p><strong>However, this team does not exist.</strong></p>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Warning: Team does not exist!</h4>
+        <p>In this app's configuration, the <strong>@Model.OrgWideTeamName</strong> team is defined as the team that holds all the org's members.</p>
+        <p><strong>However, this team does not exist.</strong></p>
+    </div>
 }
