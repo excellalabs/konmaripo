@@ -14,6 +14,7 @@ namespace Konmaripo.Web.Controllers
         public OrgWideVisibilityController(IOptions<OrgWideVisibilitySettings> visibilitySettings)
         {
             if (visibilitySettings == null){throw new ArgumentNullException(nameof(visibilitySettings));}
+            if (string.IsNullOrWhiteSpace(visibilitySettings.Value.AllOrgMembersGroupName)){throw new ArgumentNullException(nameof(visibilitySettings.Value.AllOrgMembersGroupName));}
         }
         public IActionResult Index()
         {
