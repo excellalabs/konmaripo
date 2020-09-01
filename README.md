@@ -27,8 +27,6 @@ This tool uses:
 * [Octokit .NET](https://github.com/octokit/octokit.net) (with a GitHub Access token with admin permissions)
 * [libgit2sharp](https://github.com/libgit2/libgit2sharp) for archiving and downloading repositories.
 
-## [Planned Feature Roadmap](https://github.com/excellalabs/konmaripo/projects/1)
-
 ## About the Project Name
 It is meant as an homage to [Marie Kondo's KonMari method](https://konmari.com/), to enable you to clean up your GitHub organization when things don't quite spark joy.
 
