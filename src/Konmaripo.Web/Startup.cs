@@ -52,6 +52,7 @@ namespace Konmaripo.Web
 
             services.Configure<ArchivalSettings>(Configuration.GetSection("ArchivalSettings"));
             services.Configure<GitHubSettings>(Configuration.GetSection("GitHubSettings"));
+            services.Configure<OrgWideVisibilitySettings>(Configuration.GetSection("OrgWideVisibilitySettings"));
             services.AddTransient(serviceProvider =>
             {
                 var settings = serviceProvider.GetService<IOptions<GitHubSettings>>();
