@@ -11,10 +11,14 @@ namespace Konmaripo.Web.Controllers
 {
     public class OrgWideVisibilityController : Controller
     {
+        private string _orgWideTeam;
+
         public OrgWideVisibilityController(IOptions<OrgWideVisibilitySettings> visibilitySettings)
         {
             if (visibilitySettings == null){throw new ArgumentNullException(nameof(visibilitySettings));}
             if (string.IsNullOrWhiteSpace(visibilitySettings.Value.AllOrgMembersGroupName)){throw new ArgumentNullException(nameof(visibilitySettings.Value.AllOrgMembersGroupName));}
+
+            _orgWideTeam = visibilitySettings.Value.AllOrgMembersGroupName;
         }
         public IActionResult Index()
         {
