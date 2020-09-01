@@ -137,5 +137,12 @@ namespace Konmaripo.Web.Services
             _logger.Warning("Deleting Repository {RepoId}", repoId);
             return _githubClient.Repository.Delete(repoId);
         }
+
+        public async Task<bool> TeamExists(string teamName)
+        {
+            var allTeams = await _githubClient.Organization.Team.GetAll(_gitHubSettings.OrganizationName);
+
+            return allTeams.Any(x => x.Name.Equals(teamName, StringComparison.InvariantCultureIgnoreCase));
+        }
     }
 }
