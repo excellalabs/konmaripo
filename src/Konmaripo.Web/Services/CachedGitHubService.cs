@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Functional.Maybe;
@@ -105,6 +104,11 @@ namespace Konmaripo.Web.Services
         public Task<bool> TeamExists(string teamName)
         {
             return _gitHubService.TeamExists(teamName);
+        }
+
+        public Task CreateTeam(string teamName, string teamDescription)
+        {
+            return _gitHubService.CreateTeam(teamName, teamDescription);
         }
     }
 }

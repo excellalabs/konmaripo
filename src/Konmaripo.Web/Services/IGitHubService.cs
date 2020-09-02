@@ -20,5 +20,6 @@ namespace Konmaripo.Web.Services
         DateTimeOffset APITokenResetTime();
         Task DeleteRepository(long repoId);
         Task<bool> TeamExists(string teamName);
+        Task CreateTeam(string teamName, string teamDescription);
     }
 }

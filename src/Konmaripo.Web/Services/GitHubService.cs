@@ -144,5 +144,12 @@ namespace Konmaripo.Web.Services
 
             return allTeams.Any(x => x.Name.Equals(teamName, StringComparison.InvariantCultureIgnoreCase));
         }
+
+        public Task CreateTeam(string teamName, string teamDescription)
+        {
+            var newTeam = new NewTeam(teamName) {Description = teamDescription};
+
+            return _githubClient.Organization.Team.Create(_gitHubSettings.OrganizationName, newTeam);
+        }
     }
 }
