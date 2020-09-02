@@ -31,6 +31,12 @@ namespace Konmaripo.Web.Controllers
             return View(vm);
         }
 
+        public async Task<IActionResult> CreateOrgWideTeam()
+        {
+            await _gitHubService.CreateTeam(_settings.AllOrgMembersGroupName, _settings.AllOrgMembersGroupDescription);
+
+            return RedirectToAction("Index");
+        }
     }
 
     public class OrgWideVisibilityIndexVM
