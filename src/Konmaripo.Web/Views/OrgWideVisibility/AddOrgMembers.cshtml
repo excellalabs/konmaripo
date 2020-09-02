@@ -1,0 +1,23 @@
+﻿@model List<Octokit.User>
+@{
+    ViewData["Title"] = "Org-Wide Visibility";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Org-Wide Visibility</h1>
+    <p>Ensuring all organization members can see all private repositories.</p>
+</div>
+
+<div class="text-center">
+    <h2>Step 2: Add Missing team members</h2>
+    <p>The @Model.Count below organization members are not a part of the org-wide group.</p>
+</div>
+
+<ul>
+    @foreach (var item in Model)
+    {
+        <li>@item.Login</li>
+    }
+</ul>
+
+@Html.ActionLink($"Add these {Model.Count} members to the group.", "AddOrgMembers", "OrgWideVisibility", null, new { @class = "btn btn-success", role = "button" });
