@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Options;
 
 namespace Konmaripo.Web.Controllers
