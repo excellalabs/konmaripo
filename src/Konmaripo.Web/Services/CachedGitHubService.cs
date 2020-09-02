@@ -106,5 +106,10 @@ namespace Konmaripo.Web.Services
         {
             return _gitHubService.TeamExists(teamName);
         }
+
+        public Task CreateTeam(string teamName, string teamDescription)
+        {
+            return _gitHubService.CreateTeam(teamName, teamDescription);
+        }
     }
 }
