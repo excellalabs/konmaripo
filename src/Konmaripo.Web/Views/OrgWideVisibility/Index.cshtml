@@ -26,5 +26,7 @@ else
         <h4 class="alert-heading">Warning: Team does not exist!</h4>
         <p>In this app's configuration, the <strong>@Model.OrgWideTeamName</strong> team is defined as the team that holds all the org's members.</p>
         <p><strong>However, this team does not exist.</strong></p>
+
+        @Html.ActionLink($"Create '{Model.OrgWideTeamName}' team in the GitHub org", "CreateOrgWideTeam", "OrgWideVisibility", null,new { @class = "btn btn-success", role = "button" })
     </div>
 }
