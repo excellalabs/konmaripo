@@ -151,5 +151,31 @@ namespace Konmaripo.Web.Services
 
             return _githubClient.Organization.Team.Create(_gitHubSettings.OrganizationName, newTeam);
         }
+
+        public async Task<List<User>> GetUsersNotInTeam(string teamName)
+        {
+            var allTeams = await GetAllTeams();
+            var allOrgMembers = await GetAllUsers();
+            var teamId = allTeams.Single(x => x.Name.Equals(teamName, StringComparison.InvariantCultureIgnoreCase)).Id;
+
+            var teamMembers = await GetTeamMembers(teamId);
+
+            return allOrgMembers.Except(teamMembers, new OctokitUserEqualityComparer()).ToList();
+        }
+
+        public Task<IReadOnlyList<User>> GetAllUsers()
+        {
+            return _githubClient.Organization.Member.GetAll(_gitHubSettings.OrganizationName);
+        }
+
+        public Task<IReadOnlyList<Team>> GetAllTeams()
+        {
+            return _githubClient.Organization.Team.GetAll(_gitHubSettings.OrganizationName);
+        }
+
+        public Task<IReadOnlyList<User>> GetTeamMembers(int teamId)
+        {
+            return _githubClient.Organization.Team.GetAllMembers(teamId);
+        }
     }
 }
