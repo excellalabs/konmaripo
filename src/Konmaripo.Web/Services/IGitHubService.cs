@@ -21,5 +21,9 @@ namespace Konmaripo.Web.Services
         Task DeleteRepository(long repoId);
         Task<bool> TeamExists(string teamName);
         Task CreateTeam(string teamName, string teamDescription);
+        Task<List<User>> GetUsersNotInTeam(string teamName);
+        Task<IReadOnlyList<User>> GetAllUsers();
+        Task<IReadOnlyList<Team>> GetAllTeams();
+        Task<IReadOnlyList<User>> GetTeamMembers(int teamId);
     }
 }
