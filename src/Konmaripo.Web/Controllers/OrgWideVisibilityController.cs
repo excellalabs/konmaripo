@@ -56,6 +56,28 @@ namespace Konmaripo.Web.Controllers
             OrgWideTeamName = orgWideTeamName;
             TeamExists = teamExists;
         }
+
+
+    }
+
+    public static class ArrayExtensions
+    {
+        /// <summary>
+        /// Splits an array into several smaller arrays.
+        /// </summary>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <param name="array">The array to split.</param>
+        /// <param name="size">The size of the smaller arrays.</param>
+        /// <returns>An array containing smaller arrays.</returns>
+        /// <seealso cref="https://www.jerriepelser.com/blog/approaches-when-rendering-list-using-bootstrap-grid-system/"/>
+        /// <seealso cref="https://stackoverflow.com/questions/18986129/c-splitting-an-array-into-n-parts/18987605"/>
+        public static IEnumerable<IEnumerable<T>> Split<T>(this T[] array, int size)
+        {
+            for (var i = 0; i < (float)array.Length / size; i++)
+            {
+                yield return array.Skip(i * size).Take(size);
+            }
+        }
     }
 
 }
