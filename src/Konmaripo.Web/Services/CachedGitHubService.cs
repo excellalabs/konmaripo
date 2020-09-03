@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Functional.Maybe;
@@ -100,6 +99,71 @@ namespace Konmaripo.Web.Services
             repos.Remove(item);
 
             _memoryCache.Set(RepoCacheKey, repos, _cacheTimeout);
+        }
+
+        public Task<bool> TeamExists(string teamName)
+        {
+            return _gitHubService.TeamExists(teamName);
+        }
+
+        public Task CreateTeam(string teamName, string teamDescription)
+        {
+            return _gitHubService.CreateTeam(teamName, teamDescription);
+        }
+
+        public Task<IReadOnlyList<User>> GetAllUsers()
+        {
+            return _gitHubService.GetAllUsers();
+        }
+
+        public Task<IReadOnlyList<Team>> GetAllTeams()
+        {
+            return _gitHubService.GetAllTeams();
+        }
+        public Task<IReadOnlyList<User>> GetTeamMembers(int teamId)
+        {
+            return _gitHubService.GetTeamMembers(teamId);
+        }
+
+        public async Task AddMembersToTeam(string teamName, List<string> loginsToAdd)
+        {
+            var teams = await GetAllTeams();
+            var theTeam = teams.Single(x => x.Name.Equals(teamName, StringComparison.InvariantCultureIgnoreCase));
+
+            await AddMembersToTeam(theTeam.Id, loginsToAdd);
+        }
+
+        public async Task AddMembersToTeam(int teamId, List<string> loginsToAdd)
+        {
+            await _gitHubService.AddMembersToTeam(teamId, loginsToAdd);
+        }
+
+        public async Task<List<User>> GetUsersNotInTeam(string teamName)
+        {
+            var allTeams = await GetAllTeams();
+            var allOrgMembers = await GetAllUsers();
+            var teamId = allTeams.Single(x => x.Name.Equals(teamName, StringComparison.InvariantCultureIgnoreCase)).Id;
+
+            var teamMembers = await GetTeamMembers(teamId);
+
+            return allOrgMembers.Except(teamMembers, new OctokitUserEqualityComparer()).ToList();
+        }
+    }
+
+    public class OctokitUserEqualityComparer : IEqualityComparer<User>
+    {
+        public bool Equals(User x, User y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            return x.Id.Equals(y.Id);
+        }
+
+        public int GetHashCode(User obj)
+        {
+            return obj.UpdatedAt.GetHashCode();
         }
     }
 }
