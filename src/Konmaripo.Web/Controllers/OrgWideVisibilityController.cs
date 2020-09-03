@@ -30,6 +30,14 @@ namespace Konmaripo.Web.Controllers
             return View(vm);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddOrgMembers(List<string> loginsToAdd)
+        {
+            await _gitHubService.AddMembersToTeam(_settings.AllOrgMembersGroupName, loginsToAdd);
+
+            return RedirectToAction("AddOrgMembers");
+        }
+
         public async Task<IActionResult> AddOrgMembers()
         {
             var usersNotInTeam = await _gitHubService.GetUsersNotInTeam(_settings.AllOrgMembersGroupName);
