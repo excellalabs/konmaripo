@@ -1,0 +1,32 @@
+﻿@using Konmaripo.Web.Controllers
+@model List<string>
+@{
+    ViewData["Title"] = "Org-Wide Visibility";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Org-Wide Visibility</h1>
+    <p>Ensuring all organization members can see all private repositories.</p>
+</div>
+
+<div class="text-center">
+    <h2>Step 2: Add Missing team members</h2>
+    <p>The @Model.Count below organization members are not a part of the org-wide group.</p>
+</div>
+
+<div class="container">
+@foreach (var row in Model.ToArray().Split(4))
+{
+    <div class="row">
+        @foreach (var login in row)
+        {
+            <div class="col">
+                @login
+            </div>
+        }
+    </div>
+}
+</div>
+<div>
+    @Html.ActionLink($"Add these {Model.Count} members to the group.", "AddOrgMembersList", "OrgWideVisibility", new { loginsToAdd = Model }, new { @class = "btn btn-success", role = "button" })
+</div>

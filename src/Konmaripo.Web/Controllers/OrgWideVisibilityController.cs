@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis.Options;
 using Microsoft.Extensions.Options;
 
 namespace Konmaripo.Web.Controllers
@@ -31,6 +30,22 @@ namespace Konmaripo.Web.Controllers
             return View(vm);
         }
 
+        public async Task<IActionResult> AddOrgMembersList(List<string> loginsToAdd)
+        {
+            await _gitHubService.AddMembersToTeam(_settings.AllOrgMembersGroupName, loginsToAdd);
+
+            return RedirectToAction("AddOrgMembers");
+        }
+
+        public async Task<IActionResult> AddOrgMembers()
+        {
+            var usersNotInTeam = await _gitHubService.GetUsersNotInTeam(_settings.AllOrgMembersGroupName);
+
+            var userLogins = usersNotInTeam.Select(x => x.Login).ToList();
+
+            return View(userLogins);
+        }
+
         public async Task<IActionResult> CreateOrgWideTeam()
         {
             await _gitHubService.CreateTeam(_settings.AllOrgMembersGroupName, _settings.AllOrgMembersGroupDescription);
@@ -48,6 +63,28 @@ namespace Konmaripo.Web.Controllers
         {
             OrgWideTeamName = orgWideTeamName;
             TeamExists = teamExists;
+        }
+
+
+    }
+
+    public static class ArrayExtensions
+    {
+        /// <summary>
+        /// Splits an array into several smaller arrays.
+        /// </summary>
+        /// <typeparam name="T">The type of the array.</typeparam>
+        /// <param name="array">The array to split.</param>
+        /// <param name="size">The size of the smaller arrays.</param>
+        /// <returns>An array containing smaller arrays.</returns>
+        /// <seealso cref="https://www.jerriepelser.com/blog/approaches-when-rendering-list-using-bootstrap-grid-system/"/>
+        /// <seealso cref="https://stackoverflow.com/questions/18986129/c-splitting-an-array-into-n-parts/18987605"/>
+        public static IEnumerable<IEnumerable<T>> Split<T>(this T[] array, int size)
+        {
+            for (var i = 0; i < (float)array.Length / size; i++)
+            {
+                yield return array.Skip(i * size).Take(size);
+            }
         }
     }
 

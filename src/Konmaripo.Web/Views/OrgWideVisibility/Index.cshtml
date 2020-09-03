@@ -9,16 +9,17 @@
 </div>
 
 <div class="text-center">
-    <h2>Org-wide team</h2>
+    <h2>Step 1: Org-wide team</h2>
 </div>
 
 @if (Model.TeamExists)
 {
-    <div class="alert alert-success">
-        <h4 class="alert-heading">Org-Wide Team exists in the org.</h4>
-        <p>In this app's configuration, the <strong>@Model.OrgWideTeamName</strong> team is defined as the team that holds all the org's members.</p>
-        <p>The team exists; so far, so good!</p>
-    </div>
+<div class="alert alert-success">
+    <h4 class="alert-heading">Org-Wide Team exists in the org.</h4>
+    <p>In this app's configuration, the <strong>@Model.OrgWideTeamName</strong> team is defined as the team that holds all the org's members.</p>
+    <p>The team exists; so far, so good!</p>
+    @Html.ActionLink($"Next step: Add org members to team", "AddOrgMembers", "OrgWideVisibility", null, new { @class = "btn btn-success", role = "button" })
+</div>
 }
 else
 {
