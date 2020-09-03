@@ -1,5 +1,5 @@
 ﻿@using Konmaripo.Web.Controllers
-@model List<Octokit.User>
+@model List<string>
 @{
     ViewData["Title"] = "Org-Wide Visibility";
 }
@@ -18,15 +18,15 @@
 @foreach (var row in Model.ToArray().Split(4))
 {
     <div class="row">
-        @foreach (var user in row)
+        @foreach (var login in row)
         {
             <div class="col">
-                @user.Login
+                @login
             </div>
         }
     </div>
 }
 </div>
 <div>
-    @Html.ActionLink($"Add these {Model.Count} members to the group.", "AddOrgMembers", "OrgWideVisibility", null, new { @class = "btn btn-success", role = "button" })
+    @Html.ActionLink($"Add these {Model.Count} members to the group.", "AddOrgMembers", "OrgWideVisibility", new { usersToAdd = Model }, new { @class = "btn btn-success", role = "button" })
 </div>

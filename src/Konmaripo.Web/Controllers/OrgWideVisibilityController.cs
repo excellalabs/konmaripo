@@ -34,7 +34,9 @@ namespace Konmaripo.Web.Controllers
         {
             var usersNotInTeam = await _gitHubService.GetUsersNotInTeam(_settings.AllOrgMembersGroupName);
 
-            return View(usersNotInTeam);
+            var userLogins = usersNotInTeam.Select(x => x.Login).ToList();
+
+            return View(userLogins);
         }
 
         public async Task<IActionResult> CreateOrgWideTeam()
