@@ -113,13 +113,11 @@ namespace Konmaripo.Web.Services
 
         public Task<IReadOnlyList<User>> GetAllUsers()
         {
-            // TODO: Cache
             return _gitHubService.GetAllUsers();
         }
 
         public Task<IReadOnlyList<Team>> GetAllTeams()
         {
-            // TODO: Cache
             return _gitHubService.GetAllTeams();
         }
         public Task<IReadOnlyList<User>> GetTeamMembers(int teamId)
