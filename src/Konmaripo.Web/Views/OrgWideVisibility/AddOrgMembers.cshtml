@@ -28,5 +28,5 @@
 }
 </div>
 <div>
-    @Html.ActionLink($"Add these {Model.Count} members to the group.", "AddOrgMembers", "OrgWideVisibility", new { usersToAdd = Model }, new { @class = "btn btn-success", role = "button" })
+    @Html.ActionLink($"Add these {Model.Count} members to the group.", "AddOrgMembersList", "OrgWideVisibility", new { loginsToAdd = Model }, new { @class = "btn btn-success", role = "button" })
 </div>
