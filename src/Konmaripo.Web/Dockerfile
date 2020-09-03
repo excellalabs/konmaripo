@@ -28,6 +28,7 @@ FROM base AS final
 
 # Install tzdata for timezone purposes
 RUN export DEBIAN_FRONTEND=noninteractive
+RUN apt-get update
 RUN apt-get install tzdata -y
 
 # Set timezone
