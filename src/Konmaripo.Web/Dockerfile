@@ -27,13 +27,13 @@ RUN dotnet publish "Konmaripo.Web.csproj" -c Release -o /app/publish
 FROM base AS final
 
 # Install tzdata for timezone purposes
-export DEBIAN_FRONTEND=noninteractive
-apt-get update
-apt-get install tzdata -y
+RUN export DEBIAN_FRONTEND=noninteractive
+RUN apt-get update
+RUN apt-get install tzdata -y
 
 # Set timezone
-ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
-dpkg-reconfigure --frontend noninteractive tzdata
+RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime
+RUN dpkg-reconfigure --frontend noninteractive tzdata
 
 # Do the rest of the app stuff
 WORKDIR /app
