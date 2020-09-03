@@ -19,5 +19,13 @@ namespace Konmaripo.Web.Services
         Task CreateIssueInRepo(NewIssue issue, long repoId);
         DateTimeOffset APITokenResetTime();
         Task DeleteRepository(long repoId);
+        Task<bool> TeamExists(string teamName);
+        Task CreateTeam(string teamName, string teamDescription);
+        Task<List<User>> GetUsersNotInTeam(string teamName);
+        Task<IReadOnlyList<User>> GetAllUsers();
+        Task<IReadOnlyList<Team>> GetAllTeams();
+        Task<IReadOnlyList<User>> GetTeamMembers(int teamId);
+        Task AddMembersToTeam(string teamName, List<string> loginsToAdd);
+        Task AddMembersToTeam(int teamId, List<string> loginsToAdd);
     }
 }
