@@ -126,6 +126,20 @@ namespace Konmaripo.Web.Services
         {
             return _gitHubService.GetTeamMembers(teamId);
         }
+
+        public async Task AddMembersToTeam(string teamName, List<string> loginsToAdd)
+        {
+            var teams = await GetAllTeams();
+            var theTeam = teams.Single(x => x.Name.Equals(teamName, StringComparison.InvariantCultureIgnoreCase));
+
+            await AddMembersToTeam(theTeam.Id, loginsToAdd);
+        }
+
+        public async Task AddMembersToTeam(int teamId, List<string> loginsToAdd)
+        {
+            await _gitHubService.AddMembersToTeam(teamId, loginsToAdd);
+        }
+
         public async Task<List<User>> GetUsersNotInTeam(string teamName)
         {
             var allTeams = await GetAllTeams();
