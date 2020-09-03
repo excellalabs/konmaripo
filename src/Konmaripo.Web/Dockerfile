@@ -25,6 +25,13 @@ FROM build AS publish
 RUN dotnet publish "Konmaripo.Web.csproj" -c Release -o /app/publish
 
 FROM base AS final
+
+# Install tzdata for timezone purposes
+RUN export DEBIAN_FRONTEND=noninteractive
+RUN apt-get update
+RUN apt-get install tzdata -y
+
+# Do the rest of the app stuff
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENV LD_DEBUG=all
