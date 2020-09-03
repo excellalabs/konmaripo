@@ -32,7 +32,7 @@ RUN apt-get update
 RUN apt-get install tzdata -y
 
 # Set timezone
-RUN echo "America/New_York" | sudo tee /etc/timezone
+RUN echo "America/New_York" | tee /etc/timezone
 RUN dpkg-reconfigure --frontend noninteractive tzdata
 
 # Do the rest of the app stuff
