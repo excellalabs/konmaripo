@@ -52,6 +52,11 @@ namespace Konmaripo.Web.Controllers
 
             return RedirectToAction("Index");
         }
+        public IActionResult ExemptRepositoryCheck()
+        {
+            // TODO
+            return RedirectToAction("Index");
+        }
     }
 
     public class OrgWideVisibilityIndexVM
