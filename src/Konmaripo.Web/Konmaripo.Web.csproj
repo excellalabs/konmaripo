@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Functional.Maybe" Version="2.0.20" />
-    <PackageReference Include="Humanizer" Version="2.8.26" />
+    <PackageReference Include="Humanizer" Version="2.11.10" />
     <PackageReference Include="libgit2sharp" Version="0.26.2" />
     <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="2.0.306" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="3.1.7" />
