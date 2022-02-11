@@ -6,7 +6,7 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-# NOTE: We use the "bionic" tag (Ubuntu 18.04) as the default "buster-slim" (Debian) is not supported by libgit2sharp as of August 2020.
+# NOTE: We use the "focal" tag (Ubuntu 20.04) as the default "buster-slim" (Debian) is not supported by libgit2sharp as of August 2020.
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /src
 COPY ["Konmaripo.sln", "."]
