@@ -11,7 +11,7 @@
     <PackageReference Include="Functional.Maybe" Version="2.0.20" />
     <PackageReference Include="Humanizer" Version="2.14.1" />
     <PackageReference Include="libgit2sharp" Version="0.26.2" />
-    <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="2.0.306" />
+    <PackageReference Include="LibGit2Sharp.NativeBinaries" Version="2.0.314" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.AzureAD.UI" Version="6.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.14.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.2" />
