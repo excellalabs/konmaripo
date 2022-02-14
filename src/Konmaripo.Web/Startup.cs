@@ -122,8 +122,6 @@ namespace Konmaripo.Web
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -132,7 +130,6 @@ namespace Konmaripo.Web
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
             });
         }
     }
