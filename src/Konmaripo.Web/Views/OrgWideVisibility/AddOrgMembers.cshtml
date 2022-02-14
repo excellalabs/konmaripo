@@ -11,34 +11,22 @@
 
 <div class="text-center">
     <h2>Step 2: Add Missing team members</h2>
+    <p>The @Model.Count below organization members are not a part of the org-wide group.</p>
 </div>
 
-@if (!Model.Any())
+<div class="container">
+@foreach (var row in Model.ToArray().Split(4))
 {
-    <div class="alert alert-success">
-        <h4 class="alert-heading">Great! No missing members.</h4>
-        <p>All your org's members are within the group.</p>
-        @Html.ActionLink($"Next step: Remove access for exempt repositories", "ExemptRepositoryCheck", "OrgWideVisibility", null, new { @class = "btn btn-success", role = "button" })
-    </div>
-
-}
-else
-{
-    <div class="container">
-        @foreach (var row in Model.ToArray().Split(4))
+    <div class="row">
+        @foreach (var login in row)
         {
-            <div class="row">
-                @foreach (var login in row)
-                {
-                    <div class="col">
-                        @login
-                    </div>
-                }
+            <div class="col">
+                @login
             </div>
         }
     </div>
-    <div>
-        @Html.ActionLink($"Add these {Model.Count} members to the group.", "AddOrgMembersList", "OrgWideVisibility", new { loginsToAdd = Model }, new { @class = "btn btn-success", role = "button" })
-    </div>
 }
-
+</div>
+<div>
+    @Html.ActionLink($"Add these {Model.Count} members to the group.", "AddOrgMembersList", "OrgWideVisibility", new { loginsToAdd = Model }, new { @class = "btn btn-success", role = "button" })
+</div>
