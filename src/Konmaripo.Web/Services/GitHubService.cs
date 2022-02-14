@@ -194,5 +194,12 @@ namespace Konmaripo.Web.Services
                 await _githubClient.Organization.Team.AddOrEditMembership(teamId, login, request);
             }
         }
+
+        public async Task<List<string>> GetRepositoriesWithTopicThatAreVisibleToTeam(string topicName, string teamName)
+        {
+            var allRepos = await GetRepositoriesForOrganizationAsync();
+
+            // TODO Filter repos by topic.
+        }
     }
 }
