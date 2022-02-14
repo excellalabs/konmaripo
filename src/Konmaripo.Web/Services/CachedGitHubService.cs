@@ -138,11 +138,6 @@ namespace Konmaripo.Web.Services
             await _gitHubService.AddMembersToTeam(teamId, loginsToAdd);
         }
 
-        public Task<List<string>> GetRepositoriesWithTopicThatAreVisibleToTeam(string topicName, string teamName)
-        {
-            return _gitHubService.GetRepositoriesWithTopicThatAreVisibleToTeam(topicName, teamName);
-        }
-
         public async Task<List<User>> GetUsersNotInTeam(string teamName)
         {
             var allTeams = await GetAllTeams();

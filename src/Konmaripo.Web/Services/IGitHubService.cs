@@ -27,6 +27,5 @@ namespace Konmaripo.Web.Services
         Task<IReadOnlyList<User>> GetTeamMembers(int teamId);
         Task AddMembersToTeam(string teamName, List<string> loginsToAdd);
         Task AddMembersToTeam(int teamId, List<string> loginsToAdd);
-        Task<List<string>> GetRepositoriesWithTopicThatAreVisibleToTeam(string topicName, string teamName);
     }
 }
