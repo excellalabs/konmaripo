@@ -31,7 +31,7 @@ namespace Konmaripo.Web
                 var app = builder.Build();
                 
                 startup.Configure(app, app.Environment);
-
+                
                 app.MapRazorPages();
 
                 app.Run();
