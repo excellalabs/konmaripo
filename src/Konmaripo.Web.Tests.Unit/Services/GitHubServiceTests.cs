@@ -410,7 +410,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
                 _mockClient.Setup(x => x.Issue).Returns(mockIssuesClient.Object);
 
-                Func<Task> act = async () => await _sut.CreateArchiveIssueInRepo(idThatDoesntMatter, nameThatDoesntMatter);
+                Action act = async () => await _sut.CreateArchiveIssueInRepo(idThatDoesntMatter, nameThatDoesntMatter);
 
                 act.Should().NotThrow();
             }
@@ -431,7 +431,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
                 _mockClient.Setup(x => x.Issue).Returns(mockIssuesClient.Object);
 
-                Func<Task> act = async () => await _sut.CreateArchiveIssueInRepo(idThatDoesntMatter, nameThatDoesntMatter);
+                Action act = async () => await _sut.CreateArchiveIssueInRepo(idThatDoesntMatter, nameThatDoesntMatter);
 
                 act.Should().Throw<ApiException>();
             }
