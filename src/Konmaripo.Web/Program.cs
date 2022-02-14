@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -21,7 +22,19 @@ namespace Konmaripo.Web
             try
             {
                 Log.Information("Starting web host");
-                CreateHostBuilder(args).Build().Run();
+                var builder = WebApplication.CreateBuilder(args);
+                builder.Host.UseSerilog(Log.Logger);
+
+                var startup = new Startup(builder.Configuration);
+                startup.ConfigureServices(builder.Services);
+                
+                var app = builder.Build();
+                
+                startup.Configure(app, app.Environment);
+                
+                app.MapRazorPages();
+
+                app.Run();
             }
             catch (Exception ex)
             {
@@ -32,13 +45,5 @@ namespace Konmaripo.Web
                 Log.CloseAndFlush();
             }
         }
-
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseSerilog(logger:Log.Logger)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
     }
 }

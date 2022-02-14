@@ -1,13 +1,13 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 # NOTE: We use the "bionic" tag (Ubuntu 18.04) as the default "buster-slim" (Debian) is not supported by libgit2sharp as of August 2020.
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1-bionic AS base
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-# NOTE: We use the "bionic" tag (Ubuntu 18.04) as the default "buster-slim" (Debian) is not supported by libgit2sharp as of August 2020.
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-bionic AS build
+# NOTE: We use the "focal" tag (Ubuntu 20.04) as the default "buster-slim" (Debian) is not supported by libgit2sharp as of August 2020.
+FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /src
 COPY ["Konmaripo.sln", "."]
 COPY ["Konmaripo.Web/Konmaripo.Web.csproj", "./Konmaripo.Web/"]
