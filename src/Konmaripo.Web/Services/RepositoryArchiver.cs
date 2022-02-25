@@ -49,7 +49,6 @@ namespace Konmaripo.Web.Services
                 // ReSharper enable InconsistentNaming
             };
 
-            //var destinationArchiveFileName = Path.Combine(START_PATH, $"{repoName}.zip");
             var clonePath = Path.Combine(START_PATH, repoName);
 
             // TODO: Make async
