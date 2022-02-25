@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Konmaripo.Web.Models;
@@ -34,6 +35,7 @@ namespace Konmaripo.Web.Services
             {
                 TagFetchMode = TagFetchMode.All,
                 CredentialsProvider = (_url, _user, _cred) => creds,
+                Prune = false
             };
 
             var options = new CloneOptions
@@ -56,34 +58,8 @@ namespace Konmaripo.Web.Services
             // This ensures all branches and tags get fetched as well.
             using (var repo = new LibGit2Sharp.Repository(pathToRepoGitFile))
             {
-                var remoteBranches = repo.Branches.Where(x => x.IsRemote && !x.IsTracking).ToList();
-
-                var nonExistingRemoteBranches = remoteBranches.Where(x =>
-                {
-                    var localBranchName = GenerateLocalBranchName(x);
-                    return repo.Branches[localBranchName] == null;
-                }).ToList();
-
-                foreach (var remoteBranch in nonExistingRemoteBranches)
-                {
-                    var localBranchName = GenerateLocalBranchName(remoteBranch);
-
-                    var localCreatedBranch = repo.CreateBranch(localBranchName, remoteBranch.Tip);
-                    repo.Branches.Update(localCreatedBranch, b => b.TrackedBranch = remoteBranch.CanonicalName);
-                }
-                repo.Network.Fetch(REMOTE_NAME, new[] { $"+refs/heads/*:refs/remotes/origin/*" }, fetchOptions);
-                var mergeOptions = new MergeOptions
-                {
-                    FastForwardStrategy = FastForwardStrategy.Default,
-                    CommitOnSuccess = true,
-                    FailOnConflict = true,
-                    MergeFileFavor = MergeFileFavor.Theirs
-                };
-                var pullOptions = new PullOptions { FetchOptions = fetchOptions, MergeOptions = mergeOptions };
-                var sig = new LibGit2Sharp.Signature("Konmaripo Tool", "konmaripo@excella.com", DateTimeOffset.UtcNow);
-                Commands.Pull(repo, sig, pullOptions);
+                repo.Network.Fetch("origin", new List<string>(){ "+refs/*:refs/*" }, fetchOptions);
             }
-
             
             var pathToFullRepo = pathToRepoGitFile.Replace(".git/", ""); // Directory.GetParent didn't work for this, maybe due to the period in the directory name.
             return new RepositoryPath(pathToFullRepo);
