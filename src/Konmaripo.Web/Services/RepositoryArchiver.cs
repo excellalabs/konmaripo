@@ -34,7 +34,7 @@ namespace Konmaripo.Web.Services
             var fetchOptions = new FetchOptions()
             {
                 TagFetchMode = TagFetchMode.All,
-                CredentialsProvider = (_url, _user, _cred) => creds,
+                CredentialsProvider = (_, _, _) => creds,
                 Prune = false
             };
 
@@ -43,10 +43,8 @@ namespace Konmaripo.Web.Services
                 Checkout = true,
                 IsBare = false,
                 RecurseSubmodules = true,
-                // ReSharper disable InconsistentNaming
-                CredentialsProvider = (_url, _user, _cred) => creds,
+                CredentialsProvider = (_, _, _) => creds,
                 FetchOptions = fetchOptions
-                // ReSharper enable InconsistentNaming
             };
 
             var clonePath = Path.Combine(START_PATH, repoName);
