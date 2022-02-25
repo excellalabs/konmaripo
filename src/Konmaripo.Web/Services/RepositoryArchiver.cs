@@ -61,11 +61,5 @@ namespace Konmaripo.Web.Services
             var pathToFullRepo = pathToRepoGitFile.Replace(".git/", ""); // Directory.GetParent didn't work for this, maybe due to the period in the directory name.
             return new RepositoryPath(pathToFullRepo);
         }
-
-        private string GenerateLocalBranchName(Branch x)
-        {
-            return x.FriendlyName.Replace($"{REMOTE_NAME}/", string.Empty);
-        }
-
     }
 }
