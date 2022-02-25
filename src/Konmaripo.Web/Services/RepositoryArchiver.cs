@@ -50,6 +50,7 @@ namespace Konmaripo.Web.Services
             var pathToRepoGitFile = LibGit2Sharp.Repository.Clone(url, clonePath, options);
 
             // This ensures all branches and tags get fetched as well.
+            // ReSharper disable once RedundantNameQualifier -- so we can quickly tell between Octokit and Libgit2sharp
             using (var repo = new LibGit2Sharp.Repository(pathToRepoGitFile))
             {
                 repo.Network.Fetch("origin", new List<string>(){ "+refs/*:refs/*" }, fetchOptions);
