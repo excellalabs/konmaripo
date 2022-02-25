@@ -12,7 +12,6 @@ namespace Konmaripo.Web.Services
     {
         private readonly string _githubOrgName;
         private readonly string _accessToken;
-        const string REMOTE_NAME = "origin"; // hard-coded since this will be the default when cloned from GitHub.
         const string START_PATH = "./Data"; // TODO: Extract to config
 
         public RepositoryArchiver(IOptions<GitHubSettings> githubSettings)
