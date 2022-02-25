@@ -10,7 +10,7 @@ namespace Konmaripo.Web.Services
     {
         private readonly string _githubOrgName;
         private readonly string _accessToken;
-        const string START_PATH = "./Data"; // TODO: Extract to config
+        private const string START_PATH = "./Data"; // TODO: Extract to config
 
         public RepositoryArchiver(IOptions<GitHubSettings> githubSettings)
         {
