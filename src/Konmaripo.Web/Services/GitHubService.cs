@@ -73,10 +73,9 @@ namespace Konmaripo.Web.Services
 
         public async Task ArchiveRepository(long repoId, string repoName)
         {
-            var makeArchived = new RepositoryUpdate(repoName)
-            {
-                Archived = true
-            };
+            var makeArchived = new RepositoryUpdate();
+            makeArchived.Archived = true;
+            makeArchived.Name = repoName;
 
             await _githubClient.Repository.Edit(repoId, makeArchived);
         }
