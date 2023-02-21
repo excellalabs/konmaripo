@@ -17,7 +17,7 @@ variables:
   imageRepository: 'konmaripoweb'
   containerRegistry: 'konmaripocontainerregistry.azurecr.io'
   buildContextLocation: 'src/'
-  dockerfilePath: 'src/Konmaripo.Web/Dockerfile'
+  dockerfilePath: 'src/Dockerfile'
   tag: '$(Build.BuildId)'
   #tag: 'release'
   
