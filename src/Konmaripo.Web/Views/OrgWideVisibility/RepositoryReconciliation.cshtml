@@ -57,15 +57,9 @@ else
     }
 
     <div class="alert alert-danger" role="alert">
-        <h1 class="display-4">Update all user for these @(Model.RepositoriesToAddAccessTo.Count + Model.RepositoriesToAddAccessTo.Count) Repositories?</h1>
+        <h1 class="display-4">Update all user for these @(Model.RepositoriesToAddAccessTo.Count + Model.RepositoriesToRemoveAccessFrom.Count) Repositories?</h1>
         <h4 class="alert-heading">Clicking this will change repository visibility access!</h4>
         <p>Once the process has begun, it is not cancelable.</p>
 
         <button type="submit" class="btn btn-danger" role="button">Submit</button>
     </div>
-
-    <div>
-        @*@Html.ActionLink($"Add these {Model.Count} members to the group.", "AddOrgMembersList", "OrgWideVisibility", new { loginsToAdd = Model }, new { @class = "btn btn-success", role = "button" })*@
-    </div>
-}
-
