@@ -14,6 +14,14 @@ using FileMode = System.IO.FileMode;
 
 namespace Konmaripo.Web.Services
 {
+    public static class ExtensionMethods
+    {
+        public static GitHubRepo ToKonmaripoRepo(this Repository x)
+        {
+            return new GitHubRepo(x.Id, x.Name, x.StargazersCount, x.Archived, x.ForksCount, x.OpenIssuesCount, x.CreatedAt, x.UpdatedAt, x.Description, x.Private, x.PushedAt, x.HtmlUrl, x.SubscribersCount, x.Topics);
+        }
+    }
+
     public class GitHubService : IGitHubService
     {
         private readonly IGitHubClient _githubClient;
@@ -30,13 +38,22 @@ namespace Konmaripo.Web.Services
             _archiver = archiver ?? throw new ArgumentNullException(nameof(archiver));
         }
 
+        public async Task<List<GitHubRepo>> GetRepositoriesForTeam(string teamName)
+        {
+            var allTeams = await GetAllTeams();
+            var teamId = allTeams.Single(x => x.Name.Equals(teamName, StringComparison.InvariantCultureIgnoreCase)).Id;
+
+            var repos = await _githubClient.Organization.Team.GetAllRepositories(teamId);
+            return repos.Select(x => x.ToKonmaripoRepo()).ToList();
+        }
+
         public async Task<List<GitHubRepo>> GetRepositoriesForOrganizationAsync()
         {
             var orgName = _gitHubSettings.OrganizationName;
 
             var repos = await _githubClient.Repository.GetAllForOrg(orgName);
 
-            return repos.Select(x => new GitHubRepo(x.Id, x.Name, x.StargazersCount, x.Archived, x.ForksCount, x.OpenIssuesCount, x.CreatedAt, x.UpdatedAt, x.Description, x.Private, x.PushedAt, x.HtmlUrl, x.SubscribersCount, x.Topics)).ToList();
+            return repos.Select(x => x.ToKonmaripoRepo()).ToList();
         }
 
         public async Task<ExtendedRepoInformation> GetExtendedRepoInformationFor(long repoId)

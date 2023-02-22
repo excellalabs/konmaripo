@@ -54,12 +54,13 @@ namespace Konmaripo.Web.Controllers
         }
         public async Task<IActionResult> RepositoryReconciliation()
         {
-            var tagName = _settings.ExemptionTagName;
+            var exemptionTagName = _settings.ExemptionTagName;
+            var teamName = _settings.AllOrgMembersGroupName;
 
             var repos = await _gitHubService.GetRepositoriesWithTopic(
-                tagName);
+                exemptionTagName);
 
-            var vm = new RepositoryReconciliationViewModel(tagName, repos);
+            var vm = new RepositoryReconciliationViewModel(exemptionTagName, repos);
             return View(vm);
         }
     }
