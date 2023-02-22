@@ -1,6 +1,6 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-# NOTE: We use the "bionic" tag (Ubuntu 18.04) as the default "buster-slim" (Debian) is not supported by libgit2sharp as of August 2020.
+# NOTE: We use the "focal" tag (Ubuntu 20.04) as the default "buster-slim" (Debian) is not supported by libgit2sharp as of August 2020.
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
 WORKDIR /app
 EXPOSE 80
