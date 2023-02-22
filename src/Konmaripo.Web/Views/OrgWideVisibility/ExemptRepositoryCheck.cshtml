@@ -1,0 +1,35 @@
+﻿@using Konmaripo.Web.Controllers
+@model ExemptRepositoryCheckViewModel
+@{
+    ViewData["Title"] = "Org-Wide Visibility";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Org-Wide Visibility</h1>
+    <p>Ensuring all organization members can see all private repositories.</p>
+</div>
+
+<div class="text-center">
+    <h2>Step 3: Ensuring Access is removed from exempt repos</h2>
+</div>
+
+@if (!Model.Repositories.Any())
+{
+    <div class="alert alert-success">
+        <h4 class="alert-heading">No need for this! No Repositories have the exemption.</h4>
+        <p>All your org's members are within the group.</p>
+        @Html.ActionLink($"Next step: Remove access for exempt repositories", "ExemptRepositoryCheck", "OrgWideVisibility", null, new { @class = "btn btn-success", role = "button" })
+    </div>
+
+}
+else
+{
+    <div class="container">
+        <h4>The following repositories will have access removed for the all-org group:</h4>
+        <h4>TODO</h4>
+    </div>
+    <div>
+        @*@Html.ActionLink($"Add these {Model.Count} members to the group.", "AddOrgMembersList", "OrgWideVisibility", new { loginsToAdd = Model }, new { @class = "btn btn-success", role = "button" })*@
+    </div>
+}
+

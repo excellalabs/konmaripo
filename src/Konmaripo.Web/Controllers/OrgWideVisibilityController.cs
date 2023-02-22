@@ -52,29 +52,27 @@ namespace Konmaripo.Web.Controllers
 
             return RedirectToAction("Index");
         }
-        public IActionResult ExemptRepositoryCheck()
+        public async Task<IActionResult> ExemptRepositoryCheck()
         {
             var tagName = _settings.ExemptionTagName;
 
-            var repos = _gitHubService.GetRepositoriesWithTopicThatAreVisibleToTeam(
-                tagName,
-                _settings.AllOrgMembersGroupName);
+            var repos = await _gitHubService.GetRepositoriesWithTopic(
+                tagName);
 
             var vm = new ExemptRepositoryCheckViewModel(tagName, repos);
-            // TODO
-            return View();
+            return View(vm);
         }
     }
 
     public class ExemptRepositoryCheckViewModel
     {
         public string TagName { get; }
-        public List<string> RepositoryNames { get; }
+        public List<GitHubRepo> Repositories { get; }
 
-        public ExemptRepositoryCheckViewModel(string tagName, List<string> repoNames)
+        public ExemptRepositoryCheckViewModel(string tagName, List<GitHubRepo> repos)
         {
             TagName = tagName;
-            RepositoryNames = repoNames;
+            Repositories = repos;
         }
     }
     public class OrgWideVisibilityIndexVM

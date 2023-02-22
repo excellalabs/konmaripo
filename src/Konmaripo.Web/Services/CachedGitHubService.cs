@@ -58,7 +58,7 @@ namespace Konmaripo.Web.Services
             var repos = _memoryCache.Get<List<GitHubRepo>>(RepoCacheKey);
             var item = repos.First(x => x.Id == repoId);
 
-            var archivedItem = new GitHubRepo(item.Id, item.Name, item.StarCount, true, item.ForkCount, item.OpenIssueCount, item.CreatedDate, item.UpdatedDate, item.Description, item.IsPrivate, item.PushedDate.ToNullable(), item.RepoUrl, item.Subscribers);
+            var archivedItem = new GitHubRepo(item.Id, item.Name, item.StarCount, true, item.ForkCount, item.OpenIssueCount, item.CreatedDate, item.UpdatedDate, item.Description, item.IsPrivate, item.PushedDate.ToNullable(), item.RepoUrl, item.Subscribers, item.Topics);
             repos.Remove(item);
             repos.Add(archivedItem);
 
@@ -138,9 +138,9 @@ namespace Konmaripo.Web.Services
             await _gitHubService.AddMembersToTeam(teamId, loginsToAdd);
         }
 
-        public Task<List<string>> GetRepositoriesWithTopicThatAreVisibleToTeam(string topicName, string teamName)
+        public Task<List<GitHubRepo>> GetRepositoriesWithTopic(string topicName)
         {
-            return _gitHubService.GetRepositoriesWithTopicThatAreVisibleToTeam(topicName, teamName);
+            return _gitHubService.GetRepositoriesWithTopic(topicName);
         }
 
         public async Task<List<User>> GetUsersNotInTeam(string teamName)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
 using Microsoft.Extensions.Options;
@@ -35,7 +36,7 @@ namespace Konmaripo.Web.Services
 
             var repos = await _githubClient.Repository.GetAllForOrg(orgName);
 
-            return repos.Select(x => new GitHubRepo(x.Id, x.Name, x.StargazersCount, x.Archived, x.ForksCount, x.OpenIssuesCount, x.CreatedAt, x.UpdatedAt, x.Description, x.Private, x.PushedAt, x.HtmlUrl, x.SubscribersCount)).ToList();
+            return repos.Select(x => new GitHubRepo(x.Id, x.Name, x.StargazersCount, x.Archived, x.ForksCount, x.OpenIssuesCount, x.CreatedAt, x.UpdatedAt, x.Description, x.Private, x.PushedAt, x.HtmlUrl, x.SubscribersCount, x.Topics)).ToList();
         }
 
         public async Task<ExtendedRepoInformation> GetExtendedRepoInformationFor(long repoId)
@@ -194,10 +195,13 @@ namespace Konmaripo.Web.Services
             }
         }
 
-        public async Task<List<string>> GetRepositoriesWithTopicThatAreVisibleToTeam(string topicName, string teamName)
+        public async Task<List<GitHubRepo>> GetRepositoriesWithTopic(string topicName)
         {
             var allRepos = await GetRepositoriesForOrganizationAsync();
 
+            var reposWithTopic = allRepos.Where(x=>x.Topics.Any(x=>x.Equals(topicName, StringComparison.InvariantCultureIgnoreCase))).ToList();
+
+            return reposWithTopic;
             // TODO Filter repos by topic.
         }
     }
