@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
@@ -25,10 +26,12 @@ namespace Konmaripo.Web.Controllers
             return obj.Id.GetHashCode();
         }
     }
+
+    [Authorize]
     public class OrgWideVisibilityController : Controller
     {
-        private OrgWideVisibilitySettings _settings;
-        private IGitHubService _gitHubService;
+        private readonly OrgWideVisibilitySettings _settings;
+        private readonly IGitHubService _gitHubService;
 
         public OrgWideVisibilityController(IOptions<OrgWideVisibilitySettings> visibilitySettings, IGitHubService gitHubService)
         {
