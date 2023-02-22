@@ -124,7 +124,7 @@ namespace Konmaripo.Web.Tests.Unit.Services
 
             public GitHubRepo Build()
             {
-                return new GitHubRepo(_id,string.Empty,0,false,0,0,DateTimeOffset.Now,DateTimeOffset.Now, string.Empty,false,DateTimeOffset.Now, string.Empty,0);
+                return new GitHubRepo(_id,string.Empty,0,false,0,0,DateTimeOffset.Now,DateTimeOffset.Now, string.Empty,false,DateTimeOffset.Now, string.Empty,0, new List<string>());
             }
 
         }
