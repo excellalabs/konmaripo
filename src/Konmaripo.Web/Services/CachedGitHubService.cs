@@ -153,6 +153,11 @@ namespace Konmaripo.Web.Services
 
             return allOrgMembers.Except(teamMembers, new OctokitUserEqualityComparer()).ToList();
         }
+
+        public Task<List<GitHubRepo>> GetRepositoriesForTeam(string teamName)
+        {
+            return _gitHubService.GetRepositoriesForTeam(teamName);
+        }
     }
 
     public class OctokitUserEqualityComparer : IEqualityComparer<User>
