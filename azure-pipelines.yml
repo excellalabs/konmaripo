@@ -13,7 +13,7 @@ resources:
 
 variables:
   # Container registry service connection established during pipeline creation
-  dockerRegistryServiceConnection: 'konmaripocontainerregistry'
+  dockerRegistryServiceConnection: 'konmaripocontainerregistry_2023'
   imageRepository: 'konmaripoweb'
   containerRegistry: 'konmaripocontainerregistry.azurecr.io'
   buildContextLocation: 'src/'
