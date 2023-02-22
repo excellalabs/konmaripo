@@ -158,6 +158,16 @@ namespace Konmaripo.Web.Services
         {
             return _gitHubService.GetRepositoriesForTeam(teamName);
         }
+
+        public Task AddAllOrgTeamToRepos(List<GitHubRepo> vmRepositoriesToAddAccessTo, string teamName)
+        {
+            return _gitHubService.AddAllOrgTeamToRepos(vmRepositoriesToAddAccessTo, teamName);
+        }
+
+        public Task RemoveAllOrgTeamFromRepos(List<GitHubRepo> vmRepositoriesToRemoveAccessFrom, string teamName)
+        {
+            return _gitHubService.RemoveAllOrgTeamFromRepos(vmRepositoriesToRemoveAccessFrom, teamName);
+        }
     }
 
     public class OctokitUserEqualityComparer : IEqualityComparer<User>

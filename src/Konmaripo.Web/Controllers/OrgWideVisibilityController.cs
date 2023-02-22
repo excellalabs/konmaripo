@@ -97,8 +97,10 @@ namespace Konmaripo.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> RepositoryReconciliation (RepositoryReconciliationViewModel vm)
         {
-            _gitHubService.AddAllOrgTeamToRepos(vm.RepositoriesToAddAccessTo);
-            _gitHubService.RemoveAllOrgTeamFromRepos(vm.RepositoriesToRemoveAccessFrom);
+            await _gitHubService.AddAllOrgTeamToRepos(vm.RepositoriesToAddAccessTo, vm.AllOrgMemberTeamName);
+            await _gitHubService.RemoveAllOrgTeamFromRepos(vm.RepositoriesToRemoveAccessFrom, vm.AllOrgMemberTeamName);
+
+            return View("RepositoryReconciliationSuccess");
         }
     }
 

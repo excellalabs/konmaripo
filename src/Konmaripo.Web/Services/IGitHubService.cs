@@ -29,5 +29,7 @@ namespace Konmaripo.Web.Services
         Task AddMembersToTeam(int teamId, List<string> loginsToAdd);
         Task<List<GitHubRepo>> GetRepositoriesWithTopic(string topicName);
         Task<List<GitHubRepo>> GetRepositoriesForTeam(string teamName);
+        Task AddAllOrgTeamToRepos(List<GitHubRepo> vmRepositoriesToAddAccessTo, string teamName);
+        Task RemoveAllOrgTeamFromRepos(List<GitHubRepo> vmRepositoriesToRemoveAccessFrom, string teamName);
     }
 }
