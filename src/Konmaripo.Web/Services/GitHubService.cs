@@ -35,7 +35,7 @@ namespace Konmaripo.Web.Services
 
             var repos = await _githubClient.Repository.GetAllForOrg(orgName);
 
-            return repos.Select(x => new GitHubRepo(x.Id, x.Name, x.StargazersCount, x.Archived, x.ForksCount, x.OpenIssuesCount, x.CreatedAt, x.UpdatedAt, x.Description, x.Private, x.PushedAt, x.HtmlUrl)).ToList();
+            return repos.Select(x => new GitHubRepo(x.Id, x.Name, x.StargazersCount, x.Archived, x.ForksCount, x.OpenIssuesCount, x.CreatedAt, x.UpdatedAt, x.Description, x.Private, x.PushedAt, x.HtmlUrl, x.SubscribersCount)).ToList();
         }
 
         public async Task<ExtendedRepoInformation> GetExtendedRepoInformationFor(long repoId)
@@ -73,10 +73,9 @@ namespace Konmaripo.Web.Services
 
         public async Task ArchiveRepository(long repoId, string repoName)
         {
-            var makeArchived = new RepositoryUpdate(repoName)
-            {
-                Archived = true
-            };
+            var makeArchived = new RepositoryUpdate();
+            makeArchived.Archived = true;
+            makeArchived.Name = repoName;
 
             await _githubClient.Repository.Edit(repoId, makeArchived);
         }

@@ -16,6 +16,7 @@
                     <th scope="col" title="Stars"><i class="fas fa-star"></i></th>
                     <th scope="col" title="Forks"><i class="fas fa-code-branch"></i></th>
                     <th scope="col" title="Issues"><i class="fas fa-exclamation-circle"></i></th>
+                    <th scope="col" title="Subscribers"><i class="fas fa-eyes"></i></th>
                     <th scope="col" title="Date the repository was created">Created</th>
                     <th scope="col" title="Date the repository was updated, e.g. title, language, settings, properties">Updated</th>
                     <th scope="col" title="Date the Repository last had changes pushed to it">Pushed</th>
@@ -41,6 +42,7 @@
                     <td title="@item.StarCount stars">@item.StarCount</td>
                     <td title="@item.ForkCount forks">@item.ForkCount</td>
                     <td title="@item.OpenIssueCount issues">@item.OpenIssueCount</td>
+                    <td title="@item.Subscribers subscribers">@item.Subscribers</td>
                     <td title="Created @item.CreatedDate">@item.CreatedDate.Humanize()</td>
                     <td title="Updated @item.UpdatedDate">@item.UpdatedDate.Humanize()</td>
                     @if (item.PushedDate.HasValue)
