@@ -18,7 +18,7 @@
     <div class="alert alert-success">
         <h4 class="alert-heading">Great! No missing members.</h4>
         <p>All your org's members are within the group.</p>
-        @Html.ActionLink($"Next step: Remove access for exempt repositories", "ExemptRepositoryCheck", "OrgWideVisibility", null, new { @class = "btn btn-success", role = "button" })
+        @Html.ActionLink($"Next step: Grant/Remove Team Access to Repositories", "RepositoryReconciliation", "OrgWideVisibility", null, new { @class = "btn btn-success", role = "button" })
     </div>
 
 }
