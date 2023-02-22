@@ -93,6 +93,13 @@ namespace Konmaripo.Web.Controllers
             var vm = new RepositoryReconciliationViewModel(_settings.ExemptionTagName, _settings.AllOrgMembersGroupName, reposToAddTeamTo, reposToRemoveTeamFrom);
             return View(vm);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> RepositoryReconciliation (RepositoryReconciliationViewModel vm)
+        {
+            _gitHubService.AddAllOrgTeamToRepos(vm.RepositoriesToAddAccessTo);
+            _gitHubService.RemoveAllOrgTeamFromRepos(vm.RepositoriesToRemoveAccessFrom);
+        }
     }
 
     public class RepositoryReconciliationViewModel
