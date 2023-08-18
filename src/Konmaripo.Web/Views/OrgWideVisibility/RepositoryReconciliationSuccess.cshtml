@@ -1,0 +1,18 @@
+﻿@using Konmaripo.Web.Controllers
+@{
+    ViewData["Title"] = "Org-Wide Visibility";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Org-Wide Visibility</h1>
+    <p>Ensuring all organization members can see all private repositories.</p>
+</div>
+
+<div class="text-center">
+    <h2>Step 3: Repository Reconciliation</h2>
+</div>
+
+<div class="alert alert-success">
+    <h4 class="alert-heading">Repository Reconciliation succeeded.</h4>
+    @Html.ActionLink($"Return to Home", "Index", "Home", null, new { @class = "btn btn-success", role = "button" })
+</div>

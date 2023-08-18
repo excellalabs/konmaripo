@@ -4,15 +4,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
 using Konmaripo.Web.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 namespace Konmaripo.Web.Controllers
 {
+    public class GitHubRepoEqualityComparer : IEqualityComparer<GitHubRepo>
+    {
+        public bool Equals(GitHubRepo x, GitHubRepo y)
+        {
+            if (ReferenceEquals(x, y)) return true;
+            if (ReferenceEquals(x, null)) return false;
+            if (ReferenceEquals(y, null)) return false;
+            if (x.GetType() != y.GetType()) return false;
+            return x.Id == y.Id;
+        }
+
+        public int GetHashCode(GitHubRepo obj)
+        {
+            return obj.Id.GetHashCode();
+        }
+    }
+
+    [Authorize]
     public class OrgWideVisibilityController : Controller
     {
-        private OrgWideVisibilitySettings _settings;
-        private IGitHubService _gitHubService;
+        private readonly OrgWideVisibilitySettings _settings;
+        private readonly IGitHubService _gitHubService;
 
         public OrgWideVisibilityController(IOptions<OrgWideVisibilitySettings> visibilitySettings, IGitHubService gitHubService)
         {
@@ -52,8 +71,54 @@ namespace Konmaripo.Web.Controllers
 
             return RedirectToAction("Index");
         }
+        public async Task<IActionResult> RepositoryReconciliation()
+        {
+            var comparer = new GitHubRepoEqualityComparer();
+
+            var allRepos = await _gitHubService.GetRepositoriesForOrganizationAsync();
+            var reposWithExemptionTopic = await _gitHubService.GetRepositoriesWithTopic(_settings.ExemptionTagName);
+            var reposThatAlreadyHaveTeamAccess = await _gitHubService.GetRepositoriesForTeam(_settings.AllOrgMembersGroupName);
+
+
+            var reposToAddTeamTo = 
+                allRepos
+                .Except(reposThatAlreadyHaveTeamAccess, comparer)
+                .Except(reposWithExemptionTopic, comparer).ToList();
+
+            var reposToRemoveTeamFrom = 
+                reposThatAlreadyHaveTeamAccess
+                    .Intersect(reposWithExemptionTopic, comparer)
+                    .ToList();
+
+            var vm = new RepositoryReconciliationViewModel(_settings.ExemptionTagName, _settings.AllOrgMembersGroupName, reposToAddTeamTo, reposToRemoveTeamFrom);
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RepositoryReconciliation (RepositoryReconciliationViewModel vm)
+        {
+            await _gitHubService.AddAllOrgTeamToRepos(vm.RepositoriesToAddAccessTo, vm.AllOrgMemberTeamName);
+            await _gitHubService.RemoveAllOrgTeamFromRepos(vm.RepositoriesToRemoveAccessFrom, vm.AllOrgMemberTeamName);
+
+            return View("RepositoryReconciliationSuccess");
+        }
     }
 
+    public class RepositoryReconciliationViewModel
+    {
+        public string ExemptionTagName { get; }
+        public string AllOrgMemberTeamName { get; }
+        public List<GitHubRepo> RepositoriesToAddAccessTo { get; }
+        public List<GitHubRepo> RepositoriesToRemoveAccessFrom { get; }
+        
+        public RepositoryReconciliationViewModel(string exemptionTagName, string allOrgMemberTeamName, List<GitHubRepo> reposToAdd, List<GitHubRepo> reposToRemove)
+        {
+            ExemptionTagName = exemptionTagName;
+            AllOrgMemberTeamName = allOrgMemberTeamName;
+            RepositoriesToAddAccessTo = reposToAdd;
+            RepositoriesToRemoveAccessFrom = reposToRemove;
+        }
+    }
     public class OrgWideVisibilityIndexVM
     {
         public string OrgWideTeamName { get; }

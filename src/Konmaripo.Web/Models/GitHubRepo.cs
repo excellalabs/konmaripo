@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Functional.Maybe;
 
 namespace Konmaripo.Web.Models
@@ -18,8 +19,9 @@ namespace Konmaripo.Web.Models
         public Maybe<DateTimeOffset> PushedDate { get; }
         public string RepoUrl { get; }
         public int Subscribers { get; }
+        public IReadOnlyList<string> Topics { get; }
 
-        public GitHubRepo(long repoId, string name, int starCount, bool isArchived, int forkCount, int openIssues, DateTimeOffset createdDate, DateTimeOffset updatedDate, string description, bool isPrivate, DateTimeOffset? pushedDate, string url, int subscribers)
+        public GitHubRepo(long repoId, string name, int starCount, bool isArchived, int forkCount, int openIssues, DateTimeOffset createdDate, DateTimeOffset updatedDate, string description, bool isPrivate, DateTimeOffset? pushedDate, string url, int subscribers, IReadOnlyList<string> topics)
         {
             Name = name;
             StarCount = starCount;
@@ -34,6 +36,7 @@ namespace Konmaripo.Web.Models
             PushedDate = pushedDate.ToMaybe();
             RepoUrl = url;
             Subscribers = subscribers;
+            Topics = topics;
         }
     }
 }

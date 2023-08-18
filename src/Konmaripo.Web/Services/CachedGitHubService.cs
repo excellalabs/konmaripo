@@ -58,7 +58,7 @@ namespace Konmaripo.Web.Services
             var repos = _memoryCache.Get<List<GitHubRepo>>(RepoCacheKey);
             var item = repos.First(x => x.Id == repoId);
 
-            var archivedItem = new GitHubRepo(item.Id, item.Name, item.StarCount, true, item.ForkCount, item.OpenIssueCount, item.CreatedDate, item.UpdatedDate, item.Description, item.IsPrivate, item.PushedDate.ToNullable(), item.RepoUrl, item.Subscribers);
+            var archivedItem = new GitHubRepo(item.Id, item.Name, item.StarCount, true, item.ForkCount, item.OpenIssueCount, item.CreatedDate, item.UpdatedDate, item.Description, item.IsPrivate, item.PushedDate.ToNullable(), item.RepoUrl, item.Subscribers, item.Topics);
             repos.Remove(item);
             repos.Add(archivedItem);
 
@@ -138,6 +138,11 @@ namespace Konmaripo.Web.Services
             await _gitHubService.AddMembersToTeam(teamId, loginsToAdd);
         }
 
+        public Task<List<GitHubRepo>> GetRepositoriesWithTopic(string topicName)
+        {
+            return _gitHubService.GetRepositoriesWithTopic(topicName);
+        }
+
         public async Task<List<User>> GetUsersNotInTeam(string teamName)
         {
             var allTeams = await GetAllTeams();
@@ -147,6 +152,21 @@ namespace Konmaripo.Web.Services
             var teamMembers = await GetTeamMembers(teamId);
 
             return allOrgMembers.Except(teamMembers, new OctokitUserEqualityComparer()).ToList();
+        }
+
+        public Task<List<GitHubRepo>> GetRepositoriesForTeam(string teamName)
+        {
+            return _gitHubService.GetRepositoriesForTeam(teamName);
+        }
+
+        public Task AddAllOrgTeamToRepos(List<GitHubRepo> vmRepositoriesToAddAccessTo, string teamName)
+        {
+            return _gitHubService.AddAllOrgTeamToRepos(vmRepositoriesToAddAccessTo, teamName);
+        }
+
+        public Task RemoveAllOrgTeamFromRepos(List<GitHubRepo> vmRepositoriesToRemoveAccessFrom, string teamName)
+        {
+            return _gitHubService.RemoveAllOrgTeamFromRepos(vmRepositoriesToRemoveAccessFrom, teamName);
         }
     }
 

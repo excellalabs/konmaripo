@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Konmaripo.Web.Models;
+using Microsoft.CodeAnalysis.VisualBasic.Syntax;
 using Microsoft.Extensions.Options;
 using Octokit;
 using Serilog;
@@ -13,6 +15,14 @@ using FileMode = System.IO.FileMode;
 
 namespace Konmaripo.Web.Services
 {
+    public static class ExtensionMethods
+    {
+        public static GitHubRepo ToKonmaripoRepo(this Repository x)
+        {
+            return new GitHubRepo(x.Id, x.Name, x.StargazersCount, x.Archived, x.ForksCount, x.OpenIssuesCount, x.CreatedAt, x.UpdatedAt, x.Description, x.Private, x.PushedAt, x.HtmlUrl, x.SubscribersCount, x.Topics);
+        }
+    }
+
     public class GitHubService : IGitHubService
     {
         private readonly IGitHubClient _githubClient;
@@ -29,13 +39,44 @@ namespace Konmaripo.Web.Services
             _archiver = archiver ?? throw new ArgumentNullException(nameof(archiver));
         }
 
+        public async Task<List<GitHubRepo>> GetRepositoriesForTeam(string teamName)
+        {
+            var allTeams = await GetAllTeams();
+            var teamId = allTeams.Single(x => x.Name.Equals(teamName, StringComparison.InvariantCultureIgnoreCase)).Id;
+
+            var repos = await _githubClient.Organization.Team.GetAllRepositories(teamId);
+            return repos.Select(x => x.ToKonmaripoRepo()).ToList();
+        }
+
+        public async Task AddAllOrgTeamToRepos(List<GitHubRepo> vmRepositoriesToAddAccessTo, string teamName)
+        {
+            var allTeams = await GetAllTeams();
+            var teamId = allTeams.Single(x => x.Name.Equals(teamName, StringComparison.InvariantCultureIgnoreCase)).Id;
+
+            foreach (var repo in vmRepositoriesToAddAccessTo)
+            {
+                await _githubClient.Organization.Team.AddRepository(teamId, _gitHubSettings.OrganizationName, repo.Name);
+            }
+        }
+
+        public async Task RemoveAllOrgTeamFromRepos(List<GitHubRepo> vmRepositoriesToRemoveAccessFrom, string teamName)
+        {
+            var allTeams = await GetAllTeams();
+            var teamId = allTeams.Single(x => x.Name.Equals(teamName, StringComparison.InvariantCultureIgnoreCase)).Id;
+
+            foreach (var repo in vmRepositoriesToRemoveAccessFrom)
+            {
+                await _githubClient.Organization.Team.RemoveRepository(teamId, _gitHubSettings.OrganizationName, repo.Name);
+            }
+        }
+
         public async Task<List<GitHubRepo>> GetRepositoriesForOrganizationAsync()
         {
             var orgName = _gitHubSettings.OrganizationName;
 
             var repos = await _githubClient.Repository.GetAllForOrg(orgName);
 
-            return repos.Select(x => new GitHubRepo(x.Id, x.Name, x.StargazersCount, x.Archived, x.ForksCount, x.OpenIssuesCount, x.CreatedAt, x.UpdatedAt, x.Description, x.Private, x.PushedAt, x.HtmlUrl, x.SubscribersCount)).ToList();
+            return repos.Select(x => x.ToKonmaripoRepo()).ToList();
         }
 
         public async Task<ExtendedRepoInformation> GetExtendedRepoInformationFor(long repoId)
@@ -192,6 +233,16 @@ namespace Konmaripo.Web.Services
             {
                 await _githubClient.Organization.Team.AddOrEditMembership(teamId, login, request);
             }
+        }
+
+        public async Task<List<GitHubRepo>> GetRepositoriesWithTopic(string topicName)
+        {
+            var allRepos = await GetRepositoriesForOrganizationAsync();
+
+            var reposWithTopic = allRepos.Where(x=>x.Topics.Any(x=>x.Equals(topicName, StringComparison.InvariantCultureIgnoreCase))).ToList();
+
+            return reposWithTopic;
+            // TODO Filter repos by topic.
         }
     }
 }

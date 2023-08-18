@@ -1,0 +1,66 @@
+﻿@using Konmaripo.Web.Controllers
+@model RepositoryReconciliationViewModel
+@{
+    ViewData["Title"] = "Org-Wide Visibility";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Org-Wide Visibility</h1>
+    <p>Ensuring all organization members can see all private repositories.</p>
+</div>
+
+<div class="text-center">
+    <h2>Step 3: Repository Reconciliation</h2>
+</div>
+
+@if (!(Model.RepositoriesToAddAccessTo.Any() || Model.RepositoriesToRemoveAccessFrom.Any()))
+{
+    <div class="alert alert-success">
+        <h4 class="alert-heading">No team access changes needed</h4>
+        <p>The "@Model.AllOrgMemberTeamName" team has access to all repos except repos tagged with "@Model.ExemptionTagName".</p>
+        @Html.ActionLink($"Return to Home", "Index", "Home", null, new { @class = "btn btn-success", role = "button" })
+    </div>
+}
+else
+{
+    if (Model.RepositoriesToRemoveAccessFrom.Any())
+    {
+        <div class="container">
+            <h4>The following repositories will have access removed for the "@Model.AllOrgMemberTeamName" team:</h4>
+            <div class="row">
+                <div class="col">
+                    <ul>
+                        @foreach (var repo in Model.RepositoriesToRemoveAccessFrom)
+                        {
+                            <li>@repo.Name</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+    if (Model.RepositoriesToAddAccessTo.Any())
+    {
+        <div class="container">
+            <h4>The following repositories will have access added for the "@Model.AllOrgMemberTeamName" team. To prevent this, add the "@Model.ExemptionTagName" topic in the repository's settings.</h4>
+            <div class="row">
+                <div class="col">
+                    <ul>
+                        @foreach (var repo in Model.RepositoriesToAddAccessTo)
+                        {
+                            <li>@repo.Name</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="alert alert-danger" role="alert">
+        <h1 class="display-4">Update all user for these @(Model.RepositoriesToAddAccessTo.Count + Model.RepositoriesToRemoveAccessFrom.Count) Repositories?</h1>
+        <h4 class="alert-heading">Clicking this will change repository visibility access!</h4>
+        <p>Once the process has begun, it is not cancelable.</p>
+
+        <button type="submit" class="btn btn-danger" role="button">Submit</button>
+    </div>
+}
